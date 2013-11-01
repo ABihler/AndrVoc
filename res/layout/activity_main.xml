@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp" >
+    
 	<EditText android:id="@+id/edit_message"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/edit_message"
-        
+        android:onClick="sendMessage"
         android:text="Fertig" />
 
     <Spinner
@@ -35,7 +36,14 @@
         android:layout_below="@+id/planets_spinner"
         android:layout_alignParentLeft="true"
         android:spinnerMode="dropdown" />
-    
+    	
+    	<Button
+        android:id="@+id/neu"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dates"
+        android:onClick="neuButton"
+        android:text="Neu" />    
     
 </RelativeLayout>
 

@@ -62,4 +62,16 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
     
+    /** Called when the user clicks the Neu button */
+    public void neuButton(View view) {
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        //EditText editText = (EditText) findViewById(R.id.edit_message);
+        Spinner planet =  (Spinner)findViewById(R.id.planets_spinner);
+//        planet.toString();
+        //.toString();
+        String message = "Hardcoded Text " + planet.getSelectedItem().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }    
+    
 }
