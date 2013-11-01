@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AndrVoc Vokabeltrainer</string>
+    <string name="edit_message">Gib etwas ein</string>
+    <string name="button_send">Send</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_display_message">Meine Meldung</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="Text1">Statischer Text!</string>
+    
+
+</resources>
