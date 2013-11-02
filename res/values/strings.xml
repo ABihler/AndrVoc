@@ -10,6 +10,13 @@
     <string name="title_activity_display_message">Meine Meldung XXX</string>
     <string name="hello_world">Hello world!</string>
     <string name="Text1">Statischer Text!</string>
+    <string name="Text_Erinnerung">Erinnerung!</string>
+    <string name="ButtonFrageStellen">Frage stellen</string>
+    <string name="ButtonNeu">Neu</string>
+    <string name="ButtonOK">OK</string>
+    <string name="ButtonFertig">Fertig</string>
+    
+    
     
 
 </resources>

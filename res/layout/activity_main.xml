@@ -4,21 +4,51 @@
     android:layout_height="fill_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp" >
+
+
+<Button
+        android:id="@+id/start_question"
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
+		
+        android:onClick="startQuestion"
+        android:text="@string/ButtonFrageStellen"
+        />
+
+    
+    
+    <View style="@style/Divider"
+        android:id="@+id/div01"
+        android:layout_below="@+id/start_question"
+        />
+
+        <View style="@style/WhiteLineSpace"
+        android:id="@+id/whiteLine01"
+        android:layout_below="@+id/div01"
+        />
+    
+        <View style="@style/Divider"
+        android:id="@+id/div02"
+        android:layout_below="@+id/whiteLine01"
+        />
     
 	<EditText android:id="@+id/edit_message"
-        android:layout_width="300dp"
+	    android:layout_below="@+id/div02"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Erinnerung"
+        android:hint="@string/Text_Erinnerung"
         android:singleLine="true"
     />
     
     <Button
         android:id="@+id/button_fertig"
-        android:layout_width="100dp"
+        android:layout_below="@+id/div02"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/edit_message"
         android:onClick="sendMessage"
-        android:text="Fertig" />
+        android:text="@string/ButtonFertig" />
 
     <Spinner
         android:id="@+id/planets_spinner"
@@ -43,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dates"
         android:onClick="neuButton"
-        android:text="Neu" />    
+        android:text="@string/ButtonNeu" />    
     
 </RelativeLayout>
 

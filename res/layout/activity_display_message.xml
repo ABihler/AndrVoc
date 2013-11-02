@@ -31,6 +31,6 @@
         android:layout_toRightOf="@id/message_text"
         android:layout_height="wrap_content"
         android:onClick="okButton"
-        android:text="OK" />
+        android:text="@string/ButtonOK" />
 
 </RelativeLayout>
