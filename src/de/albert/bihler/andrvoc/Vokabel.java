@@ -1,10 +1,16 @@
 package de.albert.bihler.andrvoc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 
 public class Vokabel {
 	public String name;
 	public String translation;
 	public String alt_translation;
+	public List<String> altList;
 		
 	public Vokabel() {
 		name="excuse me";
@@ -22,5 +28,15 @@ public class Vokabel {
 		translation=t;
 		alt_translation=a;
 	}
-
+	
+	public Vokabel (String v, String t, List<String> l)
+	{
+		name=v;
+		translation=t;
+				
+		List<String> list = new ArrayList<String>();
+		list.addAll(l);
+		list.add(v);
+		altList = list;
+	}
 }

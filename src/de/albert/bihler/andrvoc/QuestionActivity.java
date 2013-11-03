@@ -1,5 +1,10 @@
 package de.albert.bihler.andrvoc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
@@ -7,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
@@ -15,27 +21,46 @@ public class QuestionActivity extends Activity {
 //	private Spinner spinner findViewById(R.id.question_spinner_answer);
 	private TextView textWord;
 	private TextView textResult;
+	private TextView textStatus;
 	private Spinner answerSpinner;
+	private List<String> stringList;
+	private List<Vokabel> vocList;
+	private int numTest = 0;
+	private int actTest = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
 
+		textStatus = (TextView) findViewById(R.id.question_field_status);
+		textStatus.setText("Status: unbekannt");
+		loadVocabulary();
+		numTest=vocList.size();
+
+		
 		textWord = (TextView) findViewById(R.id.question_field_word);
-        textWord.setText("morgens");
+        textWord.setText(vocList.get(0).translation);
         textResult = (TextView) findViewById(R.id.question_field_result);
         textResult.setText("");
-        
-        //      spinner.setOnItemSelectedListener(new OnItemSelectedListener();
+//        
+//        //      //spinner.setOnItemSelectedListener(new OnItemSelectedListener();
         answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
-                
-        
-        String array_spinner[]=new String[5];
-        array_spinner[0]="at the morning";
-        array_spinner[1]="in the morning";
-        array_spinner[2]="morning";
-        array_spinner[3]="during the morning";
-        array_spinner[4]="it's morning";
+//
+        int max = vocList.get(0).altList.size();
+        	String array_spinner[]=new String[max];
+        	
+        	try{
+	        	for (int i = 0; i <= max -1 ; i++ )
+	        	{
+	        		array_spinner[i]=vocList.get(0).altList.get(i);			
+	        	}
+        	}
+	    		catch (Exception e)
+	    		{
+	    			exceptionOutput("Exception: " + e.toString());
+	    		}
+	        	
         
         ArrayAdapter adapter = new ArrayAdapter(this,
         		R.layout.spinner_list, array_spinner);
@@ -43,8 +68,8 @@ public class QuestionActivity extends Activity {
         adapter.setDropDownViewResource(R.layout.spinner);
                 
         answerSpinner.setAdapter(adapter);
-        
-        //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
+//        
+//         // //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
 	}
 
 	@Override
@@ -58,10 +83,10 @@ public class QuestionActivity extends Activity {
 	public void doCheck(View view) {
 		Spinner answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		String answer = answerSpinner.getSelectedItem().toString();
-		if (answer.equals("in the morning")) {
+		if (answer.equals(vocList.get(actTest).name)) {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
 	    	textResult.setTextColor(Color.GREEN);
-	        textResult.setText("Richtig!!!");
+	        textResult.setText("Die Antwort ist richtig!!!");
 	    }
 	    else {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
@@ -72,21 +97,8 @@ public class QuestionActivity extends Activity {
 	
 	// Nächste Frage
 	public void doNext(View view) {
-		textWord.setText("Entschuldigen Sie bitte.");
 		clearResult();
-		
-		String array_spinner[]=new String[4];
-        array_spinner[0]="sorry";
-        array_spinner[1]="I'm sorry";
-        array_spinner[2]="excuse me";
-        array_spinner[3]="excuse please";
-//        array_spinner[4]="it's morning";
-        ArrayAdapter adapter = new ArrayAdapter(this,
-        		R.layout.spinner_list, array_spinner);
-        
-        adapter.setDropDownViewResource(R.layout.spinner);
-                
-        answerSpinner.setAdapter(adapter);
+		actTest++;
         
 	}
 	
@@ -95,6 +107,23 @@ public class QuestionActivity extends Activity {
 		   textResult.setText("");
 	   }
 	
+	   
+private void exceptionOutput(String s)
+{
+	textStatus.setText(s);
+}
+private void loadVocabulary()
+{
+	//List<String> list = Arrays.asList("test,foo,bar".split(","));
+	stringList= Arrays.asList("milc#milch#mulk".split("#"));
+	Vokabel v = new Vokabel ("milk", "Milch", stringList);
+	
+	vocList = new ArrayList<Vokabel>(Arrays.asList(v));
+	stringList= Arrays.asList("toogeter#togeter#toogether".split("#"));
+	Vokabel v2 = new Vokabel ("together", "zusammen", stringList);
+	vocList.add(v2);
+}
+
 //   public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 //	        // your code here
 //	    }
@@ -104,5 +133,42 @@ public class QuestionActivity extends Activity {
 //	        // your code here
 //	    }
 	
+	/*
+	I'm sorry	Enschuldigung, tut mir leid
+	together	zusammen
+	her	ihr, ihre
+	our	uneser, unsere
+	It's my turn.	Ich bin dran.
+	wrong	falsch, verkehrt
+	Sit with me	Setz dich. Setzt euch zu mir.
+	come	komm, kommt
+	Don't listen to Dan	Hör nich auf Dan.
+	mad	verrückt
+	first	zuerst, als erster
+	nervous	nervös, aufgeregt
+	student	Schüler, Student
+	lesson	(Unterrichts-)Stunde
+	before	vor (zeitlich)
+	mobile phone	Handy, Mobiltetefon
+	milk	Milch
+	box	Kiste, Kasten, Kästchen
+	word	Wort
+	in the morning	am morgen, mogrens
+	marmalada	Orangenmarmalade
+	there are	es sind (vorhanden), es gibt
+	there's	es ist (vorhanden), eg gibt
+	comic	Comic(-heft)
+	lots fo	viele, eine Menge, viel
+	You're welcome	Gern geschehen. Nichts zu danken
+	back to Germany	zurück nach Deutschland
+	trip	Reise, Ausflug
+	excuse me	Entschuldigung, entschuldigen sie,
+	Good luck (with)	Viel Glück (bei/mit)
+	at work	bei der Arbeit, am Arbeitsplatz
+	wheelchair	Rollstuhl
+	They welcome you to…	Sie heißen dich in … willkommen
+	parrot	Papagei
 	
+	*/
+
 }

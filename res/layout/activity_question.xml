@@ -70,4 +70,12 @@
         android:text="@string/question_button_next"
         />
 
+      <TextView
+        android:id="@+id/question_field_status"
+		android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_below="@+id/question_button_next"
+        
+        android:text="@string/question_field_status" />
 </RelativeLayout>
