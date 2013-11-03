@@ -17,6 +17,7 @@
     <string name="ButtonFertig">Fertig</string>
     <string name="title_activity_question">Frage</string>
     <string name="question_button_check">Prüfen</string>
+    <string name="question_button_next">Weiter…</string>
     <string name="question_field_result"></string>
     
     
