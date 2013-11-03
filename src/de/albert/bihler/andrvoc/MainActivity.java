@@ -76,10 +76,13 @@ public class MainActivity extends Activity {
     
     /** Called when the user clicks the start question button*/
     public void startQuestion(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        String message = "Hier geht es jetzt mit dem Vokabeltrauning los…";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+//        Intent intent = new Intent(this, DisplayMessageActivity.class);
+//        String message = "Hier geht es jetzt mit dem Vokabeltrauning los…";
+//        intent.putExtra(EXTRA_MESSAGE, message);
+//        startActivity(intent);
+    	
+    	Intent intent = new Intent(this, QuestionActivity.class);
+    	startActivity(intent);
     }        
     
     

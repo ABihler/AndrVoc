@@ -15,7 +15,9 @@
     <string name="ButtonNeu">Neu</string>
     <string name="ButtonOK">OK</string>
     <string name="ButtonFertig">Fertig</string>
-    
+    <string name="title_activity_question">Frage</string>
+    <string name="question_button_check">Prüfen</string>
+    <string name="question_field_result"></string>
     
     
 
