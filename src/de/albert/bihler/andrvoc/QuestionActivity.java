@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -28,6 +29,8 @@ public class QuestionActivity extends Activity {
 	private List<Vokabel> vocList;
 	private int numTest = 0;
 	private int actTest = 0;
+	private int numRightAnswers = 0;
+	private int numWrongAnswers = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +39,12 @@ public class QuestionActivity extends Activity {
 
 		setStatus("Status: unbekannt");
 		loadVocabulary();
+		randomizeList();
 		
 		if (numTest > 0)
 		{
 			populateFields(actTest);
 		}
-
-		
-//        
 //         // //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
 	}
 
@@ -55,6 +56,7 @@ public class QuestionActivity extends Activity {
 	}
 
 	// Check answer
+	// TODO:Mechanismus einbauen, der verhindert, dass man mehrmals erfolgreich prüfen kann.
 	public void doCheck(View view) {
 		Spinner answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		String answer = answerSpinner.getSelectedItem().toString();
@@ -62,24 +64,26 @@ public class QuestionActivity extends Activity {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
 	    	textResult.setTextColor(Color.GREEN);
 	        textResult.setText("Die Antwort ist richtig!!!");
+	        numRightAnswers++;
 	    }
 	    else {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
 	    	textResult.setTextColor(Color.RED);
 	        textResult.setText("Die Antwort ist leider falsch.");
+	        numWrongAnswers++;
 	    }
+		setStatus(getStasiticString());
 	}
 	
 	// Nächste Frage
 	public void doNext(View view) {
 		
-		//TODO ist hier noch nicht sauber. Steigt aus, wenn Ende der Liste erreicht ist.
-		if (actTest <= numTest -1)
+		if (actTest <= (numTest -2))
 		{
 			clearResult();
-			setStatus("Fragen:" + actTest);
 			actTest++;
 			populateFields(actTest);
+			//setStatus("act:" + actTest + " num:" + numTest + "min2 "+(numTest -2));
 		}
 		else
 		{
@@ -90,6 +94,8 @@ public class QuestionActivity extends Activity {
 	// Füllt Felder mit Daten aus Vokabel Objekt
 	private void populateFields(int index)
 	   {
+		setStatus(getStasiticString());
+		
 		textWord = (TextView) findViewById(R.id.question_field_word);
         textWord.setText(vocList.get(index).translation);
         textResult = (TextView) findViewById(R.id.question_field_result);
@@ -102,6 +108,8 @@ public class QuestionActivity extends Activity {
         	String array_spinner[]=new String[max];
         	
         	try{
+        		
+        		vocList.get(index).randomizeList();
 	        	for (int i = 0; i <= max -1 ; i++ )
 	        	{
 	        		array_spinner[i]=vocList.get(index).altList.get(i);			
@@ -122,6 +130,21 @@ public class QuestionActivity extends Activity {
 
 	   }
 	
+	// Schüttelt die Liste der Vokabeln durcheinander
+	public void randomizeList()
+	{
+		Random rand = new Random();
+	    for(int i = 1; i<= 100; i++)
+	    {
+	        int r1 = rand.nextInt(vocList.size());
+	        int r2 = rand.nextInt(vocList.size());
+	        Vokabel v1 = vocList.get(r1);
+	        Vokabel v2 = vocList.get(r2);
+	        vocList.set(r1, v2);
+	        vocList.set(r2, v1);
+	    }
+	}
+	
 	   private void clearResult()
 	   {
 		   textResult.setText("");
@@ -138,6 +161,13 @@ private void exceptionOutput(String s)
 {
 	textStatus.setText(s);
 }
+
+private String getStasiticString()
+{
+	String stat = "Statistik:" + numRightAnswers + " richtig und " + numWrongAnswers + " falsch.";
+	return stat;
+}
+
 private void loadVocabulary()
 {
 	try
@@ -159,9 +189,17 @@ private void loadVocabulary()
 	Vokabel v4 = new Vokabel (new ArrayList<String>(Arrays.asList("unser, unsere#our#hers#his#us#we".split("#"))));
 	vocList.add(v4);
 	vocList.add(new Vokabel (new ArrayList<String>(Arrays.asList("Ich bin dran.#It's my turn.#It's me#his#us#we".split("#")))));
-//	
+	vocList.add(new Vokabel("falsch, verkehrt#wrong#rong#fals#bring#ring#brong"));
+	
+	vocList.add(new Vokabel("Setz dich. Setzt euch zu mir.#Sit with me.#Sit down.#Sit you.#You ist with"));
+	vocList.add(new Vokabel("komm, kommt#come#came#com#cam#comes"));	
+	vocList.add(new Vokabel("Hör nich auf Dan.#Don't listen to Dan.#Listen not Dan.#Don't to Dan listen#Don't you listen Dan."));
+	vocList.add(new Vokabel("verrückt#mad#mat#med#mat"));
+	vocList.add(new Vokabel("zuerst, als erster#first#farst#ferst#prime#primes"));
+//	vocList.add(new Vokabel("nervous	nervös, aufgeregt
+//	vocList.add(new Vokabel("student	Schüler, Student
+//	vocList.add(new Vokabel("lesson	(Unterrichts-)Stunde
 	numTest = vocList.size();
-
 	}
 	catch (Exception e)
 	    		{
@@ -179,21 +217,7 @@ private void loadVocabulary()
 //	    }
 	
 	/*
-	I'm sorry	Enschuldigung, tut mir leid
-	together	zusammen
-	her	ihr, ihre
-	our	uneser, unsere
-	It's my turn.	Ich bin dran.
-	wrong	falsch, verkehrt
-	Sit with me	Setz dich. Setzt euch zu mir.
-	come	komm, kommt
-	Don't listen to Dan	Hör nich auf Dan.
-	mad	verrückt
-	first	zuerst, als erster
-	nervous	nervös, aufgeregt
-	student	Schüler, Student
-	lesson	(Unterrichts-)Stunde
-	before	vor (zeitlich)
+
 	mobile phone	Handy, Mobiltetefon
 	milk	Milch
 	box	Kiste, Kasten, Kästchen
