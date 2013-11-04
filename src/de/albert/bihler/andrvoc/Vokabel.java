@@ -39,4 +39,20 @@ public class Vokabel {
 		list.add(v);
 		altList = list;
 	}
+	
+	public Vokabel (List<String> l)
+	{
+		translation=l.get(0);
+		name=l.get(1);
+		
+		l.remove(0);
+				
+		//translation="hartcodiert";
+		List<String> list = new ArrayList<String>();
+		list.addAll(l);
+		
+		//list.add(v);
+		altList = list;
+	}
+	
 }

@@ -23,6 +23,7 @@ public class QuestionActivity extends Activity {
 	private TextView textResult;
 	private TextView textStatus;
 	private Spinner answerSpinner;
+	//TODO:String List brauchen wir nicht wirklich
 	private List<String> stringList;
 	private List<Vokabel> vocList;
 	private int numTest = 0;
@@ -33,41 +34,15 @@ public class QuestionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
 
-		textStatus = (TextView) findViewById(R.id.question_field_status);
-		textStatus.setText("Status: unbekannt");
+		setStatus("Status: unbekannt");
 		loadVocabulary();
-		numTest=vocList.size();
+		
+		if (numTest > 0)
+		{
+			populateFields(actTest);
+		}
 
 		
-		textWord = (TextView) findViewById(R.id.question_field_word);
-        textWord.setText(vocList.get(0).translation);
-        textResult = (TextView) findViewById(R.id.question_field_result);
-        textResult.setText("");
-//        
-//        //      //spinner.setOnItemSelectedListener(new OnItemSelectedListener();
-        answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
-//
-        int max = vocList.get(0).altList.size();
-        	String array_spinner[]=new String[max];
-        	
-        	try{
-	        	for (int i = 0; i <= max -1 ; i++ )
-	        	{
-	        		array_spinner[i]=vocList.get(0).altList.get(i);			
-	        	}
-        	}
-	    		catch (Exception e)
-	    		{
-	    			exceptionOutput("Exception: " + e.toString());
-	    		}
-	        	
-        
-        ArrayAdapter adapter = new ArrayAdapter(this,
-        		R.layout.spinner_list, array_spinner);
-        
-        adapter.setDropDownViewResource(R.layout.spinner);
-                
-        answerSpinner.setAdapter(adapter);
 //        
 //         // //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
 	}
@@ -97,16 +72,67 @@ public class QuestionActivity extends Activity {
 	
 	// Nächste Frage
 	public void doNext(View view) {
-		clearResult();
-		actTest++;
-        
+		
+		//TODO ist hier noch nicht sauber. Steigt aus, wenn Ende der Liste erreicht ist.
+		if (actTest <= numTest -1)
+		{
+			clearResult();
+			setStatus("Fragen:" + actTest);
+			actTest++;
+			populateFields(actTest);
+		}
+		else
+		{
+			setStatus("Ende der Lektion erreicht.");
+		}
 	}
+	
+	// Füllt Felder mit Daten aus Vokabel Objekt
+	private void populateFields(int index)
+	   {
+		textWord = (TextView) findViewById(R.id.question_field_word);
+        textWord.setText(vocList.get(index).translation);
+        textResult = (TextView) findViewById(R.id.question_field_result);
+        textResult.setText("");
+//        
+//        //      //spinner.setOnItemSelectedListener(new OnItemSelectedListener();
+        answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+//
+        int max = vocList.get(index).altList.size();
+        	String array_spinner[]=new String[max];
+        	
+        	try{
+	        	for (int i = 0; i <= max -1 ; i++ )
+	        	{
+	        		array_spinner[i]=vocList.get(index).altList.get(i);			
+	        	}
+        	}
+	    		catch (Exception e)
+	    		{
+	    			exceptionOutput("Exception: " + e.toString());
+	    		}
+	        	
+        
+        ArrayAdapter adapter = new ArrayAdapter(this,
+        		R.layout.spinner_list, array_spinner);
+        
+        adapter.setDropDownViewResource(R.layout.spinner);
+                
+        answerSpinner.setAdapter(adapter);
+
+	   }
 	
 	   private void clearResult()
 	   {
 		   textResult.setText("");
 	   }
-	
+	   
+	   // Setzt Statusfeld
+	   private void setStatus(String message)
+	   {
+		   textStatus = (TextView) findViewById(R.id.question_field_status);
+		   textStatus.setText(message);		   
+	   }
 	   
 private void exceptionOutput(String s)
 {
@@ -114,7 +140,8 @@ private void exceptionOutput(String s)
 }
 private void loadVocabulary()
 {
-	//List<String> list = Arrays.asList("test,foo,bar".split(","));
+	try
+	{
 	stringList= Arrays.asList("milc#milch#mulk".split("#"));
 	Vokabel v = new Vokabel ("milk", "Milch", stringList);
 	
@@ -122,6 +149,24 @@ private void loadVocabulary()
 	stringList= Arrays.asList("toogeter#togeter#toogether".split("#"));
 	Vokabel v2 = new Vokabel ("together", "zusammen", stringList);
 	vocList.add(v2);
+	
+	stringList = new ArrayList<String>(Arrays.asList("ihr, ihre,#her#his#she#he#its".split("#")));
+	setStatus(stringList.get(0));
+	Vokabel v3 = new Vokabel (stringList );
+	vocList.add(v3);
+	
+	
+	Vokabel v4 = new Vokabel (new ArrayList<String>(Arrays.asList("unser, unsere#our#hers#his#us#we".split("#"))));
+	vocList.add(v4);
+	vocList.add(new Vokabel (new ArrayList<String>(Arrays.asList("Ich bin dran.#It's my turn.#It's me#his#us#we".split("#")))));
+//	
+	numTest = vocList.size();
+
+	}
+	catch (Exception e)
+	    		{
+	    			exceptionOutput("Load Exception: " + e.toString());
+	    		}
 }
 
 //   public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
