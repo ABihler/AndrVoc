@@ -6,11 +6,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,14 +26,11 @@ import android.widget.ArrayAdapter;
 
 //TODO:Bundle speichern damit beim Drehen nicht wieder von vorne begonnen wird
 public class QuestionActivity extends Activity {
-//	private Spinner spinner findViewById(R.id.question_spinner_answer);
 	private TextView textWord;
 	private TextView textResult;
 	private TextView textStatus;
 	private TextView textLog;
 	private Spinner answerSpinner;
-	//TODO:String List brauchen wir nicht wirklich
-	private List<String> stringList;
 	private List<Vokabel> vocList;
 	private int numTest = 0;
 	private int actTest = 0;
@@ -38,6 +38,7 @@ public class QuestionActivity extends Activity {
 	private int numWrongAnswers = 0;
 	private Button button;
 	private String status ="new";
+	private boolean logActive = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +48,11 @@ public class QuestionActivity extends Activity {
 		button = (Button) findViewById(R.id.question_button_main);
 		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		textLog = (TextView) findViewById(R.id.question_field_log);
+		textLog.setMovementMethod(new ScrollingMovementMethod());
+		
 		textStatus = (TextView) findViewById(R.id.question_field_status);
 		
-		//log("onCreate");
-		
+		log("onCreate");
 
 		setStatusLine("Status: unbekannt");
 		loadVocabulary();
@@ -61,7 +63,6 @@ public class QuestionActivity extends Activity {
 			setStatusCheck();
 			populateFields(actTest);
 		}
-//         // //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
 	}
 
 	@Override
@@ -73,7 +74,6 @@ public class QuestionActivity extends Activity {
 
 	// Check answer
 	public void doCheck(View view) {
-		//Spinner answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		String answer = answerSpinner.getSelectedItem().toString();
 		if (answer.equals(vocList.get(actTest).name)) {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
@@ -133,10 +133,7 @@ public class QuestionActivity extends Activity {
         textWord.setText(vocList.get(index).translation);
         textResult = (TextView) findViewById(R.id.question_field_result);
         textResult.setText("");
-//        
-//        //      //spinner.setOnItemSelectedListener(new OnItemSelectedListener();
-        //answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
-//
+
         int max = vocList.get(index).altList.size();
         	String array_spinner[]=new String[max];
         	
@@ -203,70 +200,70 @@ private void setStatusCheck()
 {
 	status="Check";
 	answerSpinner.setEnabled(true);
-	button.setText("Prüfen");
-	// TODO: Resource statt hardcoded
+	button.setText(R.string.question_button_check);
 }
 
 private void setStatusNext()
 {
 	status="Next";
 	answerSpinner.setEnabled(false);
-	button.setText("Weiter…");
-	// TODO: Resource statt hardcoded
+	button.setText(R.string.question_button_next);
 }
 
 private void log(String s)
 {
-	textLog.append("\n" + s); 
+	if(logActive){
+		textLog.append("\n" + s);
+	}
 }
 private void loadVocabulary()
 {
-//	try
-//	{
-//		Resources res = this.getResources();
-//		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_01);
-//		log(xrp.getName());
-//	}
-//	catch (Exception e)
-//	{
-//		exceptionOutput("Load Exception: " + e.toString());
-//	}
-//	
+	log("loadVocabulary");
+	
 	try
 	{
-	stringList= Arrays.asList("milc#milch#mulk".split("#"));
-	Vokabel v = new Vokabel ("milk", "Milch", stringList);
-	
-	vocList = new ArrayList<Vokabel>(Arrays.asList(v));
-	stringList= Arrays.asList("toogeter#togeter#toogether".split("#"));
-	Vokabel v2 = new Vokabel ("together", "zusammen", stringList);
-	vocList.add(v2);
-	
-	stringList = new ArrayList<String>(Arrays.asList("ihr, ihre,#her#his#she#he#its".split("#")));
-	setStatusLine(stringList.get(0));
-	Vokabel v3 = new Vokabel (stringList );
-	vocList.add(v3);
-	
-	
-	Vokabel v4 = new Vokabel (new ArrayList<String>(Arrays.asList("unser, unsere#our#hers#his#us#we".split("#"))));
-	vocList.add(v4);
-	vocList.add(new Vokabel (new ArrayList<String>(Arrays.asList("Ich bin dran.#It's my turn.#It's me#his#us#we".split("#")))));
-	vocList.add(new Vokabel("falsch, verkehrt#wrong#rong#fals#bring#ring#brong"));
-	
-	vocList.add(new Vokabel("Setz dich. Setzt euch zu mir.#Sit with me.#Sit down.#Sit you.#You ist with"));
-	vocList.add(new Vokabel("komm, kommt#come#came#com#cam#comes"));	
-	vocList.add(new Vokabel("Hör nich auf Dan.#Don't listen to Dan.#Listen not Dan.#Don't to Dan listen#Don't you listen Dan."));
-	vocList.add(new Vokabel("verrückt#mad#mat#med#mat"));
-	vocList.add(new Vokabel("zuerst, als erster#first#farst#ferst#prime#primes"));
-//	vocList.add(new Vokabel("nervous	nervös, aufgeregt
-//	vocList.add(new Vokabel("student	Schüler, Student
-//	vocList.add(new Vokabel("lesson	(Unterrichts-)Stunde
-	numTest = vocList.size();
+		Resources res = this.getResources();
+		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_01);
+		int eventType = xrp.getEventType();
+		
+		String tag = "";
+		   while (eventType != XmlPullParser.END_DOCUMENT)
+		   {
+//			   if(eventType == XmlPullParser.START_DOCUMENT)
+//			    {
+//			     log("--- Start XML ---");
+//			    }
+			    if(eventType == XmlPullParser.START_TAG)
+			    {
+//			     log("\nSTART_TAG: "+xrp.getName());
+			     tag = xrp.getName();
+			    }
+//			    else if(eventType == XmlPullParser.END_TAG)
+//			    {
+//			     log("\nEND_TAG: "+xrp.getName());
+//			    }
+			    else if(eventType == XmlPullParser.TEXT)
+			    {
+			    	log("\nTEXT: "+xrp.getText());
+			    	String line = xrp.getText();
+			    	if("VokLine".equalsIgnoreCase(tag))
+			    	{
+			    		if(vocList == null){
+			    			vocList = new ArrayList<Vokabel>(Arrays.asList(new Vokabel(line)));
+			    		}
+			    		else{
+			    			vocList.add(new Vokabel(line));
+			    		}
+			    	}
+			    }
+			   eventType = xrp.next();
+		   }
+			numTest = vocList.size();	
+		}
+		catch (Exception e){
+			exceptionOutput("Load Exception: " + e.toString());
+		}
 	}
-	catch (Exception e)
-	    		{
-	    			exceptionOutput("Load Exception: " + e.toString());
-	    		}
 }
 
 //   public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -277,29 +274,3 @@ private void loadVocabulary()
 //    public void onNothingSelected(AdapterView<?> parentView) {
 //	        // your code here
 //	    }
-	
-	/*
-
-	mobile phone	Handy, Mobiltetefon
-	milk	Milch
-	box	Kiste, Kasten, Kästchen
-	word	Wort
-	in the morning	am morgen, mogrens
-	marmalada	Orangenmarmalade
-	there are	es sind (vorhanden), es gibt
-	there's	es ist (vorhanden), eg gibt
-	comic	Comic(-heft)
-	lots fo	viele, eine Menge, viel
-	You're welcome	Gern geschehen. Nichts zu danken
-	back to Germany	zurück nach Deutschland
-	trip	Reise, Ausflug
-	excuse me	Entschuldigung, entschuldigen sie,
-	Good luck (with)	Viel Glück (bei/mit)
-	at work	bei der Arbeit, am Arbeitsplatz
-	wheelchair	Rollstuhl
-	They welcome you to…	Sie heißen dich in … willkommen
-	parrot	Papagei
-	
-	*/
-
-}

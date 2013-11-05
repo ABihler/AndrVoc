@@ -33,48 +33,6 @@
         android:layout_below="@+id/whiteLine01"
         />
     
-<!-- 	<EditText android:id="@+id/edit_message" -->
-<!-- 	    android:layout_below="@+id/div02" -->
-<!--         android:layout_width="200dp" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:hint="@string/Text_Erinnerung" -->
-<!--         android:singleLine="true" -->
-<!--     /> -->
-    
-<!--     <Button -->
-<!--         android:id="@+id/button_fertig" -->
-<!--         android:layout_below="@+id/div02" -->
-<!--         android:layout_width="150dp" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_toRightOf="@id/edit_message" -->
-<!--         android:onClick="sendMessage" -->
-<!--         android:text="@string/ButtonFertig" /> -->
-
-<!--     <Spinner -->
-<!--         android:id="@+id/planets_spinner" -->
-<!--         android:layout_width="150dp" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_below="@+id/edit_message" -->
-<!--         android:layout_alignParentLeft="true" -->
-<!--         android:spinnerMode="dropdown" -->
-<!--          />     -->
-  
-<!--           <Spinner -->
-<!--         android:id="@+id/dates" -->
-<!--         android:layout_width="200dp" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_below="@+id/planets_spinner" -->
-<!--         android:layout_alignParentLeft="true" -->
-<!--         android:spinnerMode="dropdown" /> -->
-    	
-<!--     	<Button -->
-<!--         android:id="@+id/neu" -->
-<!--         android:layout_width="100dp" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_below="@id/dates" -->
-<!--         android:onClick="neuButton" -->
-<!--         android:text="@string/ButtonNeu" />     -->
-    
 </RelativeLayout>
 
 
