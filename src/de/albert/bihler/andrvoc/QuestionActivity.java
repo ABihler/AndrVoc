@@ -8,6 +8,8 @@ import java.util.Random;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
@@ -25,6 +27,7 @@ public class QuestionActivity extends Activity {
 	private TextView textWord;
 	private TextView textResult;
 	private TextView textStatus;
+	private TextView textLog;
 	private Spinner answerSpinner;
 	//TODO:String List brauchen wir nicht wirklich
 	private List<String> stringList;
@@ -40,14 +43,19 @@ public class QuestionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
+		
+		button = (Button) findViewById(R.id.question_button_main);
+		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+		textLog = (TextView) findViewById(R.id.question_field_log);
+		textStatus = (TextView) findViewById(R.id.question_field_status);
+		
+		//log("onCreate");
+		
 
 		setStatusLine("Status: unbekannt");
 		loadVocabulary();
 		randomizeList();
 
-		button = (Button) findViewById(R.id.question_button_main);
-		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
-		
 		if (numTest > 0)
 		{
 			setStatusCheck();
@@ -127,7 +135,7 @@ public class QuestionActivity extends Activity {
         textResult.setText("");
 //        
 //        //      //spinner.setOnItemSelectedListener(new OnItemSelectedListener();
-        answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+        //answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 //
         int max = vocList.get(index).altList.size();
         	String array_spinner[]=new String[max];
@@ -144,15 +152,13 @@ public class QuestionActivity extends Activity {
 	    		{
 	    			exceptionOutput("Exception: " + e.toString());
 	    		}
-	        	
-        
-        ArrayAdapter adapter = new ArrayAdapter(this,
-        		R.layout.spinner_list, array_spinner);
-        
-        adapter.setDropDownViewResource(R.layout.spinner);
-                
-        answerSpinner.setAdapter(adapter);
-
+        	
+            ArrayAdapter adapter = new ArrayAdapter(this,
+            		R.layout.spinner_list, array_spinner);
+                    adapter.setDropDownViewResource(R.layout.spinner);
+                    
+            answerSpinner.setAdapter(adapter);
+        	
 	   }
 	
 	// Schüttelt die Liste der Vokabeln durcheinander
@@ -209,8 +215,23 @@ private void setStatusNext()
 	// TODO: Resource statt hardcoded
 }
 
+private void log(String s)
+{
+	textLog.append("\n" + s); 
+}
 private void loadVocabulary()
 {
+//	try
+//	{
+//		Resources res = this.getResources();
+//		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_01);
+//		log(xrp.getName());
+//	}
+//	catch (Exception e)
+//	{
+//		exceptionOutput("Load Exception: " + e.toString());
+//	}
+//	
 	try
 	{
 	stringList= Arrays.asList("milc#milch#mulk".split("#"));

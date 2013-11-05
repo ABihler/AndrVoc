@@ -21,6 +21,8 @@
     <string name="question_button_main">main</string>
     <string name="question_field_result"></string>
     <string name="question_field_status"></string>
+    <string name="question_field_log"></string>
+    
     
     
 

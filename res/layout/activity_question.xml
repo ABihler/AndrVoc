@@ -72,5 +72,12 @@
         />		
 
 
+        <TextView
+        android:id="@+id/question_field_log"
+		android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_below="@+id/question_button_main"
+        android:text="@string/question_field_log" />
 
 </RelativeLayout>
