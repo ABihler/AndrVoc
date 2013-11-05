@@ -15,7 +15,7 @@
         android:layout_height="80dp"
         android:text="@string/hello_world" />
     
-        <View style="@style/Divider"
+     <View style="@style/Divider"
         android:id="@+id/question_div01"
         android:layout_below="@+id/question_field_word" />
      
@@ -40,42 +40,37 @@
         android:layout_below="@+id/question_div02"
         android:text="@string/question_field_result" />
      
-
       <View style="@style/Divider"
         android:id="@+id/question_div03"
         android:layout_below="@+id/question_field_result" />
       
-     <Button
-        android:id="@+id/question_button_check"
-        android:layout_width="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="50dp"
-		android:layout_below="@+id/question_div03"
-        android:onClick="doCheck"
-        android:text="@string/question_button_check"
-        />
-     
-      <View style="@style/WhiteLineSpace"
-        android:id="@+id/question_WhiteLine01"
-        android:layout_below="@+id/question_button_check"
-        />
-      
-       <Button
-        android:id="@+id/question_button_next"
-        android:layout_width="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="50dp"
-		android:layout_below="@+id/question_WhiteLine01"
-        android:onClick="doNext"
-        android:text="@string/question_button_next"
-        />
-
       <TextView
         android:id="@+id/question_field_status"
 		android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:layout_below="@+id/question_button_next"
-        
+        android:layout_below="@+id/question_div03"
         android:text="@string/question_field_status" />
+
+      <View style="@style/Divider"
+        android:id="@+id/question_div04"
+        android:layout_below="@+id/question_field_result" />
+           
+      <View style="@style/WhiteLineSpace"
+        android:id="@+id/question_WhiteLine01"
+        android:layout_below="@+id/question_div04"
+        />
+      
+     <Button
+        android:id="@+id/question_button_main"
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
+		android:layout_below="@+id/question_WhiteLine01"
+        android:onClick="doMain"
+        android:text="@string/question_button_main"
+        />		
+
+
+
 </RelativeLayout>

@@ -18,6 +18,7 @@
     <string name="title_activity_question">Frage</string>
     <string name="question_button_check">Prüfen</string>
     <string name="question_button_next">Weiter…</string>
+    <string name="question_button_main">main</string>
     <string name="question_field_result"></string>
     <string name="question_field_status"></string>
     

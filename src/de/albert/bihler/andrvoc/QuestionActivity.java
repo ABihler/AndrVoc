@@ -13,11 +13,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
 
+//TODO:Bundle speichern damit beim Drehen nicht wieder von vorne begonnen wird
 public class QuestionActivity extends Activity {
 //	private Spinner spinner findViewById(R.id.question_spinner_answer);
 	private TextView textWord;
@@ -31,18 +33,24 @@ public class QuestionActivity extends Activity {
 	private int actTest = 0;
 	private int numRightAnswers = 0;
 	private int numWrongAnswers = 0;
+	private Button button;
+	private String status ="new";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
 
-		setStatus("Status: unbekannt");
+		setStatusLine("Status: unbekannt");
 		loadVocabulary();
 		randomizeList();
+
+		button = (Button) findViewById(R.id.question_button_main);
+		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		
 		if (numTest > 0)
 		{
+			setStatusCheck();
 			populateFields(actTest);
 		}
 //         // //answerSpinner.setOnItemSelectedListener(new OnItemSelectedListener());
@@ -56,23 +64,40 @@ public class QuestionActivity extends Activity {
 	}
 
 	// Check answer
-	// TODO:Mechanismus einbauen, der verhindert, dass man mehrmals erfolgreich prüfen kann.
 	public void doCheck(View view) {
-		Spinner answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+		//Spinner answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 		String answer = answerSpinner.getSelectedItem().toString();
 		if (answer.equals(vocList.get(actTest).name)) {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
 	    	textResult.setTextColor(Color.GREEN);
 	        textResult.setText("Die Antwort ist richtig!!!");
 	        numRightAnswers++;
+	        setStatusNext();
 	    }
 	    else {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
 	    	textResult.setTextColor(Color.RED);
 	        textResult.setText("Die Antwort ist leider falsch.");
 	        numWrongAnswers++;
+	        setStatusCheck();
 	    }
-		setStatus(getStasiticString());
+		setStatusLine(getStasiticString());
+	}
+	
+	public void doMain(View view)
+	{
+		if ("Next".equals(status))
+		{
+			doNext(view);
+		}
+		else if ("Check".equals(status))
+		{
+			doCheck(view);
+		}
+		else
+		{
+			setStatusLine("unknown status: " + status);
+		}
 	}
 	
 	// Nächste Frage
@@ -83,18 +108,18 @@ public class QuestionActivity extends Activity {
 			clearResult();
 			actTest++;
 			populateFields(actTest);
-			//setStatus("act:" + actTest + " num:" + numTest + "min2 "+(numTest -2));
+			setStatusCheck();
 		}
 		else
 		{
-			setStatus("Ende der Lektion erreicht.");
+			setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
 		}
 	}
 	
 	// Füllt Felder mit Daten aus Vokabel Objekt
 	private void populateFields(int index)
 	   {
-		setStatus(getStasiticString());
+		setStatusLine(getStasiticString());
 		
 		textWord = (TextView) findViewById(R.id.question_field_word);
         textWord.setText(vocList.get(index).translation);
@@ -151,7 +176,7 @@ public class QuestionActivity extends Activity {
 	   }
 	   
 	   // Setzt Statusfeld
-	   private void setStatus(String message)
+	   private void setStatusLine(String message)
 	   {
 		   textStatus = (TextView) findViewById(R.id.question_field_status);
 		   textStatus.setText(message);		   
@@ -168,6 +193,22 @@ private String getStasiticString()
 	return stat;
 }
 
+private void setStatusCheck()
+{
+	status="Check";
+	answerSpinner.setEnabled(true);
+	button.setText("Prüfen");
+	// TODO: Resource statt hardcoded
+}
+
+private void setStatusNext()
+{
+	status="Next";
+	answerSpinner.setEnabled(false);
+	button.setText("Weiter…");
+	// TODO: Resource statt hardcoded
+}
+
 private void loadVocabulary()
 {
 	try
@@ -181,7 +222,7 @@ private void loadVocabulary()
 	vocList.add(v2);
 	
 	stringList = new ArrayList<String>(Arrays.asList("ihr, ihre,#her#his#she#he#its".split("#")));
-	setStatus(stringList.get(0));
+	setStatusLine(stringList.get(0));
 	Vokabel v3 = new Vokabel (stringList );
 	vocList.add(v3);
 	
