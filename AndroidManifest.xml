@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name="de.albert.bihler.andrvoc.QuestionActivity"
-            android:label="@string/title_activity_question" >
+            android:label="@string/title_activity_question" 
+            android:configChanges="orientation|screenSize" >
         </activity>
     </application>
 
