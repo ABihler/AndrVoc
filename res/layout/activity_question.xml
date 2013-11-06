@@ -20,13 +20,13 @@
         android:layout_below="@+id/question_field_word" />
      
      <Spinner
-        android:id="@+id/question_spinner_answer"
-		android:textSize="20sp"
-        android:layout_width="wrap_content"
-		android:layout_height="80dp"
-        android:layout_below="@+id/question_div01"
-        android:layout_alignParentLeft="true"
-        android:spinnerMode="dropdown" />
+         android:id="@+id/question_spinner_answer"
+         android:layout_width="fill_parent"
+         android:layout_height="80dp"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/question_div01"
+         android:spinnerMode="dropdown"
+         android:textSize="20sp" />
 
       <View style="@style/Divider"
         android:id="@+id/question_div02"
