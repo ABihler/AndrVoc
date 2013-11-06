@@ -32,6 +32,22 @@
         android:id="@+id/div02"
         android:layout_below="@+id/whiteLine01"
         />
+
+        
+      <View style="@style/WhiteLineSpace"
+        android:id="@+id/whiteLine03"
+        android:layout_below="@+id/div02"
+       />
+
+      <Spinner
+         android:id="@+id/main_spinner_unit"
+         android:layout_width="fill_parent"
+         android:layout_height="80dp"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/whiteLine03"
+         android:spinnerMode="dropdown"
+         android:textSize="20sp" />
+        
     
 </RelativeLayout>
 

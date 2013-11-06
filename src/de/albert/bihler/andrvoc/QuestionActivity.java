@@ -39,11 +39,18 @@ public class QuestionActivity extends Activity {
 	private Button button;
 	private String status ="new";
 	private boolean logActive = false;
+	private AppPreferences appPrefs;
+	private int currentUnitID;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
+		
+    	appPrefs = new AppPreferences(getApplicationContext());
+    	//String someString = appPrefs.getUnit();
+    	currentUnitID = appPrefs.getUnitID();
 		
 		button = (Button) findViewById(R.id.question_button_main);
 		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
@@ -223,8 +230,12 @@ private void loadVocabulary()
 	try
 	{
 		Resources res = this.getResources();
-		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
+		//XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
+		XmlResourceParser xrp = res.getXml(currentUnitID);
+
 		int eventType = xrp.getEventType();
+		log("CurrentUnitId:" + currentUnitID);
+		
 		
 		String tag = "";
 		   while (eventType != XmlPullParser.END_DOCUMENT)
