@@ -24,7 +24,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
 
-//TODO:Bundle speichern damit beim Drehen nicht wieder von vorne begonnen wird
 public class QuestionActivity extends Activity {
 	private TextView textWord;
 	private TextView textResult;
@@ -50,7 +49,7 @@ public class QuestionActivity extends Activity {
 		
     	appPrefs = new AppPreferences(getApplicationContext());
     	//String someString = appPrefs.getUnit();
-    	currentUnitID = appPrefs.getUnitID();
+    	currentUnitID = appPrefs.getUnitID(getApplicationContext());
 		
 		button = (Button) findViewById(R.id.question_button_main);
 		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
@@ -234,6 +233,7 @@ private void loadVocabulary()
 		XmlResourceParser xrp = res.getXml(currentUnitID);
 
 		int eventType = xrp.getEventType();
+		log("CurrentUnit:" + appPrefs.getUnit());
 		log("CurrentUnitId:" + currentUnitID);
 		
 		
@@ -255,7 +255,7 @@ private void loadVocabulary()
 //			    }
 			    else if(eventType == XmlPullParser.TEXT)
 			    {
-			    	log("\nTEXT: "+xrp.getText());
+			    //	log("\nTEXT: "+xrp.getText());
 			    	String line = xrp.getText();
 			    	if("VokLine".equalsIgnoreCase(tag))
 			    	{
