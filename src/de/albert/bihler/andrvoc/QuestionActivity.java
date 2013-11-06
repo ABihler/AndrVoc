@@ -223,7 +223,7 @@ private void loadVocabulary()
 	try
 	{
 		Resources res = this.getResources();
-		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_01);
+		XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
 		int eventType = xrp.getEventType();
 		
 		String tag = "";
