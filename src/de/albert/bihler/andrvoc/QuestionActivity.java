@@ -2,7 +2,6 @@ package de.albert.bihler.andrvoc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -16,10 +15,8 @@ import android.graphics.Color;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
+
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
@@ -37,7 +34,7 @@ public class QuestionActivity extends Activity {
 	private int numWrongAnswers = 0;
 	private Button button;
 	private String status ="new";
-	private boolean logActive = false;
+	private boolean logActive = true;
 	private AppPreferences appPrefs;
 	private int currentUnitID;
 
@@ -83,10 +80,18 @@ public class QuestionActivity extends Activity {
 		String answer = answerSpinner.getSelectedItem().toString();
 		if (answer.equals(vocList.get(actTest).name)) {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
-	    	textResult.setTextColor(Color.GREEN);
+	    	textResult.setTextColor(Color.rgb(50, 205, 50));
 	        textResult.setText("Die Antwort ist richtig!!!");
 	        numRightAnswers++;
 	        setStatusNext();
+	        
+	        setStatusLine(getStasiticString());
+	        // Ende der Lektion
+	        if (actTest == (numTest -1)){
+	        	setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
+	        	button.setEnabled(false);
+	        	//TODO:Statistikausgabe, Button evtl. auf zurück ummappen.
+	        }
 	    }
 	    else {
 	    	textResult = (TextView) findViewById(R.id.question_field_result);
@@ -94,8 +99,8 @@ public class QuestionActivity extends Activity {
 	        textResult.setText("Die Antwort ist leider falsch.");
 	        numWrongAnswers++;
 	        setStatusCheck();
+	        setStatusLine(getStasiticString());
 	    }
-		setStatusLine(getStasiticString());
 	}
 	
 	public void doMain(View view)
@@ -126,7 +131,8 @@ public class QuestionActivity extends Activity {
 		}
 		else
 		{
-			setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
+			// hierher sollten wir aber nie gelangen, weil in doCheck bereits auf das Ende der Lektion geprüft wird.
+			setStatusLine(getStasiticString() + "\nEnde");
 		}
 	}
 	
@@ -156,7 +162,7 @@ public class QuestionActivity extends Activity {
 	    			exceptionOutput("Exception: " + e.toString());
 	    		}
         	
-            ArrayAdapter adapter = new ArrayAdapter(this,
+            ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this,
             		R.layout.spinner_list, array_spinner);
                     adapter.setDropDownViewResource(R.layout.spinner);
                     

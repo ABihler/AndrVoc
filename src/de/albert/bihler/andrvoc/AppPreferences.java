@@ -6,8 +6,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class AppPreferences {
-    public static String CURRENT_UNIT = "en_unit01_01";
-    public static int CURRENT_UNIT_ID = 0;
+    public static String CURRENT_UNIT;
+    public static int CURRENT_UNIT_ID;
     private static final String APP_SHARED_PREFS = AppPreferences.class.getSimpleName(); //  Name of the file -.xml
     private SharedPreferences sharedPrefs;
     private Editor prefsEditor;
@@ -16,6 +16,7 @@ public class AppPreferences {
         this.sharedPrefs = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE);
         this.prefsEditor = sharedPrefs.edit();
     
+        CURRENT_UNIT = sharedPrefs.getString(CURRENT_UNIT, "en_unit00_01");
         CURRENT_UNIT_ID = context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
     }
 
@@ -30,7 +31,5 @@ public class AppPreferences {
     public void saveUnit(String text) {
         prefsEditor.putString(CURRENT_UNIT, text);
         prefsEditor.commit();
-        //TODO:Hier muss die Unit gespeichet werden. Sonst wird sie nicht richtig übernommen.
-        //CURRENT_UNIT_ID = context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
     }
 }

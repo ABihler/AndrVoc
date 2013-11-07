@@ -2,15 +2,11 @@ package de.albert.bihler.andrvoc;
 
 import de.albert.bihler.andrvoc.R;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity {
@@ -24,7 +20,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Vokabel v= new Vokabel();
+        init();
     }
 
     @Override
@@ -32,7 +28,6 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         
-        init();
         return true;
     }
     
@@ -66,7 +61,7 @@ public class MainActivity extends Activity {
     	
     	String unit = unitSpinner.getSelectedItem().toString();
     	appPrefs.saveUnit(unit);
-    	
+    	    	
     	Intent intent = new Intent(this, QuestionActivity.class);
     	startActivity(intent);
     }        
@@ -76,16 +71,14 @@ public class MainActivity extends Activity {
     	
     	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
     	
-    	String array_spinner[]=new String[] {"en_unit00_01", "en_unit01_01", "en_unit01_02"};
-        ArrayAdapter adapter = new ArrayAdapter(this,
+    	String array_spinner[]=new String[] {"benny_01", "en_unit00_01", "en_unit01_01", "en_unit01_02"};
+        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this,
         		R.layout.spinner_list, array_spinner);
                 adapter.setDropDownViewResource(R.layout.spinner);
                 
         unitSpinner.setAdapter(adapter);
     	
     	appPrefs = new AppPreferences(getApplicationContext());
-    	//String someString = appPrefs.getUnit();
-    	//appPrefs.saveUnit("en_unit00_01.xml");
     }
     
 }
