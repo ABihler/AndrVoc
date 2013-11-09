@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 
 	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
 
-	String array_spinner[] = new String[] { "benny_01", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
+	String array_spinner[] = new String[] { "benny_01", "benny_02", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
 	ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
 	adapter.setDropDownViewResource(R.layout.spinner);
 
