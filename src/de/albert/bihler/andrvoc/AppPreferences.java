@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 
 public class AppPreferences {
     public static String CURRENT_UNIT;
+    public static String CURRENT_USER;
     public static int CURRENT_UNIT_ID;
     private static final String APP_SHARED_PREFS = AppPreferences.class.getSimpleName(); //  Name of the file -.xml
     private SharedPreferences sharedPrefs;
@@ -31,5 +32,14 @@ public class AppPreferences {
     public void saveUnit(String text) {
         prefsEditor.putString(CURRENT_UNIT, text);
         prefsEditor.commit();
+    }
+    
+    public void saveUser(String text) {
+        prefsEditor.putString(CURRENT_USER, text);
+        prefsEditor.commit();
+    }
+    
+    public String getUser() {
+        return sharedPrefs.getString(CURRENT_USER, "unknown");
     }
 }

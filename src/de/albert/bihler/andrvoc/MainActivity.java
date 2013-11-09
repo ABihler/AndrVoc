@@ -8,12 +8,15 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
 	private AppPreferences appPrefs;
 	private Spinner unitSpinner;
+	private TextView textLog;
+	private boolean logActive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class MainActivity extends Activity {
 //        String message = "Hardcoded Text " + planet.getSelectedItem().toString();
 //        intent.putExtra(EXTRA_MESSAGE, message);
 //        startActivity(intent);
-    }    
+    }
     
     /** Called when the user clicks the start question button*/
     public void startQuestion(View view) {
@@ -70,7 +73,10 @@ public class MainActivity extends Activity {
     public void init(){
     	
     	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
+    	textLog = (TextView) findViewById(R.id.main_field_log);
+    	log("initialisieren");
     	
+    	//TODO: Das Array aus der DB lesen.
     	String array_spinner[]=new String[] {"benny_01", "benny_02", "en_unit00_01", "en_unit01_01", "en_unit01_02"};
         ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this,
         		R.layout.spinner_list, array_spinner);
@@ -79,6 +85,14 @@ public class MainActivity extends Activity {
         unitSpinner.setAdapter(adapter);
     	
     	appPrefs = new AppPreferences(getApplicationContext());
+    	
+    	appPrefs.saveUser("Erik");
+    	log("User: " + appPrefs.getUser());
     }
     
+	private void log(String s){
+		if(logActive){
+			textLog.append("\n" + s);
+		}
+	}
 }

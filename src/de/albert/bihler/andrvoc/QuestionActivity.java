@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
@@ -20,12 +21,14 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 public class QuestionActivity extends Activity {
 	private TextView textWord;
 	private TextView textResult;
 	private TextView textStatus;
 	private TextView textLog;
+	private TextView textTop;
 	private Spinner answerSpinner;
 	private List<Vokabel> vocList;
 	private int numTest = 0;
@@ -42,19 +45,10 @@ public class QuestionActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//TODO: Hier muss auch noch ein orientation chek her.
 		setContentView(R.layout.activity_question);
 		
-    	appPrefs = new AppPreferences(getApplicationContext());
-    	//String someString = appPrefs.getUnit();
-    	currentUnitID = appPrefs.getUnitID(getApplicationContext());
-		
-		button = (Button) findViewById(R.id.question_button_main);
-		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
-		textLog = (TextView) findViewById(R.id.question_field_log);
-		textLog.setMovementMethod(new ScrollingMovementMethod());
-		
-		textStatus = (TextView) findViewById(R.id.question_field_status);
-		
+		init();
 		log("onCreate");
 
 		setStatusLine("Status: unbekannt");
@@ -68,12 +62,42 @@ public class QuestionActivity extends Activity {
 		}
 	}
 
+	private void init() {
+    	appPrefs = new AppPreferences(getApplicationContext());
+    	currentUnitID = appPrefs.getUnitID(getApplicationContext());
+    	
+    	textTop = (TextView) findViewById(R.id.question_field_top);
+		textLog = (TextView) findViewById(R.id.question_field_log);
+		textLog.setMovementMethod(new ScrollingMovementMethod());
+		textStatus = (TextView) findViewById(R.id.question_field_status);
+		
+		button = (Button) findViewById(R.id.question_button_main);
+		answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.question, menu);
 		return true;
 	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+
+	    // Checks the orientation of the screen
+	    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	        Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+	        setContentView(R.layout.activity_question_land);
+	    } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+	        Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+	        setContentView(R.layout.activity_question);
+	    }
+        init();
+        setStatusCheck();
+        populateFields(actTest);
+	  }
 
 	// Check answer
 	public void doCheck(View view) {
@@ -140,6 +164,7 @@ public class QuestionActivity extends Activity {
 	private void populateFields(int index)
 	   {
 		setStatusLine(getStasiticString());
+		setTopLine();
 		
 		textWord = (TextView) findViewById(R.id.question_field_word);
         textWord.setText(vocList.get(index).translation);
@@ -193,8 +218,15 @@ public class QuestionActivity extends Activity {
 	   // Setzt Statusfeld
 	   private void setStatusLine(String message)
 	   {
-		   textStatus = (TextView) findViewById(R.id.question_field_status);
+		   //textStatus = (TextView) findViewById(R.id.question_field_status);
 		   textStatus.setText(message);		   
+	   }
+
+	   
+	   // Setzt aktuelle TopLine
+	   private void setTopLine()
+	   {
+		   textTop.setText("  Benutzer: " + appPrefs.getUser() + " " +(actTest +1) + "/" + numTest);		   
 	   }
 	   
 private void exceptionOutput(String s)
@@ -228,6 +260,7 @@ private void log(String s)
 		textLog.append("\n" + s);
 	}
 }
+
 private void loadVocabulary()
 {
 	log("loadVocabulary");

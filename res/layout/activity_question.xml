@@ -8,12 +8,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".QuestionActivity" >
 
+        <TextView style="@style/TopLine"
+        android:id="@+id/question_field_top"
+		/>
+    
     <TextView
         android:id="@+id/question_field_word"
 		android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:text="@string/hello_world" />
+        android:text="@string/hello_world"
+    	android:layout_below="@+id/question_field_top"
+    	 />
     
      <View style="@style/Divider"
         android:id="@+id/question_div01"
