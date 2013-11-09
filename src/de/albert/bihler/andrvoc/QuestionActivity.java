@@ -51,6 +51,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 	currentUnitID = appPrefs.getUnitID(getApplicationContext());
 
 	button = (Button) findViewById(R.id.question_button_main);
+	button.setEnabled(false);
 
 	containerGroup = (RadioGroup) findViewById(R.id.answerContainer);
 	containerGroup.setOnCheckedChangeListener(this);
@@ -120,6 +121,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
 	if (actTest <= (numTest - 2)) {
 	    clearResult();
+	    button.setEnabled(false);
 	    actTest++;
 	    populateFields(actTest);
 	    setStatusCheck();
@@ -245,6 +247,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     public void onCheckedChanged(RadioGroup group, int checkedId) {
 	RadioButton radioButton = (RadioButton) findViewById(checkedId);
 	currentSelectedAnswer = (String) radioButton.getText();
+	button.setEnabled(true);
     }
 }
 
