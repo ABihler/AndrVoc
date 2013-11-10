@@ -25,21 +25,29 @@
         style="@style/Divider"
         android:layout_width="300dp"
         android:layout_below="@+id/question_field_word" />
-
-    <Spinner
-        android:id="@+id/question_spinner_answer"
+    
+        <RadioGroup
+        android:id="@+id/answerContainer"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/question_div01"
-        android:spinnerMode="dropdown"
         android:textSize="20sp" />
+
+<!--     <Spinner -->
+<!--         android:id="@+id/question_spinner_answer" -->
+<!--         android:layout_width="300dp" -->
+<!--         android:layout_height="50dp" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/question_div01" -->
+<!--         android:spinnerMode="dropdown" -->
+<!--         android:textSize="20sp" /> -->
 
     <View
         android:id="@+id/question_div02"
         style="@style/Divider"
         android:layout_width="300dp"
-        android:layout_below="@+id/question_spinner_answer" />
+        android:layout_below="@+id/answerContainer" />
 
     <TextView
         android:id="@+id/question_field_result"
