@@ -34,13 +34,13 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     // private Spinner answerSpinner;
     private RadioGroup containerGroup;
     private List<Vokabel> vocList;
-    private int numTest = 0;
+    // private final int numTest = 0;
     private int actTest = 0;
     private int numRightAnswers = 0;
     private int numWrongAnswers = 0;
     private Button button;
     private String status = "new";
-    private boolean logActive = true;
+    private final boolean logActive = true;
     private AppPreferences appPrefs;
     private int currentUnitID;
     private String currentSelectedAnswer;
@@ -55,10 +55,8 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 	log("onCreate");
 
 	setStatusLine("Status: unbekannt");
-	loadVocabulary();
-	// randomizeList();
 
-	if (numTest > 0) {
+	if (vocList.size() > 0) {
 	    setStatusCheck();
 	    populateFields(actTest);
 	}
@@ -86,8 +84,13 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 	log("onCreate");
 
 	setStatusLine("Status: unbekannt");
-	loadVocabulary();
-	// randomizeList();
+
+	// Vokabeln der aktuellen Lektion laden
+	this.vocList = loadVocabulary(currentUnitID);
+
+	// Abfragereihenfolge der Vokabeln mischen
+	Collections.shuffle(this.vocList);
+
     }
 
     @Override
@@ -125,7 +128,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
 	    setStatusLine(getStasiticString());
 	    // Ende der Lektion
-	    if (actTest == (numTest - 1)) {
+	    if (actTest == (vocList.size() - 1)) {
 		setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
 		button.setEnabled(false);
 		// TODO:Statistikausgabe, Button evtl. auf zurück ummappen.
@@ -153,7 +156,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     // Nächste Frage
     public void doNext(View view) {
 
-	if (actTest <= (numTest - 2)) {
+	if (actTest <= (vocList.size() - 2)) {
 	    clearResult();
 	    button.setEnabled(false);
 	    actTest++;
@@ -203,7 +206,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
     // Setzt aktuelle TopLine
     private void setTopLine() {
-	textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + numTest);
+	textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
     }
 
     private void exceptionOutput(String s) {
@@ -233,17 +236,18 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 	}
     }
 
-    private void loadVocabulary() {
+    private ArrayList<Vokabel> loadVocabulary(int currentUnitId) {
 	log("loadVocabulary");
+	ArrayList<Vokabel> vocList = new ArrayList<Vokabel>();
 
 	try {
 	    Resources res = this.getResources();
 	    // XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
-	    XmlResourceParser xrp = res.getXml(currentUnitID);
+	    XmlResourceParser xrp = res.getXml(currentUnitId);
 
 	    int eventType = xrp.getEventType();
 	    log("CurrentUnit:" + appPrefs.getUnit());
-	    log("CurrentUnitId:" + currentUnitID);
+	    log("CurrentUnitId:" + currentUnitId);
 
 	    String tag = "";
 	    while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -272,10 +276,10 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 		}
 		eventType = xrp.next();
 	    }
-	    numTest = vocList.size();
 	} catch (Exception e) {
 	    exceptionOutput("Load Exception: " + e.toString());
 	}
+	return vocList;
     }
 
     @Override
