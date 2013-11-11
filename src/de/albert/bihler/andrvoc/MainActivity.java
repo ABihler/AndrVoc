@@ -15,7 +15,8 @@ public class MainActivity extends Activity {
     private AppPreferences appPrefs;
     private Spinner unitSpinner;
     private TextView textLog;
-    private boolean logActive = true;
+    private final boolean logActive = true;
+    private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,12 @@ public class MainActivity extends Activity {
 	startActivity(intent);
     }
 
+    /** Called when the user clicks the create user button */
+    public void createUser(View view) {
+	Intent intent = new Intent(this, CreateUserActivity.class);
+	startActivity(intent);
+    }
+
     // Zeugs initialisieren.
 
     public void init() {
@@ -74,6 +81,11 @@ public class MainActivity extends Activity {
 	adapter.setDropDownViewResource(R.layout.spinner);
 
 	unitSpinner.setAdapter(adapter);
+
+	db = new DBHelper(getApplicationContext());
+	db.getWritableDatabase();// this line responsible to
+	log(db.getAllUsers().toString());
+	db.closeDB();
 
 	appPrefs = new AppPreferences(getApplicationContext());
 

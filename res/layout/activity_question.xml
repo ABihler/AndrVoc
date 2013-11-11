@@ -17,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:text="@string/hello_world"
+        android:textSize="20sp"
     	android:layout_below="@+id/question_field_top"/>
     
      <View style="@style/Divider"

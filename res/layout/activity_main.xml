@@ -23,14 +23,24 @@
         android:id="@+id/whiteLine02"
         android:layout_below="@+id/start_question"
         />
+        
+        <Button
+        android:id="@+id/create_user"
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
+		android:layout_below="@+id/whiteLine02"
+        android:onClick="createUser"
+        android:text="@string/ButtonCreateUser"
+        />
     <View style="@style/Divider"
         android:id="@+id/div01"
-        android:layout_below="@+id/start_question"
+        android:layout_below="@+id/create_user"
         />
    
         <View style="@style/Divider"
         android:id="@+id/div02"
-        android:layout_below="@+id/whiteLine01"
+        android:layout_below="@+id/create_user"
         />
 
         

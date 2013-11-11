@@ -23,9 +23,9 @@
     <string name="question_field_status"></string>
     <string name="question_field_log"></string>
     <string name="main_field_log"></string>
-    
-    
-    
-    
-
+    <string name="title_activity_create_user">CreateUserActivity</string>
+	<string name="ButtonCreateUser">Benutzer anlegen</string>
+	<string name="createUser_field_label">Benutzername:</string>
+	<string name="createUser_Username_Hint">Benutzername:</string>
+	
 </resources>
