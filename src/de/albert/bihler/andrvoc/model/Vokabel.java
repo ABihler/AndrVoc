@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc;
+package de.albert.bihler.andrvoc.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
