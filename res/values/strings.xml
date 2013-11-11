@@ -23,9 +23,10 @@
     <string name="question_field_status"></string>
     <string name="question_field_log"></string>
     <string name="main_field_log"></string>
-    
-    
-    
-    
+    <string name="server_popup_explanation">Du hast das Programm zum ersten Mal gestartet. Bitte gib den URL deines Vokablservers an. Anschließend werden die Vokabeln von diesem geladen.</string>
+    <string name="save">Speichern</string>
+    <string name="title_activity_vocabulary_server_config">Vokabelserver konfigurieren</string>
+    <string name="no_valid_server">Fehler: Unter dem angegebenen URL befindet sich kein gültiger Vokabelserver!</string>
+    <string name="found_valid_server">Vokabelserver %1$s gefunden. %2$d Lektionen vorhanden. Lade Lektionen.</string>
 
 </resources>

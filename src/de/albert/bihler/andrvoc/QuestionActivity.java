@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import de.albert.bihler.andrvoc.model.Vokabel;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;

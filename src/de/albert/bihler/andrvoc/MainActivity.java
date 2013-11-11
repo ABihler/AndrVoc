@@ -15,14 +15,28 @@ public class MainActivity extends Activity {
     private AppPreferences appPrefs;
     private Spinner unitSpinner;
     private TextView textLog;
-    private boolean logActive = true;
+    private final boolean logActive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
 
-	init();
+	appPrefs = new AppPreferences(getApplicationContext());
+    }
+
+    @Override
+    protected void onResume() {
+	super.onResume();
+
+	if (appPrefs.getVocabularyServer() == null) {
+	    // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
+	    // Konfigurationsmaske anzeigen
+	    startActivity(new Intent(this, VocabularyServerConfig.class));
+	} else {
+	    init();
+	}
+
     }
 
     @Override
@@ -39,17 +53,18 @@ public class MainActivity extends Activity {
 
     /** Called when the user clicks the Neu button */
     public void neuButton(View view) {
-//        Intent intent = new Intent(this, DisplayMessageActivity.class);
-//        //EditText editText = (EditText) findViewById(R.id.edit_message);
-//        Spinner planet =  (Spinner)findViewById(R.id.planets_spinner);
-////        planet.toString();
-//        //.toString();
-//        String message = "Hardcoded Text " + planet.getSelectedItem().toString();
-//        intent.putExtra(EXTRA_MESSAGE, message);
-//        startActivity(intent);
+	// Intent intent = new Intent(this, DisplayMessageActivity.class);
+	// //EditText editText = (EditText) findViewById(R.id.edit_message);
+	// Spinner planet = (Spinner)findViewById(R.id.planets_spinner);
+	// // planet.toString();
+	// //.toString();
+	// String message = "Hardcoded Text " +
+	// planet.getSelectedItem().toString();
+	// intent.putExtra(EXTRA_MESSAGE, message);
+	// startActivity(intent);
     }
-    
-    /** Called when the user clicks the start question button*/
+
+    /** Called when the user clicks the start question button */
     public void startQuestion(View view) {
 
 	String unit = unitSpinner.getSelectedItem().toString();
@@ -61,30 +76,26 @@ public class MainActivity extends Activity {
 
     // Zeugs initialisieren.
 
-    public void init(){
-    	
-    	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
-    	textLog = (TextView) findViewById(R.id.main_field_log);
-    	log("initialisieren");
-    	
-    	//TODO: Das Array aus der DB lesen.
-    	String array_spinner[]=new String[] {"benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02"};
-        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this,
-        		R.layout.spinner_list, array_spinner);
-                adapter.setDropDownViewResource(R.layout.spinner);
-                
-        unitSpinner.setAdapter(adapter);
-    	
-    	appPrefs = new AppPreferences(getApplicationContext());
-    	
-    	appPrefs.saveUser("Erik");
-    	log("User: " + appPrefs.getUser());
-    }
-    
-	private void log(String s){
-		if(logActive){
-			textLog.append("\n" + s);
-		}
-	}
-}
+    public void init() {
 
+	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
+	textLog = (TextView) findViewById(R.id.main_field_log);
+	log("initialisieren");
+
+	// TODO: Das Array aus der DB lesen.
+	String array_spinner[] = new String[] { "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
+	ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
+	adapter.setDropDownViewResource(R.layout.spinner);
+
+	unitSpinner.setAdapter(adapter);
+
+	appPrefs.saveUser("Erik");
+	log("User: " + appPrefs.getUser());
+    }
+
+    private void log(String s) {
+	if (logActive) {
+	    textLog.append("\n" + s);
+	}
+    }
+}

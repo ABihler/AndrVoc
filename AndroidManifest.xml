@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -32,8 +33,12 @@
         </activity>
         <activity
             android:name="de.albert.bihler.andrvoc.QuestionActivity"
-            android:label="@string/title_activity_question" 
-            android:configChanges="orientation|screenSize" >
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_question" >
+        </activity>
+        <activity
+            android:name="de.albert.bihler.andrvoc.VocabularyServerConfig"
+            android:label="@string/title_activity_vocabulary_server_config" >
         </activity>
     </application>
 
