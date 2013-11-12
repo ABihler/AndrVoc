@@ -23,7 +23,21 @@ public class MainActivity extends Activity {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
 
-	init();
+	appPrefs = new AppPreferences(getApplicationContext());
+    }
+
+    @Override
+    protected void onResume() {
+	super.onResume();
+
+	if (appPrefs.getVocabularyServer() == null) {
+	    // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
+	    // Konfigurationsmaske anzeigen
+	    startActivity(new Intent(this, VocabularyServerConfig.class));
+	} else {
+	    init();
+	}
+
     }
 
     @Override
@@ -92,10 +106,11 @@ public class MainActivity extends Activity {
 	appPrefs.saveUser("Erik");
 	log("User: " + appPrefs.getUser());
     }
-
-    private void log(String s) {
-	if (logActive) {
-	    textLog.append("\n" + s);
+    
+	private void log(String s){
+		if(logActive){
+			textLog.append("\n" + s);
+		}
 	}
     }
 }
