@@ -27,5 +27,6 @@
 	<string name="ButtonCreateUser">Benutzer anlegen</string>
 	<string name="createUser_field_label">Benutzername:</string>
 	<string name="createUser_Username_Hint">Benutzername:</string>
+	<string name="Message_Username_empty">Benutzername darf nicht leer sein.</string>
 	
 </resources>

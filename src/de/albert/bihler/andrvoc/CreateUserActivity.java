@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CreateUserActivity extends Activity {
+
+    private AppPreferences appPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_create_user);
+	appPrefs = new AppPreferences(getApplicationContext());
     }
 
     @Override
@@ -23,13 +27,19 @@ public class CreateUserActivity extends Activity {
 
     public void doCreateUser(View view) {
 	TextView username = (TextView) findViewById(R.id.createUser_Username);
-	// TODO: Auf Null prüfen
-	// TODO: Prüfen ob Benutzer bereits in der DB ist.
-	DBHelper db = new DBHelper(getApplicationContext());
-	db.getWritableDatabase();// this line responsible to
-	db.insertUser(username.getText().toString());
-	db.closeDB();
-	this.finish();
+
+	// Leeren Benutzernamen abfangen
+	if (username.getText().toString().length() == 0) {
+	    Toast.makeText(this, R.string.Message_Username_empty, Toast.LENGTH_SHORT).show();
+	} else {
+	    // TODO: Prüfen ob Benutzer bereits in der DB ist.
+	    DBHelper db = new DBHelper(getApplicationContext());
+	    db.getWritableDatabase();
+	    db.insertUser(username.getText().toString());
+	    db.closeDB();
+	    appPrefs.saveUser(username.getText().toString());
+	    this.finish();
+	}
     }
 
 }

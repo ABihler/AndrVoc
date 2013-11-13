@@ -22,7 +22,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class QuestionActivity extends Activity implements OnCheckedChangeListener {
 
@@ -48,8 +47,11 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	// TODO: Hier muss auch noch ein orientation chek her.
-	setContentView(R.layout.activity_question);
+	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	    setContentView(R.layout.activity_question_land);
+	} else {
+	    setContentView(R.layout.activity_question);
+	}
 
 	init();
 	log("onCreate");
@@ -106,10 +108,8 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
 	// Checks the orientation of the screen
 	if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-	    Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
 	    setContentView(R.layout.activity_question_land);
 	} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-	    Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
 	    setContentView(R.layout.activity_question);
 	}
 	init();
