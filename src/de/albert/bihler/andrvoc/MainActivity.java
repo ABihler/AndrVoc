@@ -1,5 +1,7 @@
 package de.albert.bihler.andrvoc;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +10,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.albert.bihler.andrvoc.db.LessonDataSource;
+import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
 
@@ -29,7 +33,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
 	super.onResume();
 
-	if (appPrefs.getVocabularyServer() == null) {
+	if ("none".equals(appPrefs.getVocabularyServer())) {
 	    // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
 	    // Konfigurationsmaske anzeigen
 	    startActivity(new Intent(this, VocabularyServerConfig.class));
@@ -82,8 +86,15 @@ public class MainActivity extends Activity {
 	textLog = (TextView) findViewById(R.id.main_field_log);
 	log("initialisieren");
 
-	// TODO: Das Array aus der DB lesen.
-	String array_spinner[] = new String[] { "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
+	LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
+	lessonDataSource.open();
+	List<Lesson> lessons = lessonDataSource.getLessons();
+	lessonDataSource.close();
+
+	String array_spinner[] = new String[lessons.size()];
+	for (int i = 0; i < lessons.size(); i++) {
+	    array_spinner[i] = lessons.get(i).getName();
+	}
 	ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
 	adapter.setDropDownViewResource(R.layout.spinner);
 

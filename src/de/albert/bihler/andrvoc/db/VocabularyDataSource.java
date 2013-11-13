@@ -3,83 +3,106 @@ package de.albert.bihler.andrvoc.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Comment;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import de.albert.bihler.andrvoc.model.Vokabel;
 
 public class VocabularyDataSource {
 
-	// Database fields
-	private SQLiteDatabase database;
-	private final VocabularyOpenHelper dbHelper;
-	private final String[] allColumns = { VocabularyOpenHelper.Column.ID, VocabularyOpenHelper.Column.ORIGINAL_WORD, VocabularyOpenHelper.Column.CORRECT_TRANSLATION, VocabularyOpenHelper.Column.LESSON_ID };
+    private static final String TAG = "VocabularyDataSource";
 
-	public VocabularyDataSource(Context context) {
-		dbHelper = new VocabularyOpenHelper(context);
+    private SQLiteDatabase database;
+    private final AndrVocOpenHelper dbHelper;
+    private final Context ctx;
+
+    public VocabularyDataSource(Context context) {
+	this.ctx = context;
+	dbHelper = new AndrVocOpenHelper(context);
+    }
+
+    public void open() throws SQLException {
+	database = dbHelper.getWritableDatabase();
+    }
+
+    public void close() {
+	dbHelper.close();
+    }
+
+    /**
+     * Sichert eine Vokabel inklusive der falschen Übersetzungen
+     * 
+     * @param vokabel
+     *            Vokabel, die gesichert werden soll
+     * @param lessonId
+     *            Id der Lektion zu der die Vokabel gehört
+     */
+    public void saveWord(Vokabel vokabel, long lessonId) {
+	Log.i(TAG, "Saving word " + vokabel.getOriginalWord() + " for lesson " + lessonId);
+	// Vokabel sichern
+	ContentValues values = new ContentValues();
+	values.put(AndrVocOpenHelper.VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
+	values.put(AndrVocOpenHelper.VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
+	values.put(AndrVocOpenHelper.VocabularyColumn.LESSON_ID, lessonId);
+	long vokabelId = database.insert(AndrVocOpenHelper.TABLE_NAME_VOCABULARY, null, values);
+	// Alternative Übersetzungen sichern
+	AlternativeTranslationsDataSource altTranslationsDataSource = new AlternativeTranslationsDataSource(ctx);
+	altTranslationsDataSource.open();
+	altTranslationsDataSource.saveAlternativeTranslations(vokabel.getAlternativeTranslations(), vokabelId);
+	altTranslationsDataSource.open();
+    }
+
+    /**
+     * Sichert eine Liste von Vokabeln inklusive der falschen Übersetzungen
+     * 
+     * @param vocabulary
+     *            Liste der Vokabeln
+     * @param lessonId
+     *            Id der Lektion zu der die Vokabeln gehören
+     */
+    public void saveVocabulary(List<Vokabel> vocabulary, long lessonId) {
+	Log.i(TAG, "Saving " + vocabulary.size() + " words for lesson " + lessonId);
+	for (Vokabel vokabel : vocabulary) {
+	    saveWord(vokabel, lessonId);
 	}
+    }
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
+    /**
+     * Gibt alle Vokabeln, inklusive der falschen Übersetzungen, einer Lektion
+     * zurück
+     * 
+     * @param lessonId
+     *            Id der Lektion
+     * @return eine Liste von Vokabeln
+     */
+    public List<Vokabel> getVocabulary(long lessonId) {
+	Log.i(TAG, "Loading vocabulary for lesson " + lessonId);
+	AlternativeTranslationsDataSource altTranslationsDataSource = new AlternativeTranslationsDataSource(ctx);
+	altTranslationsDataSource.open();
+
+	List<Vokabel> vocabulary = new ArrayList<Vokabel>();
+
+	Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_VOCABULARY, AndrVocOpenHelper.ALL_COLUMNS_VOCABULARY,
+		AndrVocOpenHelper.VocabularyColumn.LESSON_ID + "=" + lessonId, null, null, null, null);
+
+	cursor.moveToFirst();
+	while (!cursor.isAfterLast()) {
+	    Vokabel vokabel = new Vokabel();
+	    vokabel.setId(cursor.getLong(0));
+	    vokabel.setOriginalWord(cursor.getString(1));
+	    vokabel.setCorrectTranslation(cursor.getString(2));
+	    vokabel.setLessonId(lessonId);
+	    vokabel.setAlternativeTranslations(altTranslationsDataSource.getAlternativeTranslations(vokabel.getId()));
+	    vocabulary.add(vokabel);
+	    cursor.moveToNext();
 	}
+	cursor.close();
 
-	public void close() {
-		dbHelper.close();
-	}
+	altTranslationsDataSource.close();
 
-	public void saveWord(Vokabel vokabel, long lessonId) {
-		ContentValues values = new ContentValues();
-		values.put(VocabularyOpenHelper.Column.ORIGINAL_WORD, vokabel.getOriginalWord());
-		values.put(VocabularyOpenHelper.Column.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
-		values.put(VocabularyOpenHelper.Column.LESSON_ID, lessonId);
-	}
-
-	// public Comment createComment(String comment) {
-	// ContentValues values = new ContentValues();
-	// values.put(MySQLiteHelper.COLUMN_COMMENT, comment);
-	// long insertId = database.insert(MySQLiteHelper.TABLE_COMMENTS, null,
-	// values);
-	// Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-	// allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-	// null, null, null);
-	// cursor.moveToFirst();
-	// Comment newComment = cursorToComment(cursor);
-	// cursor.close();
-	// return newComment;
-	// }
-	//
-	// public void deleteComment(Comment comment) {
-	// long id = comment.getId();
-	// System.out.println("Comment deleted with id: " + id);
-	// database.delete(MySQLiteHelper.TABLE_COMMENTS, MySQLiteHelper.COLUMN_ID
-	// + " = " + id, null);
-	// }
-	//
-	// public List<Comment> getAllComments() {
-	// List<Comment> comments = new ArrayList<Comment>();
-	//
-	// Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-	// allColumns, null, null, null, null, null);
-	//
-	// cursor.moveToFirst();
-	// while (!cursor.isAfterLast()) {
-	// Comment comment = cursorToComment(cursor);
-	// comments.add(comment);
-	// cursor.moveToNext();
-	// }
-	// // make sure to close the cursor
-	// cursor.close();
-	// return comments;
-	// }
-	//
-	// private Comment cursorToComment(Cursor cursor) {
-	// Comment comment = new Comment();
-	// comment.setId(cursor.getLong(0));
-	// comment.setComment(cursor.getString(1));
-	// return comment;
-	// }
+	return vocabulary;
+    }
 }

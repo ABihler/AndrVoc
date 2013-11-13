@@ -1,8 +1,5 @@
 package de.albert.bihler.andrvoc;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,10 +7,10 @@ import android.content.SharedPreferences.Editor;
 
 public class AppPreferences {
 
-    private final static String VOCABULARY_SERVER_URL = "vocabulary_server_url";
+    public final static String VOCABULARY_SERVER_URL = "vocabulary_server_url";
 
-    public static String CURRENT_UNIT;
-    public static String CURRENT_USER;
+    public static String CURRENT_UNIT = "current_unit";
+    public static String CURRENT_USER = "current_user";
     public static int CURRENT_UNIT_ID;
     // Name of the file -.xml
     private static final String APP_SHARED_PREFS = AppPreferences.class.getSimpleName();
@@ -24,8 +21,9 @@ public class AppPreferences {
 	this.sharedPrefs = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE);
 	this.prefsEditor = sharedPrefs.edit();
 
-	CURRENT_UNIT = sharedPrefs.getString(CURRENT_UNIT, "en_unit00_01");
-	CURRENT_UNIT_ID = context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
+	// CURRENT_UNIT = sharedPrefs.getString(CURRENT_UNIT, "en_unit00_01");
+	// CURRENT_UNIT_ID = context.getResources().getIdentifier(CURRENT_UNIT,
+	// "xml", context.getPackageName());
     }
 
     public String getUnit() {
@@ -50,15 +48,20 @@ public class AppPreferences {
 	return sharedPrefs.getString(CURRENT_USER, "unknown");
     }
 
-    public URL getVocabularyServer() {
-	String url = sharedPrefs.getString(VOCABULARY_SERVER_URL, null);
-	if (url != null) {
-	    try {
-		return new URL(url);
-	    } catch (MalformedURLException e) {
-		return null;
-	    }
-	}
-	return null;
+    public String getVocabularyServer() {
+	String url = sharedPrefs.getString(VOCABULARY_SERVER_URL, "none");
+	// if (url != null) {
+	// try {
+	// return new URL(url);
+	// } catch (MalformedURLException e) {
+	// return null;
+	// }
+	// }
+	return url;
+    }
+
+    public void saveVocabularyServer(String vocabularyServer) {
+	prefsEditor.putString(VOCABULARY_SERVER_URL, vocabularyServer);
+	prefsEditor.commit();
     }
 }

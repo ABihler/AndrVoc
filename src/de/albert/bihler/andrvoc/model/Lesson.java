@@ -4,32 +4,50 @@ import java.util.List;
 
 public class Lesson {
 
-	private String name;
-	private int version;
-	private List<Vokabel> vocabulary;
+    private long id;
+    private String name;
+    private String language;
+    private int version;
+    private List<Vokabel> vocabulary;
 
-	public String getName() {
-		return name;
-	}
+    public long getId() {
+	return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(long id) {
+	this.id = id;
+    }
 
-	public int getVersion() {
-		return version;
-	}
+    public String getLanguage() {
+	return language;
+    }
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
+    public void setLanguage(String language) {
+	this.language = language;
+    }
 
-	public List<Vokabel> getVocabulary() {
-		return vocabulary;
-	}
+    public String getName() {
+	return name;
+    }
 
-	public void setVocabulary(List<Vokabel> vocabulary) {
-		this.vocabulary = vocabulary;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
+
+    public int getVersion() {
+	return version;
+    }
+
+    public void setVersion(int version) {
+	this.version = version;
+    }
+
+    public List<Vokabel> getVocabulary() {
+	return vocabulary;
+    }
+
+    public void setVocabulary(List<Vokabel> vocabulary) {
+	this.vocabulary = vocabulary;
+    }
 
 }
