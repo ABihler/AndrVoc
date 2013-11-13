@@ -1,5 +1,7 @@
 package de.albert.bihler.andrvoc;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,9 @@ public class MainActivity extends Activity {
     public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
     private AppPreferences appPrefs;
     private Spinner unitSpinner;
+    private Spinner userSpinner;
     private TextView textLog;
+    private TextView textTop;
     private final boolean logActive = true;
     private DBHelper db;
 
@@ -32,6 +36,12 @@ public class MainActivity extends Activity {
 	getMenuInflater().inflate(R.menu.main, menu);
 
 	return true;
+    }
+
+    @Override
+    protected void onResume() {
+	super.onResume();
+	init();
     }
 
     /** Called when the user clicks the Send button */
@@ -72,30 +82,47 @@ public class MainActivity extends Activity {
     public void init() {
 
 	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
+	userSpinner = (Spinner) findViewById(R.id.main_spinner_user);
 	textLog = (TextView) findViewById(R.id.main_field_log);
+	textTop = (TextView) findViewById(R.id.main_field_top);
 	log("initialisieren");
 
 	// TODO: Das Array aus der DB lesen.
-	String array_spinner[] = new String[] { "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
+	String array_spinner[] = new String[] { "test", "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
 	ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
 	adapter.setDropDownViewResource(R.layout.spinner);
-
 	unitSpinner.setAdapter(adapter);
 
 	db = new DBHelper(getApplicationContext());
-	db.getWritableDatabase();// this line responsible to
-	log(db.getAllUsers().toString());
+	db.getWritableDatabase();
+	List<String> users = db.getAllUsers();
 	db.closeDB();
+	// Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
+	if (0 == users.size()) {
+	    Intent intent = new Intent(this, CreateUserActivity.class);
+	    startActivity(intent);
+	}
 
 	appPrefs = new AppPreferences(getApplicationContext());
-
-	appPrefs.saveUser("Erik");
+	// appPrefs.saveUser("Erik");
 	log("User: " + appPrefs.getUser());
+
+	ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
+	dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	userSpinner.setAdapter(dataAdapter);
+	userSpinner.setSelection(dataAdapter.getPosition(appPrefs.getUser()));
+
+	setTopLine();
     }
 
     private void log(String s) {
 	if (logActive) {
 	    textLog.append("\n" + s);
 	}
+    }
+
+    // Setzt aktuelle TopLine
+    private void setTopLine() {
+	textTop.setText("  Benutzer: " + appPrefs.getUser());
     }
 }

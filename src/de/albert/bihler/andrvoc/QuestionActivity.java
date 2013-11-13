@@ -52,6 +52,11 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 	} else {
 	    setContentView(R.layout.activity_question);
 	}
+	// try {
+	// int i = savedInstanceState.getInt("currentUnitID");
+	// } catch (Exception e) {
+	// log(e.toString());
+	// }
 
 	init();
 	log("onCreate");
