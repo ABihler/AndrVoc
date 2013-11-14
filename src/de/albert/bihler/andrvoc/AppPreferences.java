@@ -23,7 +23,7 @@ public class AppPreferences {
     public AppPreferences(Context context) {
         this.sharedPrefs = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE);
         this.prefsEditor = sharedPrefs.edit();
-    
+
         CURRENT_UNIT = sharedPrefs.getString(CURRENT_UNIT, "en_unit00_01");
         CURRENT_UNIT_ID = context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
     }
@@ -33,32 +33,32 @@ public class AppPreferences {
     }
 
     public int getUnitID(Context context) {
-    	return  context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
-   }    
-    
+        return context.getResources().getIdentifier(CURRENT_UNIT, "xml", context.getPackageName());
+    }
+
     public void saveUnit(String text) {
         prefsEditor.putString(CURRENT_UNIT, text);
         prefsEditor.commit();
     }
-    
+
     public void saveUser(String text) {
         prefsEditor.putString(CURRENT_USER, text);
         prefsEditor.commit();
     }
 
     public String getUser() {
-	return sharedPrefs.getString(CURRENT_USER, "unknown");
+        return sharedPrefs.getString(CURRENT_USER, "unknown");
     }
 
     public URL getVocabularyServer() {
-	String url = sharedPrefs.getString(VOCABULARY_SERVER_URL, null);
-	if (url != null) {
-	    try {
-		return new URL(url);
-	    } catch (MalformedURLException e) {
-		return null;
-	    }
-	}
-	return null;
+        String url = sharedPrefs.getString(VOCABULARY_SERVER_URL, null);
+        if (url != null) {
+            try {
+                return new URL(url);
+            } catch (MalformedURLException e) {
+                return null;
+            }
+        }
+        return null;
     }
 }

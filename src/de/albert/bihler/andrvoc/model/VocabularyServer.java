@@ -11,23 +11,23 @@ public class VocabularyServer {
     private List<Lesson> lessons;
 
     public String getServerType() {
-	return serverType;
+        return serverType;
     }
 
     public String getServerName() {
-	return serverName;
+        return serverName;
     }
 
     public int getServerVersion() {
-	return serverVersion;
+        return serverVersion;
     }
 
     public int getVersion() {
-	return version;
+        return version;
     }
 
     public List<Lesson> getLessons() {
-	return lessons;
+        return lessons;
     }
 
 }
