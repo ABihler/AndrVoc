@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -48,6 +49,8 @@ public class VocabularyServerConfig extends Activity {
     }
 
     public void onSave(View view) {
+        Button button = (Button) findViewById(R.id.server_popup_save);
+        button.setEnabled(false);
         checkServer(serverUrl.getText().toString());
     }
 
@@ -102,6 +105,8 @@ public class VocabularyServerConfig extends Activity {
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
+                    Button button = (Button) findViewById(R.id.server_popup_save);
+                    button.setEnabled(true);
                 }
             }
         }.execute(url);
