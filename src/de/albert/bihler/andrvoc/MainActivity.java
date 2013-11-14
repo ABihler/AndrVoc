@@ -36,7 +36,20 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if ("none".equals(appPrefs.getVocabularyServer())) {
+        if ("no user defined".equals(appPrefs.getUser())) {
+            // Es gibt noch keinen current User. D.h. wir müssen einen anlegen.
+            db = new DBHelper(getApplicationContext());
+            db.getWritableDatabase();
+            List<String> users = db.getAllUsers();
+            db.closeDB();
+            // Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
+            if (0 == users.size()) {
+                Intent intent = new Intent(this, CreateUserActivity.class);
+                startActivity(intent);
+            }
+        }
+
+        else if ("none".equals(appPrefs.getVocabularyServer())) {
             // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
             // Konfigurationsmaske anzeigen
             startActivity(new Intent(this, VocabularyServerConfig.class));
@@ -108,15 +121,7 @@ public class MainActivity extends Activity {
         adapter.setDropDownViewResource(R.layout.spinner);
         unitSpinner.setAdapter(adapter);
 
-        db = new DBHelper(getApplicationContext());
-        db.getWritableDatabase();
         List<String> users = db.getAllUsers();
-        db.closeDB();
-        // Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
-        if (0 == users.size()) {
-            Intent intent = new Intent(this, CreateUserActivity.class);
-            startActivity(intent);
-        }
 
         appPrefs = new AppPreferences(getApplicationContext());
         // appPrefs.saveUser("Erik");

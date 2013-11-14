@@ -9,16 +9,10 @@
     tools:context=".CreateUserActivity" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/createUser_field_label" />
-
-    <EditText
-        android:id="@+id/createUser_Username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/createUser_Username_Hint"
-        android:inputType="text" />
 
     <Button
         android:id="@+id/createUser_OK"
@@ -28,4 +22,19 @@
         android:layout_centerHorizontal="true"
         android:onClick="doCreateUser"
         android:text="@string/ButtonOK" />
-</RelativeLayout>
+
+    <EditText
+        android:id="@+id/createUser_Username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/createUser_Username_Hint"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

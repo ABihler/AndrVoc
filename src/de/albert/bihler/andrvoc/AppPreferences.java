@@ -37,7 +37,7 @@ public class AppPreferences {
     }
 
     public String getUser() {
-        return sharedPrefs.getString(CURRENT_USER, "unknown");
+        return sharedPrefs.getString(CURRENT_USER, "no user defined");
     }
 
     public String getVocabularyServer() {
