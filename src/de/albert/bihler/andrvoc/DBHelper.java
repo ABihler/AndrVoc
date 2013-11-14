@@ -20,46 +20,46 @@ public class DBHelper extends SQLiteOpenHelper {
     // private final SQLiteDatabase db;
 
     DBHelper(Context context) {
-	super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	// this.db = getWritableDatabase();
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        // this.db = getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-	db.execSQL(USER_TABLE_CREATE);
-	// db.execSQL("insert into user values (\'Erik\')");
+        db.execSQL(USER_TABLE_CREATE);
+        // db.execSQL("insert into user values (\'Erik\')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
     }
 
     public void closeDB() {
-	SQLiteDatabase db = this.getReadableDatabase();
-	if (db != null && db.isOpen())
-	    db.close();
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (db != null && db.isOpen())
+            db.close();
     }
 
     public List<String> getAllUsers() {
-	List<String> users = new ArrayList<String>();
-	String selectQuery = "SELECT " + USER_NAME_COLUMN + " FROM " + USER_TABLE_NAME;
-	SQLiteDatabase db = this.getReadableDatabase();
-	Cursor c = db.rawQuery(selectQuery, null);
-	// Alle User durchlaufen
-	if (c.moveToFirst()) {
-	    do {
-		String u = c.getString(c.getColumnIndex(USER_NAME_COLUMN));
-		users.add(u);
-	    } while (c.moveToNext());
-	}
-	return users;
+        List<String> users = new ArrayList<String>();
+        String selectQuery = "SELECT " + USER_NAME_COLUMN + " FROM " + USER_TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        // Alle User durchlaufen
+        if (c.moveToFirst()) {
+            do {
+                String u = c.getString(c.getColumnIndex(USER_NAME_COLUMN));
+                users.add(u);
+            } while (c.moveToNext());
+        }
+        return users;
     }
 
     public void insertUser(String username) {
-	ContentValues values = new ContentValues();
-	values.put(USER_NAME_COLUMN, username);
-	SQLiteDatabase db = this.getWritableDatabase();
-	db.insert(USER_TABLE_NAME, null, values);
+        ContentValues values = new ContentValues();
+        values.put(USER_NAME_COLUMN, username);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(USER_TABLE_NAME, null, values);
     }
 }

@@ -46,251 +46,251 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-	    setContentView(R.layout.activity_question_land);
-	} else {
-	    setContentView(R.layout.activity_question);
-	}
-	// try {
-	// int i = savedInstanceState.getInt("currentUnitID");
-	// } catch (Exception e) {
-	// log(e.toString());
-	// }
+        super.onCreate(savedInstanceState);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_question_land);
+        } else {
+            setContentView(R.layout.activity_question);
+        }
+        // try {
+        // int i = savedInstanceState.getInt("currentUnitID");
+        // } catch (Exception e) {
+        // log(e.toString());
+        // }
 
-	init();
-	log("onCreate");
+        init();
+        log("onCreate");
 
-	setStatusLine("Status: unbekannt");
+        setStatusLine("Status: unbekannt");
 
-	if (vocList.size() > 0) {
-	    setStatusCheck();
-	    populateFields(actTest);
-	}
+        if (vocList.size() > 0) {
+            setStatusCheck();
+            populateFields(actTest);
+        }
     }
 
     private void init() {
-	appPrefs = new AppPreferences(getApplicationContext());
-	currentUnitID = appPrefs.getUnitID(getApplicationContext());
+        appPrefs = new AppPreferences(getApplicationContext());
+        currentUnitID = appPrefs.getUnitID(getApplicationContext());
 
-	textTop = (TextView) findViewById(R.id.question_field_top);
-	textLog = (TextView) findViewById(R.id.question_field_log);
-	textLog.setMovementMethod(new ScrollingMovementMethod());
-	textStatus = (TextView) findViewById(R.id.question_field_status);
+        textTop = (TextView) findViewById(R.id.question_field_top);
+        textLog = (TextView) findViewById(R.id.question_field_log);
+        textLog.setMovementMethod(new ScrollingMovementMethod());
+        textStatus = (TextView) findViewById(R.id.question_field_status);
 
-	button = (Button) findViewById(R.id.question_button_main);
-	button.setEnabled(false);
-	// answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
+        button = (Button) findViewById(R.id.question_button_main);
+        button.setEnabled(false);
+        // answerSpinner = (Spinner) findViewById(R.id.question_spinner_answer);
 
-	containerGroup = (RadioGroup) findViewById(R.id.answerContainer);
-	containerGroup.setOnCheckedChangeListener(this);
+        containerGroup = (RadioGroup) findViewById(R.id.answerContainer);
+        containerGroup.setOnCheckedChangeListener(this);
 
-	textLog.setMovementMethod(new ScrollingMovementMethod());
-	textStatus = (TextView) findViewById(R.id.question_field_status);
+        textLog.setMovementMethod(new ScrollingMovementMethod());
+        textStatus = (TextView) findViewById(R.id.question_field_status);
 
-	log("onCreate");
+        log("onCreate");
 
-	setStatusLine("Status: unbekannt");
+        setStatusLine("Status: unbekannt");
 
-	// Vokabeln der aktuellen Lektion laden
-	this.vocList = loadVocabulary(currentUnitID);
+        // Vokabeln der aktuellen Lektion laden
+        this.vocList = loadVocabulary(currentUnitID);
 
-	// Abfragereihenfolge der Vokabeln mischen
-	Collections.shuffle(this.vocList);
+        // Abfragereihenfolge der Vokabeln mischen
+        Collections.shuffle(this.vocList);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-	// Inflate the menu; this adds items to the action bar if it is present.
-	getMenuInflater().inflate(R.menu.question, menu);
-	return true;
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.question, menu);
+        return true;
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-	super.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig);
 
-	// Checks the orientation of the screen
-	if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-	    setContentView(R.layout.activity_question_land);
-	} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-	    setContentView(R.layout.activity_question);
-	}
-	init();
-	setStatusCheck();
-	populateFields(actTest);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_question_land);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setContentView(R.layout.activity_question);
+        }
+        init();
+        setStatusCheck();
+        populateFields(actTest);
     }
 
     // Check answer
     public void doCheck(View view) {
-	if (currentSelectedAnswer.equals(vocList.get(actTest).getCorrectTranslation())) {
-	    textResult = (TextView) findViewById(R.id.question_field_result);
-	    textResult.setTextColor(Color.rgb(50, 205, 50));
-	    textResult.setText("Die Antwort ist richtig!!!");
-	    numRightAnswers++;
-	    setStatusNext();
+        if (currentSelectedAnswer.equals(vocList.get(actTest).getCorrectTranslation())) {
+            textResult = (TextView) findViewById(R.id.question_field_result);
+            textResult.setTextColor(Color.rgb(50, 205, 50));
+            textResult.setText("Die Antwort ist richtig!!!");
+            numRightAnswers++;
+            setStatusNext();
 
-	    setStatusLine(getStasiticString());
-	    // Ende der Lektion
-	    if (actTest == (vocList.size() - 1)) {
-		setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
-		button.setEnabled(false);
-		// TODO:Statistikausgabe, Button evtl. auf zurück ummappen.
-	    }
-	} else {
-	    textResult = (TextView) findViewById(R.id.question_field_result);
-	    textResult.setTextColor(Color.RED);
-	    textResult.setText("Die Antwort ist leider falsch.");
-	    numWrongAnswers++;
-	    setStatusCheck();
-	    setStatusLine(getStasiticString());
-	}
+            setStatusLine(getStasiticString());
+            // Ende der Lektion
+            if (actTest == (vocList.size() - 1)) {
+                setStatusLine(getStasiticString() + "\nEnde der Lektion erreicht.");
+                button.setEnabled(false);
+                // TODO:Statistikausgabe, Button evtl. auf zurück ummappen.
+            }
+        } else {
+            textResult = (TextView) findViewById(R.id.question_field_result);
+            textResult.setTextColor(Color.RED);
+            textResult.setText("Die Antwort ist leider falsch.");
+            numWrongAnswers++;
+            setStatusCheck();
+            setStatusLine(getStasiticString());
+        }
     }
 
     public void doMain(View view) {
-	if ("Next".equals(status)) {
-	    doNext(view);
-	} else if ("Check".equals(status)) {
-	    doCheck(view);
-	} else {
-	    setStatusLine("unknown status: " + status);
-	}
+        if ("Next".equals(status)) {
+            doNext(view);
+        } else if ("Check".equals(status)) {
+            doCheck(view);
+        } else {
+            setStatusLine("unknown status: " + status);
+        }
     }
 
     // Nächste Frage
     public void doNext(View view) {
 
-	if (actTest <= (vocList.size() - 2)) {
-	    clearResult();
-	    button.setEnabled(false);
-	    actTest++;
-	    populateFields(actTest);
-	    setStatusCheck();
-	} else {
-	    // hierher sollten wir aber nie gelangen, weil in doCheck bereits
-	    // auf das Ende der Lektion gepr�ft wird.
-	    setStatusLine(getStasiticString() + "\nEnde");
-	}
+        if (actTest <= (vocList.size() - 2)) {
+            clearResult();
+            button.setEnabled(false);
+            actTest++;
+            populateFields(actTest);
+            setStatusCheck();
+        } else {
+            // hierher sollten wir aber nie gelangen, weil in doCheck bereits
+            // auf das Ende der Lektion gepr�ft wird.
+            setStatusLine(getStasiticString() + "\nEnde");
+        }
     }
 
     // Füllt Felder mit Daten aus Vokabel Objekt
     private void populateFields(int index) {
-	Vokabel vokabel = vocList.get(index);
-	setStatusLine(getStasiticString());
-	setTopLine();
+        Vokabel vokabel = vocList.get(index);
+        setStatusLine(getStasiticString());
+        setTopLine();
 
-	textWord = (TextView) findViewById(R.id.question_field_word);
-	textWord.setText(vocList.get(index).getOriginalWord());
-	textResult = (TextView) findViewById(R.id.question_field_result);
-	textResult.setText("");
+        textWord = (TextView) findViewById(R.id.question_field_word);
+        textWord.setText(vocList.get(index).getOriginalWord());
+        textResult = (TextView) findViewById(R.id.question_field_result);
+        textResult.setText("");
 
-	int max = vokabel.getAlternativeTranslations().size();
+        int max = vokabel.getAlternativeTranslations().size();
 
-	// Radiobuttons der letzten Vokabel löschen
-	containerGroup.removeAllViews();
+        // Radiobuttons der letzten Vokabel löschen
+        containerGroup.removeAllViews();
 
-	for (int i = 0; i <= max - 1; i++) {
-	    RadioButton radioButton = new RadioButton(this);
-	    radioButton.setText(vokabel.getAlternativeTranslations().get(i));
-	    radioButton.setTextSize(20);
-	    radioButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-	    containerGroup.addView(radioButton);
-	}
+        for (int i = 0; i <= max - 1; i++) {
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText(vokabel.getAlternativeTranslations().get(i));
+            radioButton.setTextSize(20);
+            radioButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            containerGroup.addView(radioButton);
+        }
     }
 
     private void clearResult() {
-	textResult.setText("");
+        textResult.setText("");
     }
 
     // Setzt Statusfeld
     private void setStatusLine(String message) {
-	// textStatus = (TextView) findViewById(R.id.question_field_status);
-	textStatus.setText(message);
+        // textStatus = (TextView) findViewById(R.id.question_field_status);
+        textStatus.setText(message);
     }
 
     // Setzt aktuelle TopLine
     private void setTopLine() {
-	textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
+        textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
     }
 
     private void exceptionOutput(String s) {
-	textStatus.setText(s);
+        textStatus.setText(s);
     }
 
     private String getStasiticString() {
-	String stat = "Statistik:" + numRightAnswers + " richtig und " + numWrongAnswers + " falsch.";
-	return stat;
+        String stat = "Statistik:" + numRightAnswers + " richtig und " + numWrongAnswers + " falsch.";
+        return stat;
     }
 
     private void setStatusCheck() {
-	status = "Check";
-	containerGroup.setEnabled(true);
-	button.setText(R.string.question_button_check);
+        status = "Check";
+        containerGroup.setEnabled(true);
+        button.setText(R.string.question_button_check);
     }
 
     private void setStatusNext() {
-	status = "Next";
-	containerGroup.setEnabled(false);
-	button.setText(R.string.question_button_next);
+        status = "Next";
+        containerGroup.setEnabled(false);
+        button.setText(R.string.question_button_next);
     }
 
     private void log(String s) {
-	if (logActive) {
-	    textLog.append("\n" + s);
-	}
+        if (logActive) {
+            textLog.append("\n" + s);
+        }
     }
 
     private ArrayList<Vokabel> loadVocabulary(int currentUnitId) {
-	log("loadVocabulary");
-	ArrayList<Vokabel> vocList = new ArrayList<Vokabel>();
+        log("loadVocabulary");
+        ArrayList<Vokabel> vocList = new ArrayList<Vokabel>();
 
-	try {
-	    Resources res = this.getResources();
-	    // XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
-	    XmlResourceParser xrp = res.getXml(currentUnitId);
+        try {
+            Resources res = this.getResources();
+            // XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
+            XmlResourceParser xrp = res.getXml(currentUnitId);
 
-	    int eventType = xrp.getEventType();
-	    log("CurrentUnit:" + appPrefs.getUnit());
-	    log("CurrentUnitId:" + currentUnitId);
+            int eventType = xrp.getEventType();
+            log("CurrentUnit:" + appPrefs.getUnit());
+            log("CurrentUnitId:" + currentUnitId);
 
-	    String tag = "";
-	    while (eventType != XmlPullParser.END_DOCUMENT) {
-		// if(eventType == XmlPullParser.START_DOCUMENT)
-		// {
-		// log("--- Start XML ---");
-		// }
-		if (eventType == XmlPullParser.START_TAG) {
-		    // log("\nSTART_TAG: "+xrp.getName());
-		    tag = xrp.getName();
-		}
-		// else if(eventType == XmlPullParser.END_TAG)
-		// {
-		// log("\nEND_TAG: "+xrp.getName());
-		// }
-		else if (eventType == XmlPullParser.TEXT) {
-		    // log("\nTEXT: "+xrp.getText());
-		    String line = xrp.getText();
-		    if ("VokLine".equalsIgnoreCase(tag)) {
-			if (vocList == null) {
-			    vocList = new ArrayList<Vokabel>(Arrays.asList(new Vokabel(line)));
-			} else {
-			    vocList.add(new Vokabel(line));
-			}
-		    }
-		}
-		eventType = xrp.next();
-	    }
-	} catch (Exception e) {
-	    exceptionOutput("Load Exception: " + e.toString());
-	}
-	return vocList;
+            String tag = "";
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                // if(eventType == XmlPullParser.START_DOCUMENT)
+                // {
+                // log("--- Start XML ---");
+                // }
+                if (eventType == XmlPullParser.START_TAG) {
+                    // log("\nSTART_TAG: "+xrp.getName());
+                    tag = xrp.getName();
+                }
+                // else if(eventType == XmlPullParser.END_TAG)
+                // {
+                // log("\nEND_TAG: "+xrp.getName());
+                // }
+                else if (eventType == XmlPullParser.TEXT) {
+                    // log("\nTEXT: "+xrp.getText());
+                    String line = xrp.getText();
+                    if ("VokLine".equalsIgnoreCase(tag)) {
+                        if (vocList == null) {
+                            vocList = new ArrayList<Vokabel>(Arrays.asList(new Vokabel(line)));
+                        } else {
+                            vocList.add(new Vokabel(line));
+                        }
+                    }
+                }
+                eventType = xrp.next();
+            }
+        } catch (Exception e) {
+            exceptionOutput("Load Exception: " + e.toString());
+        }
+        return vocList;
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-	RadioButton radioButton = (RadioButton) findViewById(checkedId);
-	currentSelectedAnswer = (String) radioButton.getText();
-	button.setEnabled(true);
+        RadioButton radioButton = (RadioButton) findViewById(checkedId);
+        currentSelectedAnswer = (String) radioButton.getText();
+        button.setEnabled(true);
     }
 }

@@ -12,22 +12,22 @@ public class Vokabel {
     private final List<String> alternativeTranslations;
 
     public Vokabel(String string) {
-	alternativeTranslations = new ArrayList<String>(Arrays.asList(string.split("#")));
-	originalWord = alternativeTranslations.get(0);
-	correctTranslation = alternativeTranslations.get(1);
-	alternativeTranslations.remove(0);
-	Collections.shuffle(alternativeTranslations);
+        alternativeTranslations = new ArrayList<String>(Arrays.asList(string.split("#")));
+        originalWord = alternativeTranslations.get(0);
+        correctTranslation = alternativeTranslations.get(1);
+        alternativeTranslations.remove(0);
+        Collections.shuffle(alternativeTranslations);
     }
 
     public String getOriginalWord() {
-	return originalWord;
+        return originalWord;
     }
 
     public String getCorrectTranslation() {
-	return correctTranslation;
+        return correctTranslation;
     }
 
     public List<String> getAlternativeTranslations() {
-	return alternativeTranslations;
+        return alternativeTranslations;
     }
 }
