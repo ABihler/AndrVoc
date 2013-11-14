@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import de.albert.bihler.andrvoc.db.LessonDataSource;
+import de.albert.bihler.andrvoc.model.Lesson;
 import de.albert.bihler.andrvoc.model.VocabularyServer;
 
 public class VocabularyServerConfig extends Activity {
@@ -34,7 +36,7 @@ public class VocabularyServerConfig extends Activity {
 
         // Demo-URL vorbelegen
         serverUrl = (EditText) findViewById(R.id.server_popup_url);
-        serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/index.json");
+        serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/albert.json");
         serverUrl.selectAll();
     }
 
@@ -86,8 +88,18 @@ public class VocabularyServerConfig extends Activity {
             protected void onPostExecute(VocabularyServer server) {
                 if (server != null) {
                     Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_SHORT)
+
+                            getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_LONG)
                             .show();
+                    LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
+                    lessonDataSource.open();
+                    for (Lesson lesson : server.getLessons()) {
+                        lessonDataSource.saveLesson(lesson);
+                    }
+                    lessonDataSource.close();
+                    AppPreferences appPrefs = new AppPreferences(getApplicationContext());
+                    appPrefs.saveVocabularyServer(serverUrl.getText().toString());
+                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
                 }
