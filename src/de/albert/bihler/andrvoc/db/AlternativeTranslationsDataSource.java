@@ -19,43 +19,43 @@ public class AlternativeTranslationsDataSource {
     private final Context ctx;
 
     public AlternativeTranslationsDataSource(Context context) {
-	this.ctx = context;
-	dbHelper = new AndrVocOpenHelper(context);
+        this.ctx = context;
+        dbHelper = new AndrVocOpenHelper(context);
     }
 
     public void open() throws SQLException {
-	database = dbHelper.getWritableDatabase();
+        database = dbHelper.getWritableDatabase();
     }
 
     public void close() {
-	dbHelper.close();
+        dbHelper.close();
     }
 
     public List<String> getAlternativeTranslations(long vocabularyId) {
-	Log.i(TAG, "Loading alternative translations for word " + vocabularyId);
-	List<String> altTranslations = new ArrayList<String>();
+        Log.i(TAG, "Loading alternative translations for word " + vocabularyId);
+        List<String> altTranslations = new ArrayList<String>();
 
-	Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, AndrVocOpenHelper.ALL_COLUMNS_ALTTRANSLATIONS,
-		AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID + "=" + vocabularyId, null, null, null, null);
+        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, AndrVocOpenHelper.ALL_COLUMNS_ALTTRANSLATIONS,
+                AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID + "=" + vocabularyId, null, null, null, null);
 
-	cursor.moveToFirst();
-	while (!cursor.isAfterLast()) {
-	    altTranslations.add(cursor.getString(1));
-	    cursor.moveToNext();
-	}
-	cursor.close();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            altTranslations.add(cursor.getString(1));
+            cursor.moveToNext();
+        }
+        cursor.close();
 
-	return altTranslations;
+        return altTranslations;
     }
 
     public void saveAlternativeTranslations(List<String> altTranslations, long vocabularyId) {
-	Log.i(TAG, "Saving " + altTranslations.size() + " alternative translations for word " + vocabularyId);
-	for (String altTranslation : altTranslations) {
-	    ContentValues values = new ContentValues();
-	    values.put(AndrVocOpenHelper.AltTranslationsColumn.TRANSLATION, altTranslation);
-	    values.put(AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID, vocabularyId);
-	    database.insert(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, null, values);
-	}
+        Log.i(TAG, "Saving " + altTranslations.size() + " alternative translations for word " + vocabularyId);
+        for (String altTranslation : altTranslations) {
+            ContentValues values = new ContentValues();
+            values.put(AndrVocOpenHelper.AltTranslationsColumn.TRANSLATION, altTranslation);
+            values.put(AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID, vocabularyId);
+            database.insert(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, null, values);
+        }
     }
 
 }

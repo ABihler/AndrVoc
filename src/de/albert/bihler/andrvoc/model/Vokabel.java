@@ -24,50 +24,50 @@ public class Vokabel {
      * @param string
      */
     public Vokabel(String string) {
-	alternativeTranslations = new ArrayList<String>(Arrays.asList(string.split("#")));
-	originalWord = alternativeTranslations.get(0);
-	correctTranslation = alternativeTranslations.get(1);
-	alternativeTranslations.remove(0);
-	Collections.shuffle(alternativeTranslations);
+        alternativeTranslations = new ArrayList<String>(Arrays.asList(string.split("#")));
+        originalWord = alternativeTranslations.get(0);
+        correctTranslation = alternativeTranslations.get(1);
+        alternativeTranslations.remove(0);
+        Collections.shuffle(alternativeTranslations);
     }
 
     public long getId() {
-	return id;
+        return id;
     }
 
     public void setId(long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getOriginalWord() {
-	return originalWord;
+        return originalWord;
     }
 
     public void setOriginalWord(String word) {
-	this.originalWord = word;
+        this.originalWord = word;
     }
 
     public String getCorrectTranslation() {
-	return correctTranslation;
+        return correctTranslation;
     }
 
     public void setCorrectTranslation(String correctTranslation) {
-	this.correctTranslation = correctTranslation;
+        this.correctTranslation = correctTranslation;
     }
 
     public long getLessonId() {
-	return lessonId;
+        return lessonId;
     }
 
     public void setLessonId(long lessonId) {
-	this.lessonId = lessonId;
+        this.lessonId = lessonId;
     }
 
     public List<String> getAlternativeTranslations() {
-	return alternativeTranslations;
+        return alternativeTranslations;
     }
 
     public void setAlternativeTranslations(List<String> alternativeTranslations) {
-	this.alternativeTranslations = alternativeTranslations;
+        this.alternativeTranslations = alternativeTranslations;
     }
 }
