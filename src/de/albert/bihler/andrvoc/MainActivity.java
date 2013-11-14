@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.albert.bihler.andrvoc.db.LessonDataSource;
+import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
 
@@ -24,24 +26,32 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-	init();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-	// Inflate the menu; this adds items to the action bar if it is present.
-	getMenuInflater().inflate(R.menu.main, menu);
-
-	return true;
+        appPrefs = new AppPreferences(getApplicationContext());
     }
 
     @Override
     protected void onResume() {
-	super.onResume();
-	init();
+        super.onResume();
+
+        if ("none".equals(appPrefs.getVocabularyServer())) {
+            // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
+            // Konfigurationsmaske anzeigen
+            startActivity(new Intent(this, VocabularyServerConfig.class));
+        } else {
+            init();
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        return true;
     }
 
     /** Called when the user clicks the Send button */
@@ -50,79 +60,83 @@ public class MainActivity extends Activity {
 
     /** Called when the user clicks the Neu button */
     public void neuButton(View view) {
-	// Intent intent = new Intent(this, DisplayMessageActivity.class);
-	// //EditText editText = (EditText) findViewById(R.id.edit_message);
-	// Spinner planet = (Spinner)findViewById(R.id.planets_spinner);
-	// // planet.toString();
-	// //.toString();
-	// String message = "Hardcoded Text " +
-	// planet.getSelectedItem().toString();
-	// intent.putExtra(EXTRA_MESSAGE, message);
-	// startActivity(intent);
+        // Intent intent = new Intent(this, DisplayMessageActivity.class);
+        // //EditText editText = (EditText) findViewById(R.id.edit_message);
+        // Spinner planet = (Spinner)findViewById(R.id.planets_spinner);
+        // // planet.toString();
+        // //.toString();
+        // String message = "Hardcoded Text " +
+        // planet.getSelectedItem().toString();
+        // intent.putExtra(EXTRA_MESSAGE, message);
+        // startActivity(intent);
     }
 
     /** Called when the user clicks the start question button */
     public void startQuestion(View view) {
+        Lesson lesson = (Lesson) unitSpinner.getSelectedItem();
+        appPrefs.saveLesson(lesson.getId());
 
-	String unit = unitSpinner.getSelectedItem().toString();
-	appPrefs.saveUnit(unit);
-
-	Intent intent = new Intent(this, QuestionActivity.class);
-	startActivity(intent);
+        Intent intent = new Intent(this, QuestionActivity.class);
+        startActivity(intent);
     }
 
     /** Called when the user clicks the create user button */
     public void createUser(View view) {
-	Intent intent = new Intent(this, CreateUserActivity.class);
-	startActivity(intent);
+        Intent intent = new Intent(this, CreateUserActivity.class);
+        startActivity(intent);
     }
 
     // Zeugs initialisieren.
 
     public void init() {
+        unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
+        userSpinner = (Spinner) findViewById(R.id.main_spinner_user);
+        textLog = (TextView) findViewById(R.id.main_field_log);
+        textTop = (TextView) findViewById(R.id.main_field_top);
+        log("initialisieren");
 
-	unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
-	userSpinner = (Spinner) findViewById(R.id.main_spinner_user);
-	textLog = (TextView) findViewById(R.id.main_field_log);
-	textTop = (TextView) findViewById(R.id.main_field_top);
-	log("initialisieren");
+        LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
+        lessonDataSource.open();
+        List<Lesson> lessons = lessonDataSource.getLessons();
+        lessonDataSource.close();
 
-	// TODO: Das Array aus der DB lesen.
-	String array_spinner[] = new String[] { "test", "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
-	ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
-	adapter.setDropDownViewResource(R.layout.spinner);
-	unitSpinner.setAdapter(adapter);
+        Lesson[] array_spinner = new Lesson[lessons.size()];
+        lessons.toArray(array_spinner);
 
-	db = new DBHelper(getApplicationContext());
-	db.getWritableDatabase();
-	List<String> users = db.getAllUsers();
-	db.closeDB();
-	// Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
-	if (0 == users.size()) {
-	    Intent intent = new Intent(this, CreateUserActivity.class);
-	    startActivity(intent);
-	}
+        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
+        adapter.setDropDownViewResource(R.layout.spinner);
+        unitSpinner.setAdapter(adapter);
 
-	appPrefs = new AppPreferences(getApplicationContext());
-	// appPrefs.saveUser("Erik");
-	log("User: " + appPrefs.getUser());
+        db = new DBHelper(getApplicationContext());
+        db.getWritableDatabase();
+        List<String> users = db.getAllUsers();
+        db.closeDB();
+        // Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
+        if (0 == users.size()) {
+            Intent intent = new Intent(this, CreateUserActivity.class);
+            startActivity(intent);
+        }
 
-	ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
-	dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	userSpinner.setAdapter(dataAdapter);
-	userSpinner.setSelection(dataAdapter.getPosition(appPrefs.getUser()));
+        appPrefs = new AppPreferences(getApplicationContext());
+        // appPrefs.saveUser("Erik");
+        log("User: " + appPrefs.getUser());
 
-	setTopLine();
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userSpinner.setAdapter(dataAdapter);
+        userSpinner.setSelection(dataAdapter.getPosition(appPrefs.getUser()));
+
+        setTopLine();
     }
 
     private void log(String s) {
-	if (logActive) {
-	    textLog.append("\n" + s);
-	}
+        if (logActive) {
+            textLog.append("\n" + s);
+        }
     }
 
     // Setzt aktuelle TopLine
     private void setTopLine() {
-	textTop.setText("  Benutzer: " + appPrefs.getUser());
+        textTop.setText("  Benutzer: " + appPrefs.getUser());
     }
 }
