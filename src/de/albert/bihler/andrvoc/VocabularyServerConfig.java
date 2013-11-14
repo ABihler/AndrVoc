@@ -27,83 +27,83 @@ import de.albert.bihler.andrvoc.model.VocabularyServer;
 
 public class VocabularyServerConfig extends Activity {
 
-    EditText serverUrl;
+	EditText serverUrl;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_vocabulary_server_config);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_vocabulary_server_config);
 
-	// Demo-URL vorbelegen
-	serverUrl = (EditText) findViewById(R.id.server_popup_url);
-	serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/index.json");
-	serverUrl.selectAll();
-    }
+		// Demo-URL vorbelegen
+		serverUrl = (EditText) findViewById(R.id.server_popup_url);
+		serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/index.json");
+		serverUrl.selectAll();
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-	// Inflate the menu; this adds items to the action bar if it is present.
-	getMenuInflater().inflate(R.menu.vocabulary_server_config, menu);
-	return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.vocabulary_server_config, menu);
+		return true;
+	}
 
-    public void onSave(View view) {
-	checkServer(serverUrl.getText().toString());
-    }
+	public void onSave(View view) {
+		checkServer(serverUrl.getText().toString());
+	}
 
-    private void checkServer(String url) {
-	new AsyncTask<String, Void, VocabularyServer>() {
+	private void checkServer(String url) {
+		new AsyncTask<String, Void, VocabularyServer>() {
 
-	    @Override
-	    protected VocabularyServer doInBackground(String... params) {
-		DefaultHttpClient client = new DefaultHttpClient();
+			@Override
+			protected VocabularyServer doInBackground(String... params) {
+				DefaultHttpClient client = new DefaultHttpClient();
 
-		HttpGet getRequest = new HttpGet(params[0]);
+				HttpGet getRequest = new HttpGet(params[0]);
 
-		try {
+				try {
 
-		    HttpResponse getResponse = client.execute(getRequest);
-		    final int statusCode = getResponse.getStatusLine().getStatusCode();
+					HttpResponse getResponse = client.execute(getRequest);
+					final int statusCode = getResponse.getStatusLine().getStatusCode();
 
-		    if (statusCode != HttpStatus.SC_OK) {
-			Log.w(getClass().getSimpleName(), "Error " + statusCode + " for URL " + params[0]);
-			return null;
-		    }
+					if (statusCode != HttpStatus.SC_OK) {
+						Log.w(getClass().getSimpleName(), "Error " + statusCode + " for URL " + params[0]);
+						return null;
+					}
 
-		    HttpEntity getResponseEntity = getResponse.getEntity();
-		    Gson gson = new Gson();
-		    Reader reader = new InputStreamReader(getResponseEntity.getContent());
-		    VocabularyServer server = gson.fromJson(reader, VocabularyServer.class);
-		    return server;
-		} catch (IOException e) {
-		    getRequest.abort();
-		    Log.w(getClass().getSimpleName(), "Error for URL " + params[0], e);
-		}
+					HttpEntity getResponseEntity = getResponse.getEntity();
+					Gson gson = new Gson();
+					Reader reader = new InputStreamReader(getResponseEntity.getContent());
+					VocabularyServer server = gson.fromJson(reader, VocabularyServer.class);
+					return server;
+				} catch (IOException e) {
+					getRequest.abort();
+					Log.w(getClass().getSimpleName(), "Error for URL " + params[0], e);
+				}
 
-		return null;
+				return null;
 
-	    }
+			}
 
-	    @Override
-	    protected void onPostExecute(VocabularyServer server) {
-		if (server != null) {
-		    Toast.makeText(getApplicationContext(),
-			    getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_LONG)
-			    .show();
-		    LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
-		    lessonDataSource.open();
-		    for (Lesson lesson : server.getLessons()) {
-			lessonDataSource.saveLesson(lesson);
-		    }
-		    lessonDataSource.close();
-		    AppPreferences appPrefs = new AppPreferences(getApplicationContext());
-		    appPrefs.saveVocabularyServer(serverUrl.getText().toString());
-		    finish();
-		} else {
-		    Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
-		}
-	    }
-	}.execute(url);
+			@Override
+			protected void onPostExecute(VocabularyServer server) {
+				if (server != null) {
+					Toast.makeText(getApplicationContext(),
+							getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_LONG)
+							.show();
+					LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
+					lessonDataSource.open();
+					for (Lesson lesson : server.getLessons()) {
+						lessonDataSource.saveLesson(lesson);
+					}
+					lessonDataSource.close();
+					AppPreferences appPrefs = new AppPreferences(getApplicationContext());
+					appPrefs.saveVocabularyServer(serverUrl.getText().toString());
+					finish();
+				} else {
+					Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
+				}
+			}
+		}.execute(url);
 
-    }
+	}
 }
