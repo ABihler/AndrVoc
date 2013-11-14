@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import de.albert.bihler.andrvoc.db.LessonDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
@@ -18,8 +17,11 @@ public class MainActivity extends Activity {
     public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
     private AppPreferences appPrefs;
     private Spinner unitSpinner;
+    private Spinner userSpinner;
     private TextView textLog;
+    private TextView textTop;
     private final boolean logActive = true;
+    private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,31 +88,48 @@ public class MainActivity extends Activity {
     // Zeugs initialisieren.
 
     public void init() {
-
         unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
+        userSpinner = (Spinner) findViewById(R.id.main_spinner_user);
         textLog = (TextView) findViewById(R.id.main_field_log);
+        textTop = (TextView) findViewById(R.id.main_field_top);
         log("initialisieren");
 
-        LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
-        lessonDataSource.open();
-        List<Lesson> lessons = lessonDataSource.getLessons();
-        lessonDataSource.close();
-
-        Lesson[] array_spinner = new Lesson[lessons.size()];
-        lessons.toArray(array_spinner);
-
+        // TODO: Das Array aus der DB lesen.
+        String array_spinner[] = new String[] { "test", "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
         ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
         adapter.setDropDownViewResource(R.layout.spinner);
-
         unitSpinner.setAdapter(adapter);
 
-        appPrefs.saveUser("Erik");
+        db = new DBHelper(getApplicationContext());
+        db.getWritableDatabase();
+        List<String> users = db.getAllUsers();
+        db.closeDB();
+        // Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
+        if (0 == users.size()) {
+            Intent intent = new Intent(this, CreateUserActivity.class);
+            startActivity(intent);
+        }
+
+        appPrefs = new AppPreferences(getApplicationContext());
+        // appPrefs.saveUser("Erik");
         log("User: " + appPrefs.getUser());
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userSpinner.setAdapter(dataAdapter);
+        userSpinner.setSelection(dataAdapter.getPosition(appPrefs.getUser()));
+
+        setTopLine();
     }
 
     private void log(String s) {
         if (logActive) {
             textLog.append("\n" + s);
         }
+    }
+
+    // Setzt aktuelle TopLine
+    private void setTopLine() {
+        textTop.setText("  Benutzer: " + appPrefs.getUser());
     }
 }

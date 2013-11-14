@@ -8,22 +8,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".QuestionActivity" >
 
-        <TextView style="@style/TopLine"
+    <TextView
         android:id="@+id/question_field_top"
-		/>
-    
+        style="@style/TopLine" />
+
     <TextView
         android:id="@+id/question_field_word"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
+        android:layout_below="@+id/question_field_top"
         android:text="@string/hello_world"
-        android:textSize="20sp"
-    	android:layout_below="@+id/question_field_top"/>
-    
-     <View style="@style/Divider"
-        android:textSize="20sp"
+        android:textSize="20sp" />
+
+    <View
         android:id="@+id/question_div01"
-        android:layout_below="@+id/question_field_word" />
+        style="@style/Divider"
+        android:layout_below="@+id/question_field_word"
+        android:textSize="20sp" />
 
     <RadioGroup
         android:id="@+id/answerContainer"
@@ -73,7 +74,7 @@
         android:id="@+id/question_button_main"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_below="@+id/question_WhiteLine01"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="doMain"
         android:text="@string/question_button_main" />
