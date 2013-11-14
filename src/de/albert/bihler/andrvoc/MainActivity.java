@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.albert.bihler.andrvoc.db.LessonDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
@@ -94,8 +95,14 @@ public class MainActivity extends Activity {
         textTop = (TextView) findViewById(R.id.main_field_top);
         log("initialisieren");
 
-        // TODO: Das Array aus der DB lesen.
-        String array_spinner[] = new String[] { "test", "benny_01", "benny_02", "benny_03", "en_unit00_01", "en_unit01_01", "en_unit01_02" };
+        LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
+        lessonDataSource.open();
+        List<Lesson> lessons = lessonDataSource.getLessons();
+        lessonDataSource.close();
+
+        Lesson[] array_spinner = new Lesson[lessons.size()];
+        lessons.toArray(array_spinner);
+
         ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
         adapter.setDropDownViewResource(R.layout.spinner);
         unitSpinner.setAdapter(adapter);
