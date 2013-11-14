@@ -37,7 +37,9 @@ public class CreateUserActivity extends Activity {
             DBHelper db = new DBHelper(getApplicationContext());
             db.getWritableDatabase();
             List<String> userliste = db.getAllUsers();
+
             // Prüfen ob Benutzer bereits in der DB ist
+
             if (userliste.contains(username.getText().toString())) {
                 Toast.makeText(this, R.string.Message_Username_exists, Toast.LENGTH_SHORT).show();
             } else {

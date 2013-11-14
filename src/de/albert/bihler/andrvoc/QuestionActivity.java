@@ -5,12 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -22,6 +18,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
+import de.albert.bihler.andrvoc.db.VocabularyDataSource;
+import de.albert.bihler.andrvoc.model.Vokabel;
 
 public class QuestionActivity extends Activity implements OnCheckedChangeListener {
 
@@ -41,7 +40,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     private String status = "new";
     private final boolean logActive = true;
     private AppPreferences appPrefs;
-    private int currentUnitID;
+    private long currentLesson;
     private String currentSelectedAnswer;
 
     @Override
@@ -52,11 +51,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         } else {
             setContentView(R.layout.activity_question);
         }
-        // try {
-        // int i = savedInstanceState.getInt("currentUnitID");
-        // } catch (Exception e) {
-        // log(e.toString());
-        // }
 
         init();
         log("onCreate");
@@ -71,7 +65,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
     private void init() {
         appPrefs = new AppPreferences(getApplicationContext());
-        currentUnitID = appPrefs.getUnitID(getApplicationContext());
+        currentLesson = appPrefs.getCurrentLesson();
 
         textTop = (TextView) findViewById(R.id.question_field_top);
         textLog = (TextView) findViewById(R.id.question_field_log);
@@ -92,12 +86,11 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
         setStatusLine("Status: unbekannt");
 
-        // Vokabeln der aktuellen Lektion laden
-        this.vocList = loadVocabulary(currentUnitID);
+        // Vokabeln der aktuellen Lektion lade
+        this.vocList = loadVocabulary(currentLesson);
 
         // Abfragereihenfolge der Vokabeln mischen
         Collections.shuffle(this.vocList);
-
     }
 
     @Override
@@ -181,18 +174,29 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         setTopLine();
 
         textWord = (TextView) findViewById(R.id.question_field_word);
-        textWord.setText(vocList.get(index).getOriginalWord());
+
+        textWord.setText(vokabel.getOriginalWord());
         textResult = (TextView) findViewById(R.id.question_field_result);
         textResult.setText("");
 
-        int max = vokabel.getAlternativeTranslations().size();
+        // Anzahl der Antwortmöglichkeiten = Falsche Möglichkeiten + richtige Übersetzung
+        int max = vokabel.getAlternativeTranslations().size() + 1;
 
         // Radiobuttons der letzten Vokabel löschen
         containerGroup.removeAllViews();
 
+        // Antworten zusammenstellen
+        String[] answers = new String[max];
+        vokabel.getAlternativeTranslations().toArray(answers);
+        answers[max - 1] = vokabel.getCorrectTranslation();
+        // und mischen
+        List<String> shuffleList = Arrays.asList(answers);
+        Collections.shuffle(shuffleList);
+        shuffleList.toArray(answers);
+
         for (int i = 0; i <= max - 1; i++) {
             RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(vokabel.getAlternativeTranslations().get(i));
+            radioButton.setText(answers[i]);
             radioButton.setTextSize(20);
             radioButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             containerGroup.addView(radioButton);
@@ -241,49 +245,15 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         }
     }
 
-    private ArrayList<Vokabel> loadVocabulary(int currentUnitId) {
+    private List<Vokabel> loadVocabulary(long currentLesson) {
         log("loadVocabulary");
-        ArrayList<Vokabel> vocList = new ArrayList<Vokabel>();
+        List<Vokabel> vocList = new ArrayList<Vokabel>();
 
-        try {
-            Resources res = this.getResources();
-            // XmlResourceParser xrp = res.getXml(R.xml.en_unit01_02);
-            XmlResourceParser xrp = res.getXml(currentUnitId);
+        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
+        vocabularyDataSource.open();
+        vocList = vocabularyDataSource.getVocabulary(currentLesson);
+        vocabularyDataSource.close();
 
-            int eventType = xrp.getEventType();
-            log("CurrentUnit:" + appPrefs.getUnit());
-            log("CurrentUnitId:" + currentUnitId);
-
-            String tag = "";
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                // if(eventType == XmlPullParser.START_DOCUMENT)
-                // {
-                // log("--- Start XML ---");
-                // }
-                if (eventType == XmlPullParser.START_TAG) {
-                    // log("\nSTART_TAG: "+xrp.getName());
-                    tag = xrp.getName();
-                }
-                // else if(eventType == XmlPullParser.END_TAG)
-                // {
-                // log("\nEND_TAG: "+xrp.getName());
-                // }
-                else if (eventType == XmlPullParser.TEXT) {
-                    // log("\nTEXT: "+xrp.getText());
-                    String line = xrp.getText();
-                    if ("VokLine".equalsIgnoreCase(tag)) {
-                        if (vocList == null) {
-                            vocList = new ArrayList<Vokabel>(Arrays.asList(new Vokabel(line)));
-                        } else {
-                            vocList.add(new Vokabel(line));
-                        }
-                    }
-                }
-                eventType = xrp.next();
-            }
-        } catch (Exception e) {
-            exceptionOutput("Load Exception: " + e.toString());
-        }
         return vocList;
     }
 
