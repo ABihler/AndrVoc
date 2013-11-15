@@ -53,7 +53,8 @@ public class MainActivity extends Activity {
             // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
             // Konfigurationsmaske anzeigen
             startActivity(new Intent(this, VocabularyServerConfig.class));
-        } else {
+        }
+        else {
             init();
         }
 
@@ -121,7 +122,10 @@ public class MainActivity extends Activity {
         adapter.setDropDownViewResource(R.layout.spinner);
         unitSpinner.setAdapter(adapter);
 
+        db = new DBHelper(getApplicationContext());
+        db.getWritableDatabase();
         List<String> users = db.getAllUsers();
+        db.closeDB();
 
         appPrefs = new AppPreferences(getApplicationContext());
         // appPrefs.saveUser("Erik");
