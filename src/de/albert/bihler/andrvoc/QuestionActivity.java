@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.db.VocabularyDataSource;
 import de.albert.bihler.andrvoc.model.Vokabel;
 
@@ -117,12 +118,18 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
     // Check answer
     public void doCheck(View view) {
+
+        TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
+        trainingLogDataSource.open();
+        // Antwort ist richtig
         if (currentSelectedAnswer.equals(vocList.get(actTest).getCorrectTranslation())) {
             textResult = (TextView) findViewById(R.id.question_field_result);
             textResult.setTextColor(Color.rgb(50, 205, 50));
             textResult.setText("Die Antwort ist richtig!!!");
             numRightAnswers++;
             setStatusNext();
+
+            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 1);
 
             setStatusLine(getStasiticString());
             // Ende der Lektion
@@ -131,14 +138,18 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
                 button.setEnabled(false);
                 // TODO:Statistikausgabe, Button evtl. auf zurück ummappen.
             }
-        } else {
+        }
+        // Antwort ist falsch
+        else {
             textResult = (TextView) findViewById(R.id.question_field_result);
             textResult.setTextColor(Color.RED);
             textResult.setText("Die Antwort ist leider falsch.");
             numWrongAnswers++;
             setStatusCheck();
             setStatusLine(getStasiticString());
+            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 1);
         }
+        trainingLogDataSource.close();
     }
 
     public void doMain(View view) {

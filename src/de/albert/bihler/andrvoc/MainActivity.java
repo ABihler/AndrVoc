@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import de.albert.bihler.andrvoc.db.LessonDataSource;
+import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
@@ -147,6 +148,10 @@ public class MainActivity extends Activity {
 
     // Setzt aktuelle TopLine
     private void setTopLine() {
-        textTop.setText("  Benutzer: " + appPrefs.getUser());
+        TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
+        trainingLogDataSource.open();
+        long l = trainingLogDataSource.getNumberOfLogsForUser(appPrefs.getUser());
+        trainingLogDataSource.close();
+        textTop.setText("  Benutzer: " + appPrefs.getUser() + " (" + l + ")");
     }
 }
