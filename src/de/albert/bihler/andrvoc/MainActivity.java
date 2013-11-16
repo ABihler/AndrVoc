@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import de.albert.bihler.andrvoc.db.LessonDataSource;
+import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 
 public class MainActivity extends Activity {
@@ -53,7 +54,8 @@ public class MainActivity extends Activity {
             // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
             // Konfigurationsmaske anzeigen
             startActivity(new Intent(this, VocabularyServerConfig.class));
-        } else {
+        }
+        else {
             init();
         }
 
@@ -121,7 +123,10 @@ public class MainActivity extends Activity {
         adapter.setDropDownViewResource(R.layout.spinner);
         unitSpinner.setAdapter(adapter);
 
+        db = new DBHelper(getApplicationContext());
+        db.getWritableDatabase();
         List<String> users = db.getAllUsers();
+        db.closeDB();
 
         appPrefs = new AppPreferences(getApplicationContext());
         // appPrefs.saveUser("Erik");
@@ -143,6 +148,10 @@ public class MainActivity extends Activity {
 
     // Setzt aktuelle TopLine
     private void setTopLine() {
-        textTop.setText("  Benutzer: " + appPrefs.getUser());
+        TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
+        trainingLogDataSource.open();
+        long l = trainingLogDataSource.getNumberOfLogsForUser(appPrefs.getUser());
+        trainingLogDataSource.close();
+        textTop.setText("  Benutzer: " + appPrefs.getUser() + " (" + l + ")");
     }
 }

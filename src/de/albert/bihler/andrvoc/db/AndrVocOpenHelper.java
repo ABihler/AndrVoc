@@ -1,5 +1,6 @@
 package de.albert.bihler.andrvoc.db;
 
+import android.R.bool;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -20,6 +21,10 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_ALTTRANSLATIONS = "alternativeTranslations";
     public static final String[] ALL_COLUMNS_ALTTRANSLATIONS = { AltTranslationsColumn.ID, AltTranslationsColumn.TRANSLATION,
             AltTranslationsColumn.VOCABULARY_ID };
+
+    public static final String TABLE_NAME_TRAINING_LOG = "trainingLog";
+    public static final String[] ALL_COLUMNS_TRAINING_LOG = { TrainingLogColumn.ID, TrainingLogColumn.USER, TrainingLogColumn.LESSON_NAME,
+            TrainingLogColumn.WORD, TrainingLogColumn.CORRECT_RESULT, TrainingLogColumn.TIMESTAMP };
 
     public interface LessonColumn {
 
@@ -44,6 +49,16 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
         static final String VOCABULARY_ID = "vocabularyId";
     }
 
+    public interface TrainingLogColumn {
+
+        static final String ID = "_id";
+        static final String USER = "user";
+        static final String LESSON_NAME = "lessonName";
+        static final String WORD = "word";
+        static final String CORRECT_RESULT = "correctResult";
+        static final String TIMESTAMP = "timestamp";
+    }
+
     private static final String TABLE_CREATE_LESSON = "CREATE TABLE " + TABLE_NAME_LESSONS + " (" + LessonColumn.ID + " integer primary key autoincrement, "
             + LessonColumn.LESSON_NAME + " text not null, " + LessonColumn.LESSON_LANGUAGE + " text not null, " + LessonColumn.LESSON_VERSION
             + " integer not null);";
@@ -56,6 +71,11 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
             + " integer primary key autoincrement, " + AltTranslationsColumn.TRANSLATION + " text not null, " + AltTranslationsColumn.VOCABULARY_ID
             + " integer not null);";
 
+    private static final String TABLE_CREATE_TRAINING_LOG = "CREATE TABLE " + TABLE_NAME_TRAINING_LOG + " (" + TrainingLogColumn.ID
+            + " integer primary key autoincrement, "
+            + TrainingLogColumn.USER + " text not null, " + TrainingLogColumn.LESSON_NAME + " text not null, " + TrainingLogColumn.WORD + " text not null, " +
+            TrainingLogColumn.CORRECT_RESULT + " integer not null, " + TrainingLogColumn.TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
+
     AndrVocOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -65,6 +85,7 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_LESSON);
         db.execSQL(TABLE_CREATE_VOCABULARY);
         db.execSQL(TABLE_CREATE_ALTTRANSLATIONS);
+        db.execSQL(TABLE_CREATE_TRAINING_LOG);
     }
 
     @Override
@@ -73,6 +94,7 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_LESSONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_VOCABULARY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ALTTRANSLATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRAINING_LOG);
         onCreate(db);
     }
 
