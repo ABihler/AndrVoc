@@ -37,6 +37,7 @@ public class TrainingLogDataSource {
      *            , lesson, word, correct_result (0/1)
      * @return die Id des erzeugten Logeintrags
      */
+    // TODO: Das hier evtl. umbauen für die Vokabel-ID
     public long saveTrainingLog(String user, String lesson, String word, int res) {
         Log.i(TAG, "Saving Training Log");
         // Training Log sichern
@@ -53,6 +54,24 @@ public class TrainingLogDataSource {
     public long getNumberOfLogsForUser(String user) {
         Cursor c = database.rawQuery("select count(*) from " + AndrVocOpenHelper.TABLE_NAME_TRAINING_LOG + " where " + AndrVocOpenHelper.TrainingLogColumn.USER
                 + " = '" + user + "'", null);
+        c.moveToFirst();
+        long count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public long getNumberOfErrorLogsForUser(String user) {
+        Cursor c = database.rawQuery("select count(*) from " + AndrVocOpenHelper.TABLE_NAME_TRAINING_LOG + " where " + AndrVocOpenHelper.TrainingLogColumn.USER
+                + " = '" + user + "' AND " + AndrVocOpenHelper.TrainingLogColumn.CORRECT_RESULT + " = 0", null);
+        c.moveToFirst();
+        long count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public long getNumberOfSuccessLogsForUser(String user) {
+        Cursor c = database.rawQuery("select count(*) from " + AndrVocOpenHelper.TABLE_NAME_TRAINING_LOG + " where " + AndrVocOpenHelper.TrainingLogColumn.USER
+                + " = '" + user + "' AND " + AndrVocOpenHelper.TrainingLogColumn.CORRECT_RESULT + " = 1", null);
         c.moveToFirst();
         long count = c.getInt(0);
         c.close();

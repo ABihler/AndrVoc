@@ -147,7 +147,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
             numWrongAnswers++;
             setStatusCheck();
             setStatusLine(getStasiticString());
-            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 1);
+            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 0);
         }
         trainingLogDataSource.close();
     }

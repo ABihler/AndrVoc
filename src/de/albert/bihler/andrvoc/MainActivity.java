@@ -136,9 +136,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     private void setTopLine() {
         TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
         trainingLogDataSource.open();
-        long l = trainingLogDataSource.getNumberOfLogsForUser(appPrefs.getUser());
+        long numLogs = trainingLogDataSource.getNumberOfLogsForUser(appPrefs.getUser());
+        long numErrors = trainingLogDataSource.getNumberOfErrorLogsForUser(appPrefs.getUser());
+        long numSuc = trainingLogDataSource.getNumberOfSuccessLogsForUser(appPrefs.getUser());
         trainingLogDataSource.close();
-        textTop.setText("  Benutzer: " + appPrefs.getUser() + " (" + l + ")");
+        textTop.setText("  Benutzer: " + appPrefs.getUser() + " (Total:" + numLogs + " richtig: " + numSuc + " falsch: " + numErrors + ")");
     }
 
     /**
