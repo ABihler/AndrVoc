@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class AndrVocOpenHelper extends SQLiteOpenHelper {
+public class DbOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "AndrVoc.db";
@@ -25,7 +25,8 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
             AltTranslationsColumn.VOCABULARY_ID };
 
     public static final String TABLE_NAME_STATISTIC = "statistics";
-    public static final String[] ALL_COLUMNS_STATISTIC = {};
+    public static final String[] ALL_COLUMNS_STATISTIC = { StatisticColumn.ID, StatisticColumn.USER_ID, StatisticColumn.LESSON_ID,
+            StatisticColumn.VOCABULARY_ID, StatisticColumn.CORRECT_ANSWERS, StatisticColumn.WRONG_ANSWERS };
 
     public interface UserColumn {
 
@@ -87,7 +88,7 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
             + " integer not null, "
             + StatisticColumn.CORRECT_ANSWERS + " integer not null default 0, " + StatisticColumn.WRONG_ANSWERS + " integer not null default 0);";
 
-    AndrVocOpenHelper(Context context) {
+    DbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -102,7 +103,7 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(AndrVocOpenHelper.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+        Log.w(DbOpenHelper.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_LESSONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_VOCABULARY);

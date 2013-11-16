@@ -16,15 +16,12 @@ public class LessonDataSource {
     private static final String TAG = "LessonDataSource";
 
     private SQLiteDatabase database;
-    private final AndrVocOpenHelper dbHelper;
+    private final DbOpenHelper dbHelper;
     private final Context ctx;
-
-    // private final String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-    // MySQLiteHelper.COLUMN_COMMENT };
 
     public LessonDataSource(Context context) {
         this.ctx = context;
-        dbHelper = new AndrVocOpenHelper(context);
+        dbHelper = new DbOpenHelper(context);
     }
 
     public void open() throws SQLException {
@@ -46,7 +43,7 @@ public class LessonDataSource {
         // Lektion laden
         Lesson lesson = new Lesson();
 
-        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_LESSONS, AndrVocOpenHelper.ALL_COLUMNS_LESSONS, AndrVocOpenHelper.LessonColumn.ID + "="
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_LESSONS, DbOpenHelper.ALL_COLUMNS_LESSONS, DbOpenHelper.LessonColumn.ID + "="
                 + lessonId, null, null, null, null);
 
         cursor.moveToFirst();
@@ -78,7 +75,7 @@ public class LessonDataSource {
 
         List<Lesson> lessons = new ArrayList<Lesson>();
 
-        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_LESSONS, AndrVocOpenHelper.ALL_COLUMNS_LESSONS, null, null, null, null, null);
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_LESSONS, DbOpenHelper.ALL_COLUMNS_LESSONS, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -106,10 +103,10 @@ public class LessonDataSource {
         Log.i(TAG, "Saving lesson " + lesson.getName());
         // Lektion sichern
         ContentValues values = new ContentValues();
-        values.put(AndrVocOpenHelper.LessonColumn.LESSON_NAME, lesson.getName());
-        values.put(AndrVocOpenHelper.LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
-        values.put(AndrVocOpenHelper.LessonColumn.LESSON_VERSION, lesson.getVersion());
-        long lessonId = database.insert(AndrVocOpenHelper.TABLE_NAME_LESSONS, null, values);
+        values.put(DbOpenHelper.LessonColumn.LESSON_NAME, lesson.getName());
+        values.put(DbOpenHelper.LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
+        values.put(DbOpenHelper.LessonColumn.LESSON_VERSION, lesson.getVersion());
+        long lessonId = database.insert(DbOpenHelper.TABLE_NAME_LESSONS, null, values);
 
         // Vokabeln der Lektion sichern
         VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(this.ctx);

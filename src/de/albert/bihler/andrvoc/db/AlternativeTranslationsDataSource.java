@@ -15,12 +15,12 @@ public class AlternativeTranslationsDataSource {
     private static final String TAG = "AlternativeTranslationsDataSource";
 
     private SQLiteDatabase database;
-    private final AndrVocOpenHelper dbHelper;
+    private final DbOpenHelper dbHelper;
     private final Context ctx;
 
     public AlternativeTranslationsDataSource(Context context) {
         this.ctx = context;
-        dbHelper = new AndrVocOpenHelper(context);
+        dbHelper = new DbOpenHelper(context);
     }
 
     public void open() throws SQLException {
@@ -35,8 +35,8 @@ public class AlternativeTranslationsDataSource {
         Log.i(TAG, "Loading alternative translations for word " + vocabularyId);
         List<String> altTranslations = new ArrayList<String>();
 
-        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, AndrVocOpenHelper.ALL_COLUMNS_ALTTRANSLATIONS,
-                AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID + "=" + vocabularyId, null, null, null, null);
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_ALTTRANSLATIONS, DbOpenHelper.ALL_COLUMNS_ALTTRANSLATIONS,
+                DbOpenHelper.AltTranslationsColumn.VOCABULARY_ID + "=" + vocabularyId, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -52,9 +52,9 @@ public class AlternativeTranslationsDataSource {
         Log.i(TAG, "Saving " + altTranslations.size() + " alternative translations for word " + vocabularyId);
         for (String altTranslation : altTranslations) {
             ContentValues values = new ContentValues();
-            values.put(AndrVocOpenHelper.AltTranslationsColumn.TRANSLATION, altTranslation);
-            values.put(AndrVocOpenHelper.AltTranslationsColumn.VOCABULARY_ID, vocabularyId);
-            database.insert(AndrVocOpenHelper.TABLE_NAME_ALTTRANSLATIONS, null, values);
+            values.put(DbOpenHelper.AltTranslationsColumn.TRANSLATION, altTranslation);
+            values.put(DbOpenHelper.AltTranslationsColumn.VOCABULARY_ID, vocabularyId);
+            database.insert(DbOpenHelper.TABLE_NAME_ALTTRANSLATIONS, null, values);
         }
     }
 

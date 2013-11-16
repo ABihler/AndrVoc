@@ -16,12 +16,12 @@ public class VocabularyDataSource {
     private static final String TAG = "VocabularyDataSource";
 
     private SQLiteDatabase database;
-    private final AndrVocOpenHelper dbHelper;
+    private final DbOpenHelper dbHelper;
     private final Context ctx;
 
     public VocabularyDataSource(Context context) {
         this.ctx = context;
-        dbHelper = new AndrVocOpenHelper(context);
+        dbHelper = new DbOpenHelper(context);
     }
 
     public void open() throws SQLException {
@@ -44,10 +44,10 @@ public class VocabularyDataSource {
         Log.i(TAG, "Saving word " + vokabel.getOriginalWord() + " for lesson " + lessonId);
         // Vokabel sichern
         ContentValues values = new ContentValues();
-        values.put(AndrVocOpenHelper.VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
-        values.put(AndrVocOpenHelper.VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
-        values.put(AndrVocOpenHelper.VocabularyColumn.LESSON_ID, lessonId);
-        long vokabelId = database.insert(AndrVocOpenHelper.TABLE_NAME_VOCABULARY, null, values);
+        values.put(DbOpenHelper.VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
+        values.put(DbOpenHelper.VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
+        values.put(DbOpenHelper.VocabularyColumn.LESSON_ID, lessonId);
+        long vokabelId = database.insert(DbOpenHelper.TABLE_NAME_VOCABULARY, null, values);
         // Alternative Übersetzungen sichern
         AlternativeTranslationsDataSource altTranslationsDataSource = new AlternativeTranslationsDataSource(ctx);
         altTranslationsDataSource.open();
@@ -84,8 +84,8 @@ public class VocabularyDataSource {
 
         List<Vokabel> vocabulary = new ArrayList<Vokabel>();
 
-        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_VOCABULARY, AndrVocOpenHelper.ALL_COLUMNS_VOCABULARY,
-                AndrVocOpenHelper.VocabularyColumn.LESSON_ID + "=" + lessonId, null, null, null, null);
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, DbOpenHelper.ALL_COLUMNS_VOCABULARY,
+                DbOpenHelper.VocabularyColumn.LESSON_ID + "=" + lessonId, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
