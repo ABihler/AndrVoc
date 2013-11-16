@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc;
+package de.robertmathes.android.orangeiron;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +19,9 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.albert.bihler.andrvoc.db.VocabularyDataSource;
-import de.albert.bihler.andrvoc.model.Vokabel;
+import de.albert.bihler.andrvoc.R;
+import de.robertmathes.android.orangeiron.db.VocabularyDataSource;
+import de.robertmathes.android.orangeiron.model.Vokabel;
 
 public class QuestionActivity extends Activity implements OnCheckedChangeListener {
 

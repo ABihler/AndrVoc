@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc;
+package de.robertmathes.android.orangeiron;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import de.albert.bihler.andrvoc.db.LessonDataSource;
-import de.albert.bihler.andrvoc.model.Lesson;
+import de.robertmathes.android.orangeiron.db.DataSource;
+import de.robertmathes.android.orangeiron.model.Lesson;
 
-public class MainActivity extends Activity {
+public class OrangeIron extends Activity {
 
     public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
     private AppPreferences appPrefs;
@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
     private TextView textLog;
     private TextView textTop;
     private final boolean logActive = true;
-    private DBHelper db;
+    private DataSource db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         appPrefs = new AppPreferences(getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // TODO: DB-Connection here
     }
 
     @Override

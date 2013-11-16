@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.albert.bihler.andrvoc"
+    package="de.robertmathes.android.orangeiron"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.albert.bihler.andrvoc.MainActivity"
+            android:name="de.robertmathes.android.orangeiron.OrangeIron"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,24 +24,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.albert.bihler.andrvoc.DisplayMessageActivity"
+            android:name="de.robertmathes.android.orangeiron.DisplayMessageActivity"
             android:label="@string/title_activity_display_message"
-            android:parentActivityName="de.albert.bihler.andrvoc.MainActivity" >
+            android:parentActivityName="de.robertmathes.android.orangeiron.OrangeIron" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.albert.bihler.andrvoc.MainActivity" />
         </activity>
         <activity
-            android:name="de.albert.bihler.andrvoc.QuestionActivity"
+            android:name="de.robertmathes.android.orangeiron.QuestionActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_question" >
         </activity>
         <activity
-            android:name="de.albert.bihler.andrvoc.CreateUserActivity"
+            android:name="de.robertmathes.android.orangeiron.CreateUserActivity"
             android:label="@string/title_activity_create_user" >
         </activity>
  <activity
-            android:name="de.albert.bihler.andrvoc.VocabularyServerConfig"
+            android:name="de.robertmathes.android.orangeiron.VocabularyServerConfig"
             android:label="@string/title_activity_vocabulary_server_config" >
         </activity>
     </application>

@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc.model;
+package de.robertmathes.android.orangeiron.model;
 
 import java.util.List;
 

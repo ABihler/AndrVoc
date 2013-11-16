@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc;
+package de.robertmathes.android.orangeiron;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,9 +22,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import de.albert.bihler.andrvoc.db.LessonDataSource;
-import de.albert.bihler.andrvoc.model.Lesson;
-import de.albert.bihler.andrvoc.model.VocabularyServer;
+import de.albert.bihler.andrvoc.R;
+import de.robertmathes.android.orangeiron.db.LessonDataSource;
+import de.robertmathes.android.orangeiron.model.Lesson;
+import de.robertmathes.android.orangeiron.model.VocabularyServer;
 
 public class VocabularyServerConfig extends Activity {
 

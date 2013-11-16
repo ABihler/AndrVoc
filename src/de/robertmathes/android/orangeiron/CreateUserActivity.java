@@ -1,7 +1,8 @@
-package de.albert.bihler.andrvoc;
+package de.robertmathes.android.orangeiron;
 
 import java.util.List;
 
+import de.albert.bihler.andrvoc.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,7 +39,7 @@ public class CreateUserActivity extends Activity {
             db.getWritableDatabase();
             List<String> userliste = db.getAllUsers();
 
-            // Prüfen ob Benutzer bereits in der DB ist
+            // Prï¿½fen ob Benutzer bereits in der DB ist
 
             if (userliste.contains(username.getText().toString())) {
                 Toast.makeText(this, R.string.Message_Username_exists, Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package de.albert.bihler.andrvoc.db;
+package de.robertmathes.android.orangeiron.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
