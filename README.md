@@ -1,6 +1,7 @@
-AndrVoc
+AndrVoc Vokabeltrainer ohne Namen
 =======
 
-Android Vokabeltrainer
+Android Vokabeltrainer für Kinder und Junggebliebene.
 
-Testversion
+Killerfeature:
+- Multiple choice Antwortmöglichkeiten

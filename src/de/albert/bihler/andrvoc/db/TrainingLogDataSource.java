@@ -1,6 +1,5 @@
 package de.albert.bihler.andrvoc.db;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -9,7 +8,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import de.albert.bihler.andrvoc.model.Lesson;
 
 public class TrainingLogDataSource {
 

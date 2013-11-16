@@ -38,7 +38,7 @@ public class VocabularyServerConfig extends Activity {
         // Demo-URL vorbelegen
         serverUrl = (EditText) findViewById(R.id.server_popup_url);
         // serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/albert.json");
-        serverUrl.setText("https://dl.dropboxusercontent.com/u/64100103/AndrVoc/albert.json");
+        serverUrl.setText("https://dl.dropboxusercontent.com/u/64100103/AndrVocJSON/albert.json");
         serverUrl.selectAll();
     }
 

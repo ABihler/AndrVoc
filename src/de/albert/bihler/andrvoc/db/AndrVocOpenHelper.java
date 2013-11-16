@@ -1,6 +1,5 @@
 package de.albert.bihler.andrvoc.db;
 
-import android.R.bool;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

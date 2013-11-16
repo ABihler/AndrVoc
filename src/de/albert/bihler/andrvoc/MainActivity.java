@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,7 +16,7 @@ import de.albert.bihler.andrvoc.db.LessonDataSource;
 import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnItemSelectedListener {
 
     public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
     private AppPreferences appPrefs;
@@ -58,6 +60,7 @@ public class MainActivity extends Activity {
         else {
             init();
         }
+        userSpinner.setOnItemSelectedListener(this);
 
     }
 
@@ -67,23 +70,6 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
 
         return true;
-    }
-
-    /** Called when the user clicks the Send button */
-    public void sendMessage(View view) {
-    }
-
-    /** Called when the user clicks the Neu button */
-    public void neuButton(View view) {
-        // Intent intent = new Intent(this, DisplayMessageActivity.class);
-        // //EditText editText = (EditText) findViewById(R.id.edit_message);
-        // Spinner planet = (Spinner)findViewById(R.id.planets_spinner);
-        // // planet.toString();
-        // //.toString();
-        // String message = "Hardcoded Text " +
-        // planet.getSelectedItem().toString();
-        // intent.putExtra(EXTRA_MESSAGE, message);
-        // startActivity(intent);
     }
 
     /** Called when the user clicks the start question button */
@@ -119,8 +105,8 @@ public class MainActivity extends Activity {
         Lesson[] array_spinner = new Lesson[lessons.size()];
         lessons.toArray(array_spinner);
 
-        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
-        adapter.setDropDownViewResource(R.layout.spinner);
+        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, android.R.layout.simple_spinner_item, array_spinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitSpinner.setAdapter(adapter);
 
         db = new DBHelper(getApplicationContext());
@@ -153,5 +139,27 @@ public class MainActivity extends Activity {
         long l = trainingLogDataSource.getNumberOfLogsForUser(appPrefs.getUser());
         trainingLogDataSource.close();
         textTop.setText("  Benutzer: " + appPrefs.getUser() + " (" + l + ")");
+    }
+
+    /**
+     * Diese Methoden werden aufgerufen wenn Spinner ausgewählt werden.
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
+        parentView.getItemAtPosition(position);
+
+        switch (parentView.getId())
+        {
+            case R.id.main_spinner_user:
+                appPrefs.saveUser(userSpinner.getItemAtPosition(position).toString());
+                setTopLine();
+                break;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parentView) {
+        //
     }
 }
