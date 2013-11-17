@@ -9,6 +9,7 @@ public class Lesson {
     private String language;
     private int version;
     private List<Vokabel> vocabulary;
+    private long serverVersion;
 
     public long getId() {
         return id;
@@ -48,6 +49,14 @@ public class Lesson {
 
     public void setVocabulary(List<Vokabel> vocabulary) {
         this.vocabulary = vocabulary;
+    }
+
+    public long getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(long serverVersion) {
+        this.serverVersion = serverVersion;
     }
 
     @Override

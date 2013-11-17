@@ -18,9 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
-import de.albert.bihler.andrvoc.R;
-import de.robertmathes.android.orangeiron.db.VocabularyDataSource;
+import de.robertmathes.android.orangeiron.db.DataSource;
 import de.robertmathes.android.orangeiron.model.Vokabel;
 
 public class QuestionActivity extends Activity implements OnCheckedChangeListener {
@@ -172,7 +170,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     private void populateFields(int index) {
         Vokabel vokabel = vocList.get(index);
         setStatusLine(getStasiticString());
-        setTopLine();
 
         textWord = (TextView) findViewById(R.id.question_field_word);
 
@@ -214,11 +211,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         textStatus.setText(message);
     }
 
-    // Setzt aktuelle TopLine
-    private void setTopLine() {
-        textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
-    }
-
     private void exceptionOutput(String s) {
         textStatus.setText(s);
     }
@@ -250,7 +242,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         log("loadVocabulary");
         List<Vokabel> vocList = new ArrayList<Vokabel>();
 
-        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
+        DataSource vocabularyDataSource = new DataSource(getApplicationContext());
         vocabularyDataSource.open();
         vocList = vocabularyDataSource.getVocabulary(currentLesson);
         vocabularyDataSource.close();

@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item 
+        android:id="@+id/action_manageServers"
+        android:title="@string/action_manageServers"
+        android:icon="@drawable/ic_menu_manage_servers" 
+        android:showAsAction="ifRoom" />
+
+</menu>

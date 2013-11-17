@@ -22,14 +22,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import de.albert.bihler.andrvoc.R;
-import de.robertmathes.android.orangeiron.db.LessonDataSource;
+import de.robertmathes.android.orangeiron.db.DataSource;
 import de.robertmathes.android.orangeiron.model.Lesson;
 import de.robertmathes.android.orangeiron.model.VocabularyServer;
 
 public class VocabularyServerConfig extends Activity {
 
-    EditText serverUrl;
+    private DataSource db;
+    private EditText serverUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,17 @@ public class VocabularyServerConfig extends Activity {
         serverUrl = (EditText) findViewById(R.id.server_popup_url);
         serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/albert.json");
         serverUrl.selectAll();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Open database
+        if (db == null) {
+            db = new DataSource(getApplicationContext());
+        }
+        db.open();
     }
 
     @Override
@@ -95,12 +106,9 @@ public class VocabularyServerConfig extends Activity {
 
                             getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_LONG)
                             .show();
-                    LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
-                    lessonDataSource.open();
                     for (Lesson lesson : server.getLessons()) {
-                        lessonDataSource.saveLesson(lesson);
+                        db.saveLesson(lesson);
                     }
-                    lessonDataSource.close();
                     AppPreferences appPrefs = new AppPreferences(getApplicationContext());
                     appPrefs.saveVocabularyServer(serverUrl.getText().toString());
                     finish();
@@ -112,5 +120,13 @@ public class VocabularyServerConfig extends Activity {
             }
         }.execute(url);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Close the db connection
+        db.close();
     }
 }

@@ -3,15 +3,18 @@ package de.robertmathes.android.orangeiron.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.robertmathes.android.orangeiron.model.Lesson;
-import de.robertmathes.android.orangeiron.model.User;
-import de.robertmathes.android.orangeiron.model.Vokabel;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.LessonColumn;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.UserColumn;
+import de.robertmathes.android.orangeiron.model.Lesson;
+import de.robertmathes.android.orangeiron.model.Server;
+import de.robertmathes.android.orangeiron.model.User;
+import de.robertmathes.android.orangeiron.model.Vokabel;
 
 public class DataSource {
 
@@ -19,10 +22,8 @@ public class DataSource {
 
     private SQLiteDatabase database;
     private final DbOpenHelper dbHelper;
-    private final Context ctx;
 
     public DataSource(Context context) {
-        this.ctx = context;
         dbHelper = new DbOpenHelper(context);
     }
 
@@ -34,17 +35,87 @@ public class DataSource {
         dbHelper.close();
     }
 
-    public User getUser(long userId) {
+    public Server getServer(long serverId) {
+        // TODO Auto-generated method stub
         return null;
+    }
+
+    public List<Server> getAllServers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public long saveServer(Server server) {
+        // TODO Auto-generated method stub
+        return -1;
+    }
+
+    public User getUser(long userId) {
+        Log.i(TAG, "Loading user with id " + userId);
+
+        User user = null;
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_USER, DbOpenHelper.ALL_COLUMNS_USER, UserColumn.ID + "=" + userId, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            user = new User();
+            user.setId(cursor.getLong(0));
+            user.setName(cursor.getString(1));
+        }
+        cursor.close();
+
+        return user;
+    }
+
+    public User getUserByName(String name) {
+        Log.i(TAG, "Loading user with name " + name);
+
+        User user = null;
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_USER, DbOpenHelper.ALL_COLUMNS_USER, UserColumn.NAME + "= '" + name + "'", null, null, null,
+                null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            user = new User();
+            user.setId(cursor.getLong(0));
+            user.setName(cursor.getString(1));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return user;
     }
 
     public List<User> getAllUsers() {
-        return null;
+        Log.i(TAG, "Loading all users");
+
+        List<User> users = new ArrayList<User>();
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_USER, DbOpenHelper.ALL_COLUMNS_USER, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            User user = new User();
+            user.setId(cursor.getLong(0));
+            user.setName(cursor.getString(1));
+            users.add(user);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return users;
     }
 
     public long saveUser(User user) {
+        Log.i(TAG, "Saving user " + user.getName());
 
-        return -1;
+        ContentValues values = new ContentValues();
+        values.put(UserColumn.NAME, user.getName());
+        long lessonId = database.insert(DbOpenHelper.TABLE_NAME_USER, null, values);
+
+        return lessonId;
     }
 
     /**
@@ -58,7 +129,7 @@ public class DataSource {
         // Lektion laden
         Lesson lesson = new Lesson();
 
-        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_LESSONS, DbOpenHelper.ALL_COLUMNS_LESSONS, DbOpenHelper.LessonColumn.ID + "="
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_LESSONS, DbOpenHelper.ALL_COLUMNS_LESSONS, LessonColumn.ID + "="
                 + lessonId, null, null, null, null);
 
         cursor.moveToFirst();
@@ -78,11 +149,11 @@ public class DataSource {
     }
 
     /**
-     * Liefert eine Liste von Lessons-Objekten ohne Vokabeln.
+     * Gibt alle gespeicherten Lektionen zurück
      * 
-     * @return Liste von Lektionen ohne Vokabeln
+     * @return Liste von Lektionen mit Vokabeln
      */
-    public List<Lesson> getLessons() {
+    public List<Lesson> getAllLessons() {
         Log.i(TAG, "Loading all lessons");
 
         List<Lesson> lessons = new ArrayList<Lesson>();
@@ -96,6 +167,10 @@ public class DataSource {
             lesson.setName(cursor.getString(1));
             lesson.setLanguage(cursor.getString(2));
             lesson.setVersion(cursor.getInt(3));
+
+            // Vokabeln der Lektion laden
+            lesson.setVocabulary(getVocabulary(lesson.getId()));
+
             lessons.add(lesson);
             cursor.moveToNext();
         }

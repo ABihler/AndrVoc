@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndrVoc Vokabeltrainer</string>
+
+    <string name="app_name">Orange Iron</string>
+    <string name="action_createUser">Neuen Benutzer erstellen</string>
+    <string name="no_user_defined">Klicke oben auf den Button, um einen neuen Benutzer anzulegen!</string>
     <string name="edit_message">Gib etwas ein</string>
     <string name="neu_message">Neu ein</string>
     <string name="button_send">Send</string>
@@ -22,10 +25,11 @@
     <string name="question_field_status"></string>
     <string name="question_field_log"></string>
     <string name="main_field_log"></string>
-    <string name="title_activity_create_user">CreateUserActivity</string>
+    <string name="title_activity_create_user">Neuen Benutzer erstellen</string>
     <string name="ButtonCreateUser">Benutzer anlegen</string>
     <string name="createUser_field_label">Benutzername:</string>
-    <string name="createUser_Username_Hint">Benutzername:</string>
+    <string name="createUser_Username_Hint">Benutzername</string>
+    <string name="createUser_button">Erstellen</string>
     <string name="server_popup_explanation">Du hast das Programm zum ersten Mal gestartet. Bitte gib den URL deines Vokablservers an. Anschließend werden die Vokabeln von diesem geladen.</string>
     <string name="save">Speichern</string>
     <string name="title_activity_vocabulary_server_config">Vokabelserver konfigurieren</string>
@@ -33,4 +37,8 @@
     <string name="found_valid_server">Vokabelserver %1$s gefunden. %2$d Lektionen vorhanden. Lade Lektionen.</string>
     <string name="Message_Username_empty">Benutzername darf nicht leer sein.</string>
     <string name="Message_Username_exists">Benutzername ist bereits vergeben.</string>
+    <string name="title_activity_lesson_chooser">Lektionen</string>
+    <string name="no_lessons_present">Keine Lektionen vorhanden! Konfiguriere einen Vokabelserver um Lektionen herunterzuladen.</string>
+    <string name="action_manageServers">Vokabelserver verwalten</string>
+
 </resources>

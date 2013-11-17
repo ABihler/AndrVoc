@@ -4,30 +4,39 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.TextView;
+import de.robertmathes.android.orangeiron.adapter.UserListViewAdapter;
 import de.robertmathes.android.orangeiron.db.DataSource;
-import de.robertmathes.android.orangeiron.model.Lesson;
+import de.robertmathes.android.orangeiron.model.User;
 
-public class OrangeIron extends Activity {
+public class OrangeIron extends Activity implements OnItemClickListener {
 
-    public final static String EXTRA_MESSAGE = "de.albert.bihler.MESSAGE";
     private AppPreferences appPrefs;
-    private Spinner unitSpinner;
-    private Spinner userSpinner;
-    private TextView textLog;
-    private TextView textTop;
-    private final boolean logActive = true;
+    private ListView listView;
+    private UserListViewAdapter userAdapter;
     private DataSource db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.listView = (ListView) findViewById(R.id.userList);
+        this.listView.setOnItemClickListener(this);
+
+        // set the view when the list is empty
+        TextView emtpyView = (TextView) findViewById(R.id.empty_user_list);
+        Typeface roboto_light = Typeface.createFromAsset(getAssets(), "fonts/Roboto/Roboto-Light.ttf");
+        emtpyView.setTypeface(roboto_light);
+        this.listView.setEmptyView(emtpyView);
 
         appPrefs = new AppPreferences(getApplicationContext());
     }
@@ -36,34 +45,32 @@ public class OrangeIron extends Activity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: DB-Connection here
+        // Open database
+        if (db == null) {
+            db = new DataSource(getApplicationContext());
+        }
+        db.open();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if ("no user defined".equals(appPrefs.getUser())) {
-            // Es gibt noch keinen current User. D.h. wir müssen einen anlegen.
-            db = new DBHelper(getApplicationContext());
-            db.getWritableDatabase();
-            List<String> users = db.getAllUsers();
-            db.closeDB();
-            // Wenn es keinen User in der DB gibt, dann muss man einen anlegen.
-            if (0 == users.size()) {
-                Intent intent = new Intent(this, CreateUserActivity.class);
-                startActivity(intent);
-            }
-        }
+        // get users, if any present
+        List<User> users = db.getAllUsers();
 
-        else if ("none".equals(appPrefs.getVocabularyServer())) {
-            // Es wurde noch keine URL hinterlegt (erster Start der Anwendung)
-            // Konfigurationsmaske anzeigen
-            startActivity(new Intent(this, VocabularyServerConfig.class));
-        } else {
-            init();
-        }
+        // set the adapter to the list view
+        this.userAdapter = new UserListViewAdapter(getApplicationContext(), users);
+        this.listView.setAdapter(userAdapter);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Close the db connection
+        db.close();
     }
 
     @Override
@@ -74,82 +81,25 @@ public class OrangeIron extends Activity {
         return true;
     }
 
-    /** Called when the user clicks the Send button */
-    public void sendMessage(View view) {
-    }
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+        // save the selected user in the preferences for other activities
+        appPrefs.saveCurrentUser(id);
 
-    /** Called when the user clicks the Neu button */
-    public void neuButton(View view) {
-        // Intent intent = new Intent(this, DisplayMessageActivity.class);
-        // //EditText editText = (EditText) findViewById(R.id.edit_message);
-        // Spinner planet = (Spinner)findViewById(R.id.planets_spinner);
-        // // planet.toString();
-        // //.toString();
-        // String message = "Hardcoded Text " +
-        // planet.getSelectedItem().toString();
-        // intent.putExtra(EXTRA_MESSAGE, message);
-        // startActivity(intent);
-    }
-
-    /** Called when the user clicks the start question button */
-    public void startQuestion(View view) {
-        Lesson lesson = (Lesson) unitSpinner.getSelectedItem();
-        appPrefs.saveLesson(lesson.getId());
-
-        Intent intent = new Intent(this, QuestionActivity.class);
+        // navigate to the lesson chooser
+        Intent intent = new Intent(this, LessonChooserActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the create user button */
-    public void createUser(View view) {
-        Intent intent = new Intent(this, CreateUserActivity.class);
-        startActivity(intent);
-    }
-
-    // Zeugs initialisieren.
-
-    public void init() {
-
-        unitSpinner = (Spinner) findViewById(R.id.main_spinner_unit);
-        userSpinner = (Spinner) findViewById(R.id.main_spinner_user);
-        textLog = (TextView) findViewById(R.id.main_field_log);
-        textTop = (TextView) findViewById(R.id.main_field_top);
-        log("initialisieren");
-
-        LessonDataSource lessonDataSource = new LessonDataSource(getApplicationContext());
-        lessonDataSource.open();
-        List<Lesson> lessons = lessonDataSource.getLessons();
-        lessonDataSource.close();
-
-        Lesson[] array_spinner = new Lesson[lessons.size()];
-        lessons.toArray(array_spinner);
-
-        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(this, R.layout.spinner_list, array_spinner);
-        adapter.setDropDownViewResource(R.layout.spinner);
-        unitSpinner.setAdapter(adapter);
-
-        List<String> users = db.getAllUsers();
-
-        appPrefs = new AppPreferences(getApplicationContext());
-        // appPrefs.saveUser("Erik");
-        log("User: " + appPrefs.getUser());
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        userSpinner.setAdapter(dataAdapter);
-        userSpinner.setSelection(dataAdapter.getPosition(appPrefs.getUser()));
-
-        setTopLine();
-    }
-
-    private void log(String s) {
-        if (logActive) {
-            textLog.append("\n" + s);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_createUser:
+                Intent intent = new Intent(this, CreateUserActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-    }
-
-    // Setzt aktuelle TopLine
-    private void setTopLine() {
-        textTop.setText("  Benutzer: " + appPrefs.getUser());
     }
 }
