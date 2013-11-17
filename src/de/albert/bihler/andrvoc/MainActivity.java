@@ -1,5 +1,7 @@
 package de.albert.bihler.andrvoc;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,7 +16,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.albert.bihler.andrvoc.db.LessonDataSource;
 import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
+import de.albert.bihler.andrvoc.db.VocabularyDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
+import de.albert.bihler.andrvoc.model.Vokabel;
 
 public class MainActivity extends Activity implements OnItemSelectedListener {
 
@@ -26,6 +30,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     private TextView textTop;
     private final boolean logActive = true;
     private DBHelper db;
+    private ApplicationSingleton appSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_main);
 
         appPrefs = new AppPreferences(getApplicationContext());
+        appSingleton = ApplicationSingleton.getInstance();
     }
 
     @Override
@@ -76,6 +82,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     public void startQuestion(View view) {
         Lesson lesson = (Lesson) unitSpinner.getSelectedItem();
         appPrefs.saveLesson(lesson.getId());
+
+        // Vokabeln der aktuellen Lektion laden
+        List<Vokabel> vocList = loadVocabulary(lesson.getId());
+        // Abfragereihenfolge der Vokabeln mischen
+        Collections.shuffle(vocList);
+        appSingleton.setApplicationVocList(vocList);
 
         Intent intent = new Intent(this, QuestionActivity.class);
         startActivity(intent);
@@ -164,4 +176,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     public void onNothingSelected(AdapterView<?> parentView) {
         //
     }
+
+    private List<Vokabel> loadVocabulary(long currentLesson) {
+        log("loadVocabulary");
+        List<Vokabel> vocList = new ArrayList<Vokabel>();
+
+        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
+        vocabularyDataSource.open();
+        vocList = vocabularyDataSource.getVocabulary(currentLesson);
+        vocabularyDataSource.close();
+
+        return vocList;
+    }
+
 }

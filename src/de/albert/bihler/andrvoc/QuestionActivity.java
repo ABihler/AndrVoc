@@ -43,6 +43,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     private AppPreferences appPrefs;
     private long currentLesson;
     private String currentSelectedAnswer;
+    private ApplicationSingleton appSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,9 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         } else {
             setContentView(R.layout.activity_question);
         }
+
+        appPrefs = new AppPreferences(getApplicationContext());
+        appSingleton = ApplicationSingleton.getInstance();
 
         init();
         log("onCreate");
@@ -65,9 +69,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     }
 
     private void init() {
-        appPrefs = new AppPreferences(getApplicationContext());
-        currentLesson = appPrefs.getCurrentLesson();
-
         textTop = (TextView) findViewById(R.id.question_field_top);
         textLog = (TextView) findViewById(R.id.question_field_log);
         textLog.setMovementMethod(new ScrollingMovementMethod());
@@ -87,11 +88,8 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
         setStatusLine("Status: unbekannt");
 
-        // Vokabeln der aktuellen Lektion lade
-        this.vocList = loadVocabulary(currentLesson);
-
-        // Abfragereihenfolge der Vokabeln mischen
-        Collections.shuffle(this.vocList);
+        // Vokabeln der aktuellen Lektion holen
+        this.vocList = appSingleton.getApplicationVocList();
     }
 
     @Override
@@ -254,18 +252,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         if (logActive) {
             textLog.append("\n" + s);
         }
-    }
-
-    private List<Vokabel> loadVocabulary(long currentLesson) {
-        log("loadVocabulary");
-        List<Vokabel> vocList = new ArrayList<Vokabel>();
-
-        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
-        vocabularyDataSource.open();
-        vocList = vocabularyDataSource.getVocabulary(currentLesson);
-        vocabularyDataSource.close();
-
-        return vocList;
     }
 
     @Override
