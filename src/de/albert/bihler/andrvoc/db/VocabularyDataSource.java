@@ -104,4 +104,24 @@ public class VocabularyDataSource {
 
         return vocabulary;
     }
+
+    public Vokabel getVocabularyById(int vocId) {
+        AlternativeTranslationsDataSource altTranslationsDataSource = new AlternativeTranslationsDataSource(ctx);
+        altTranslationsDataSource.open();
+
+        Cursor cursor = database.query(AndrVocOpenHelper.TABLE_NAME_VOCABULARY, AndrVocOpenHelper.ALL_COLUMNS_VOCABULARY,
+                AndrVocOpenHelper.VocabularyColumn.ID + "=" + vocId, null, null, null, null);
+        cursor.moveToFirst();
+        Vokabel vokabel = new Vokabel();
+        vokabel.setId(cursor.getLong(0));
+        vokabel.setOriginalWord(cursor.getString(1));
+        vokabel.setCorrectTranslation(cursor.getString(2));
+        // TODO fix dirty 999 hack
+        vokabel.setLessonId(999);
+        vokabel.setAlternativeTranslations(altTranslationsDataSource.getAlternativeTranslations(vokabel.getId()));
+        cursor.close();
+
+        return vokabel;
+
+    }
 }

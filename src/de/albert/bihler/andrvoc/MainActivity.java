@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -65,9 +66,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         }
         else {
             init();
+            userSpinner.setOnItemSelectedListener(this);
         }
-        userSpinner.setOnItemSelectedListener(this);
-
     }
 
     @Override
@@ -121,6 +121,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitSpinner.setAdapter(adapter);
 
+        // Todo wäre es evtl. nich besse die DB offen zu halten und beim finisch zu schließen?
         db = new DBHelper(getApplicationContext());
         db.getWritableDatabase();
         List<String> users = db.getAllUsers();
@@ -189,4 +190,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         return vocList;
     }
 
+    /** Called when the user clicks the start question button */
+    public void startTest(View view) {
+        // Schlechteste Vokabeln holen
+        TrainingLogDataSource tds = new TrainingLogDataSource(getApplicationContext());
+        tds.open();
+        List<Vokabel> vocList = tds.getWorstForUser(appPrefs.getUser());
+        // Abfragereihenfolge der Vokabeln mischen
+        Collections.shuffle(vocList);
+        appSingleton.setApplicationVocList(vocList);
+
+        Intent intent = new Intent(this, QuestionActivity.class);
+        startActivity(intent);
+    }
 }

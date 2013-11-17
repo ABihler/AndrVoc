@@ -22,8 +22,8 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
             AltTranslationsColumn.VOCABULARY_ID };
 
     public static final String TABLE_NAME_TRAINING_LOG = "trainingLog";
-    public static final String[] ALL_COLUMNS_TRAINING_LOG = { TrainingLogColumn.ID, TrainingLogColumn.USER, TrainingLogColumn.LESSON_NAME,
-            TrainingLogColumn.WORD, TrainingLogColumn.CORRECT_RESULT, TrainingLogColumn.TIMESTAMP };
+    public static final String[] ALL_COLUMNS_TRAINING_LOG = { TrainingLogColumn.ID, TrainingLogColumn.USER, TrainingLogColumn.VOKABEL_ID,
+            TrainingLogColumn.CORRECT_RESULT, TrainingLogColumn.TIMESTAMP };
 
     public interface LessonColumn {
 
@@ -52,8 +52,8 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
 
         static final String ID = "_id";
         static final String USER = "user";
-        static final String LESSON_NAME = "lessonName";
-        static final String WORD = "word";
+        static final String VOKABEL_ID = "vocabelID";
+        // static final String WORD = "word";
         static final String CORRECT_RESULT = "correctResult";
         static final String TIMESTAMP = "timestamp";
     }
@@ -72,7 +72,7 @@ public class AndrVocOpenHelper extends SQLiteOpenHelper {
 
     private static final String TABLE_CREATE_TRAINING_LOG = "CREATE TABLE " + TABLE_NAME_TRAINING_LOG + " (" + TrainingLogColumn.ID
             + " integer primary key autoincrement, "
-            + TrainingLogColumn.USER + " text not null, " + TrainingLogColumn.LESSON_NAME + " text not null, " + TrainingLogColumn.WORD + " text not null, " +
+            + TrainingLogColumn.USER + " text not null, " + TrainingLogColumn.VOKABEL_ID + " integer not null, " +
             TrainingLogColumn.CORRECT_RESULT + " integer not null, " + TrainingLogColumn.TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
     AndrVocOpenHelper(Context context) {

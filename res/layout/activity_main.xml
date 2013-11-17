@@ -56,17 +56,21 @@
         style="@style/Divider"
         android:layout_below="@+id/main_spinner_user" />
 
-    <View
-        android:id="@+id/whiteLine03"
-        style="@style/WhiteLineSpace"
-        android:layout_below="@+id/div02" />
+    <Button
+        android:id="@+id/main_button_test"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/div02"
+        android:layout_centerHorizontal="true"
+        android:onClick="startTest"
+        android:text="@string/ButtonTest" />
 
     <Spinner
         android:id="@+id/main_spinner_unit"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/whiteLine03"
+        android:layout_below="@+id/main_button_test"
         android:spinnerMode="dropdown"
         android:textSize="20sp" />
 

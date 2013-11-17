@@ -127,7 +127,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
             numRightAnswers++;
             setStatusNext();
 
-            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 1);
+            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), (int) vocList.get(actTest).getId(), 1);
 
             setStatusLine(getStasiticString());
             // Ende der Lektion
@@ -145,7 +145,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
             numWrongAnswers++;
             setStatusCheck();
             setStatusLine(getStasiticString());
-            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), Long.toString(appPrefs.getCurrentLesson()), currentSelectedAnswer, 0);
+            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), (int) vocList.get(actTest).getId(), 0);
         }
         trainingLogDataSource.close();
     }

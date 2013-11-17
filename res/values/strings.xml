@@ -33,4 +33,6 @@
     <string name="found_valid_server">Vokabelserver %1$s gefunden. %2$d Lektionen vorhanden. Lade Lektionen.</string>
     <string name="Message_Username_empty">Benutzername darf nicht leer sein.</string>
     <string name="Message_Username_exists">Benutzername ist bereits vergeben.</string>
+    <string name="ButtonTest">unsichere Vokabeln</string>
+    
 </resources>
