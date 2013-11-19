@@ -1,6 +1,5 @@
 package de.albert.bihler.andrvoc;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

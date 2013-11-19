@@ -1,6 +1,5 @@
 package de.albert.bihler.andrvoc;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,9 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
-import de.albert.bihler.andrvoc.db.VocabularyDataSource;
 import de.albert.bihler.andrvoc.model.Vokabel;
 import de.robertmathes.android.orangeiron.R;
 
@@ -42,7 +39,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     private String status = "new";
     private final boolean logActive = true;
     private AppPreferences appPrefs;
-    private long currentLesson;
     private String currentSelectedAnswer;
     private ApplicationSingleton appSingleton;
 
@@ -227,10 +223,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     // textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
     // }
 
-    private void exceptionOutput(String s) {
-        textStatus.setText(s);
-    }
-
     private String getStasiticString() {
         String stat = "Statistik:" + numRightAnswers + " richtig und " + numWrongAnswers + " falsch.";
         return stat;
@@ -252,18 +244,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         if (logActive) {
             textLog.append("\n" + s);
         }
-    }
-
-    private List<Vokabel> loadVocabulary(long currentLesson) {
-        log("loadVocabulary");
-        List<Vokabel> vocList = new ArrayList<Vokabel>();
-
-        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
-        vocabularyDataSource.open();
-        vocList = vocabularyDataSource.getVocabulary(currentLesson);
-        vocabularyDataSource.close();
-
-        return vocList;
     }
 
     @Override

@@ -28,7 +28,6 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
     private ListView listView;
     private DataSource db;
     private LessonListViewAdapter lessonAdapter;
-    private List<Vokabel> vocList;
     private AppPreferences appPrefs;
     private ApplicationSingleton appSingleton;
 

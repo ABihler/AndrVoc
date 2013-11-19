@@ -2,14 +2,12 @@ package de.albert.bihler.andrvoc;
 
 import java.util.List;
 
-import de.albert.bihler.andrvoc.model.Lesson;
 import de.albert.bihler.andrvoc.model.Vokabel;
 
 public class ApplicationSingleton
 {
 
     private String test;
-    private Lesson lesson;
     private List<Vokabel> vocList;
     private static ApplicationSingleton appSingleton;
 
