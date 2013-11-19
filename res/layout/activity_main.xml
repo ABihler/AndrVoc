@@ -1,87 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:layout_height="fill_parent" >
+
+    <ListView
+        android:id="@+id/userList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:listSelector="@color/pressed_orangeiron" >
+    </ListView>
 
     <TextView
-        android:id="@+id/main_field_top"
-        style="@style/TopLine" />
-
-    <View
-        android:id="@+id/whiteLine01"
-        style="@style/WhiteLineSpace"
-        android:layout_below="@+id/main_field_top" />
-
-    <Button
-        android:id="@+id/start_question"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/whiteLine01"
-        android:layout_centerHorizontal="true"
-        android:onClick="startQuestion"
-        android:text="@string/ButtonFrageStellen" />
-
-    <View
-        android:id="@+id/whiteLine02"
-        style="@style/WhiteLineSpace"
-        android:layout_below="@+id/start_question" />
-
-    <Button
-        android:id="@+id/create_user"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/whiteLine02"
-        android:layout_centerHorizontal="true"
-        android:onClick="createUser"
-        android:text="@string/ButtonCreateUser" />
-
-    <View
-        android:id="@+id/div01"
-        style="@style/Divider"
-        android:layout_below="@+id/create_user" />
-
-    <Spinner
-        android:id="@+id/main_spinner_user"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/create_user"
-        android:spinnerMode="dropdown"
-        android:textSize="20sp" />
-
-    <View
-        android:id="@+id/div02"
-        style="@style/Divider"
-        android:layout_below="@+id/main_spinner_user" />
-
-    <Button
-        android:id="@+id/main_button_test"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/div02"
-        android:layout_centerHorizontal="true"
-        android:onClick="startTest"
-        android:text="@string/ButtonTest" />
-
-    <Spinner
-        android:id="@+id/main_spinner_unit"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/main_button_test"
-        android:spinnerMode="dropdown"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/main_field_log"
-        android:layout_width="fill_parent"
-        android:layout_height="150dp"
-        android:layout_below="@+id/main_spinner_unit"
-        android:maxLines="500"
-        android:scrollbars="vertical"
-        android:text="@string/main_field_log"
-        android:textSize="12sp" />
+        android:id="@+id/empty_user_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="100dp"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
+        android:text="@string/no_user_defined"
+        android:textAlignment="center" >
+    </TextView>
 
 </RelativeLayout>

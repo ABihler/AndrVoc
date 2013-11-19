@@ -18,10 +18,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
+import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.db.VocabularyDataSource;
 import de.albert.bihler.andrvoc.model.Vokabel;
+import de.robertmathes.android.orangeiron.R;
 
 public class QuestionActivity extends Activity implements OnCheckedChangeListener {
 
@@ -127,7 +128,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
             numRightAnswers++;
             setStatusNext();
 
-            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), (int) vocList.get(actTest).getId(), 1);
+            trainingLogDataSource.saveTrainingLog((int) appPrefs.getCurrentUser(), (int) vocList.get(actTest).getId(), 1);
 
             setStatusLine(getStasiticString());
             // Ende der Lektion
@@ -145,7 +146,7 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
             numWrongAnswers++;
             setStatusCheck();
             setStatusLine(getStasiticString());
-            trainingLogDataSource.saveTrainingLog(appPrefs.getUser(), (int) vocList.get(actTest).getId(), 0);
+            trainingLogDataSource.saveTrainingLog((int) appPrefs.getUser(), (int) vocList.get(actTest).getId(), 0);
         }
         trainingLogDataSource.close();
     }
@@ -180,7 +181,6 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     private void populateFields(int index) {
         Vokabel vokabel = vocList.get(index);
         setStatusLine(getStasiticString());
-        setTopLine();
 
         textWord = (TextView) findViewById(R.id.question_field_word);
 
@@ -223,9 +223,9 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     }
 
     // Setzt aktuelle TopLine
-    private void setTopLine() {
-        textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
-    }
+    // private void setTopLine() {
+    // textTop.setText("  Benutzer: " + appPrefs.getUser() + " " + (actTest + 1) + "/" + vocList.size());
+    // }
 
     private void exceptionOutput(String s) {
         textStatus.setText(s);
@@ -252,6 +252,18 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         if (logActive) {
             textLog.append("\n" + s);
         }
+    }
+
+    private List<Vokabel> loadVocabulary(long currentLesson) {
+        log("loadVocabulary");
+        List<Vokabel> vocList = new ArrayList<Vokabel>();
+
+        VocabularyDataSource vocabularyDataSource = new VocabularyDataSource(getApplicationContext());
+        vocabularyDataSource.open();
+        vocList = vocabularyDataSource.getVocabulary(currentLesson);
+        vocabularyDataSource.close();
+
+        return vocList;
     }
 
     @Override

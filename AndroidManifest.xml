@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.albert.bihler.andrvoc"
+    package="de.robertmathes.android.orangeiron"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.Orangeiron" >
         <activity
-            android:name="de.albert.bihler.andrvoc.MainActivity"
+            android:name="de.albert.bihler.andrvoc.OrangeIron"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,7 @@
         <activity
             android:name="de.albert.bihler.andrvoc.DisplayMessageActivity"
             android:label="@string/title_activity_display_message"
-            android:parentActivityName="de.albert.bihler.andrvoc.MainActivity" >
+            android:parentActivityName="de.albert.bihler.andrvoc.OrangeIron" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.albert.bihler.andrvoc.MainActivity" />
@@ -40,9 +41,13 @@
             android:name="de.albert.bihler.andrvoc.CreateUserActivity"
             android:label="@string/title_activity_create_user" >
         </activity>
- <activity
+        <activity
             android:name="de.albert.bihler.andrvoc.VocabularyServerConfig"
             android:label="@string/title_activity_vocabulary_server_config" >
+        </activity>
+        <activity
+            android:name="de.albert.bihler.andrvoc.LessonChooserActivity"
+            android:label="@string/title_activity_lesson_chooser" >
         </activity>
     </application>
 
