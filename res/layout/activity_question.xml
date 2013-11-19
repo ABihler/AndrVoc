@@ -8,17 +8,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/label_originalWord"
+            android:id="@+id/textView_lesson_originalWord"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ListView
-            android:id="@+id/listView_translations"
+            android:id="@+id/listView_lesson__translations"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </ListView>
@@ -27,7 +28,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/dark_blue" >
+        android:background="@color/dark_blue"
+        android:orientation="horizontal"
+        android:paddingLeft="64dp" >
+        
+        <TextView
+            android:id="@+id/textView_lesson_correctAnswers"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_answer_good"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_lesson_wrong_answers"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_answer_bad"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

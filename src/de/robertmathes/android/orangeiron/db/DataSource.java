@@ -62,6 +62,7 @@ public class DataSource {
             user = new User();
             user.setId(cursor.getLong(0));
             user.setName(cursor.getString(1));
+            cursor.moveToNext();
         }
         cursor.close();
 
@@ -124,7 +125,7 @@ public class DataSource {
      * @param lessonId
      * @return Lektion mit der id lessonId
      */
-    public Lesson getLesson(int lessonId) {
+    public Lesson getLesson(long lessonId) {
         Log.i(TAG, "Loading lesson " + lessonId);
         // Lektion laden
         Lesson lesson = new Lesson();
