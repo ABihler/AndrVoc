@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.robertmathes.android.orangeiron.R;
-import de.robertmathes.android.orangeiron.R.id;
-import de.robertmathes.android.orangeiron.R.layout;
 import de.robertmathes.android.orangeiron.model.User;
 
 public class UserListViewAdapter extends BaseAdapter {

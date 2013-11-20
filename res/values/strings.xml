@@ -40,5 +40,6 @@
     <string name="title_activity_lesson_chooser">Lektionen</string>
     <string name="no_lessons_present">Keine Lektionen vorhanden! Konfiguriere einen Vokabelserver um Lektionen herunterzuladen.</string>
     <string name="action_manageServers">Vokabelserver verwalten</string>
+    <string name="title_lesson">Lektion:</string>
 
 </resources>

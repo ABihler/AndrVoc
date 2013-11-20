@@ -1,22 +1,36 @@
 package de.robertmathes.android.orangeiron;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
+import de.robertmathes.android.orangeiron.adapter.QuestionListViewAdapter;
 import de.robertmathes.android.orangeiron.db.DataSource;
 import de.robertmathes.android.orangeiron.model.Lesson;
 import de.robertmathes.android.orangeiron.model.User;
 
-public class QuestionActivity extends Activity implements OnCheckedChangeListener {
+public class QuestionActivity extends Activity implements OnItemClickListener {
 
     private AppPreferences appPrefs;
     private DataSource db;
     private User user;
     private Lesson lesson;
+    private int currentWord;
     private TextView originalWord;
+    private ListView translations;
+    private TextView correctAnswers;
+    private TextView badAnswers;
+    private int correctAnswersCount = 0;
+    private int badAnswersCount = 0;
+    private QuestionListViewAdapter translationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +44,14 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         appPrefs = new AppPreferences(getApplicationContext());
 
         originalWord = (TextView) findViewById(R.id.textView_lesson_originalWord);
+        translations = (ListView) findViewById(R.id.listView_lesson__translations);
+        translations.setOnItemClickListener(this);
+        correctAnswers = (TextView) findViewById(R.id.textView_lesson_correctAnswers);
+        correctAnswers.setText(correctAnswersCount + "");
+        badAnswers = (TextView) findViewById(R.id.textView_lesson_wrong_answers);
+        badAnswers.setText(badAnswersCount + "");
 
-        // init();
-        // log("onCreate");
-        //
-        // setStatusLine("Status: unbekannt");
-        //
-        // if (vocList.size() > 0) {
-        // setStatusCheck();
-        // populateFields(actTest);
-        // }
+        currentWord = 0;
     }
 
     @Override
@@ -61,11 +73,14 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
         user = db.getUser(appPrefs.getCurrentUser());
         lesson = db.getLesson(appPrefs.getCurrentLesson());
 
-        // set the title based on the current lesson
-        // TODO move string to strings.xml
-        setTitle("Lektion: " + lesson.getName());
+        // set the list view adapter
+        translationsAdapter = new QuestionListViewAdapter(getApplicationContext(), lesson.getVocabulary().get(0));
+        translations.setAdapter(translationsAdapter);
 
-        originalWord.setText(lesson.getVocabulary().get(0).getOriginalWord());
+        // set the title based on the current lesson
+        setTitle(getString(R.string.title_lesson) + " " + lesson.getName());
+
+        originalWord.setText(lesson.getVocabulary().get(currentWord).getOriginalWord());
     }
 
     @Override
@@ -74,6 +89,16 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
 
         // Close the db connection
         db.close();
+    }
+
+    private void updateCorrectAnswerCount() {
+        correctAnswersCount++;
+        correctAnswers.setText(correctAnswersCount + "");
+    }
+
+    private void updateBadAnswerCount() {
+        badAnswersCount++;
+        badAnswers.setText(badAnswersCount + "");
     }
 
     // private void init() {
@@ -264,10 +289,26 @@ public class QuestionActivity extends Activity implements OnCheckedChangeListene
     // return vocList;
     // }
     //
+
+    @SuppressLint("NewApi")
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        // RadioButton radioButton = (RadioButton) findViewById(checkedId);
-        // currentSelectedAnswer = (String) radioButton.getText();
-        // button.setEnabled(true);
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (translationsAdapter.getItem(position).equals(lesson.getVocabulary().get(currentWord).getCorrectTranslation())) {
+            Toast.makeText(this, "Correct", Toast.LENGTH_LONG).show();
+            updateCorrectAnswerCount();
+            moveToNextWord();
+        } else {
+            Toast.makeText(this, "Wrong", Toast.LENGTH_LONG).show();
+            updateBadAnswerCount();
+        }
+    }
+
+    private void moveToNextWord() {
+        currentWord++;
+        if (currentWord < lesson.getVocabulary().size()) {
+            originalWord.setText(lesson.getVocabulary().get(currentWord).getOriginalWord());
+            translationsAdapter.setWord(lesson.getVocabulary().get(currentWord));
+            translationsAdapter.notifyDataSetChanged();
+        }
     }
 }
