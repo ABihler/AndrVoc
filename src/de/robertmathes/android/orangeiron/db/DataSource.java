@@ -334,6 +334,7 @@ public class DataSource {
             // statistic for this word already exists -> update the correct count
             Log.d(TAG, "Statistics for this word already exist. Incrementing correctAnswerCount to " + (cursor.getInt(4) + 1));
             values.put(StatisticColumn.CORRECT_ANSWERS, cursor.getInt(4) + 1);
+            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
             database.update(DbOpenHelper.TABLE_NAME_STATISTIC, values, whereClause, null);
         } else {
             // no existing record -> insert row
@@ -343,7 +344,6 @@ public class DataSource {
             values.put(StatisticColumn.VOCABULARY_ID, wordId);
             values.put(StatisticColumn.CORRECT_ANSWERS, 1);
             values.put(StatisticColumn.WRONG_ANSWERS, 0);
-            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
             database.insert(DbOpenHelper.TABLE_NAME_STATISTIC, null, values);
         }
         cursor.close();
@@ -362,6 +362,7 @@ public class DataSource {
             // statistic for this word already exists -> update the bad count
             Log.d(TAG, "Statistics for this word already exist. Incrementing badAnswerCount to " + (cursor.getInt(5) + 1));
             values.put(StatisticColumn.WRONG_ANSWERS, cursor.getInt(5) + 1);
+            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
             database.update(DbOpenHelper.TABLE_NAME_STATISTIC, values, whereClause, null);
         } else {
             // no existing record -> insert row
@@ -371,7 +372,6 @@ public class DataSource {
             values.put(StatisticColumn.VOCABULARY_ID, wordId);
             values.put(StatisticColumn.CORRECT_ANSWERS, 0);
             values.put(StatisticColumn.WRONG_ANSWERS, 1);
-            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
             database.insert(DbOpenHelper.TABLE_NAME_STATISTIC, null, values);
         }
         cursor.close();
@@ -414,9 +414,10 @@ public class DataSource {
         Log.i(TAG, "Getting oldest words for user " + user.getName());
         List<Vokabel> oldestWords = new ArrayList<Vokabel>();
 
-        String rawQueryClause = "select w." + VocabularyColumn.ID + " from " + DbOpenHelper.TABLE_NAME_VOCABULARY + " as W join "
+        String rawQueryClause = "select w." + VocabularyColumn.ID + " from " + DbOpenHelper.TABLE_NAME_VOCABULARY
+                + " as W join "
                 + DbOpenHelper.TABLE_NAME_STATISTIC + " as S on W." + VocabularyColumn.ID + " = S." + StatisticColumn.VOCABULARY_ID + " and S."
-                + StatisticColumn.USER_ID + "=" + user.getId() + " order by date(S." + StatisticColumn.TIMESTAMP + ") limit " + maxCount;
+                + StatisticColumn.USER_ID + "=" + user.getId() + " order by S." + StatisticColumn.TIMESTAMP + " limit " + maxCount;
         Log.d(TAG, "SQL query is: " + rawQueryClause);
 
         Cursor cursor = database.rawQuery(rawQueryClause, null);
