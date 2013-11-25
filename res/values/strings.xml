@@ -41,5 +41,8 @@
     <string name="no_lessons_present">Keine Lektionen vorhanden! Konfiguriere einen Vokabelserver um Lektionen herunterzuladen.</string>
     <string name="action_manageServers">Vokabelserver verwalten</string>
     <string name="title_lesson">Lektion:</string>
-
+    <string name="lesson_name_weakest_words">Schwächste Wörter</string>
+    <string name="lesson_name_oldest_words">Lange nicht abgefragt</string>
+    <string name="action_weakestWords">Schwächste Wörter abfragen</string>
+    <string name="action_oldestWords">Lange nicht-abgefragte Wörter abfragen</string>
 </resources>

@@ -1,6 +1,8 @@
 package de.robertmathes.android.orangeiron.db;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -10,7 +12,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.LessonColumn;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.StatisticColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.UserColumn;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.VocabularyColumn;
 import de.robertmathes.android.orangeiron.model.Lesson;
 import de.robertmathes.android.orangeiron.model.Server;
 import de.robertmathes.android.orangeiron.model.User;
@@ -22,8 +26,10 @@ public class DataSource {
 
     private SQLiteDatabase database;
     private final DbOpenHelper dbHelper;
+    private final Context ctx;
 
     public DataSource(Context context) {
+        this.ctx = context;
         dbHelper = new DbOpenHelper(context);
     }
 
@@ -202,6 +208,25 @@ public class DataSource {
         return lessonId;
     }
 
+    public Vokabel getWord(long wordId) {
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, DbOpenHelper.ALL_COLUMNS_VOCABULARY,
+                DbOpenHelper.VocabularyColumn.ID + "=" + wordId, null, null, null, null);
+        Vokabel vokabel = new Vokabel();
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            vokabel.setId(cursor.getLong(0));
+            vokabel.setOriginalWord(cursor.getString(1));
+            vokabel.setCorrectTranslation(cursor.getString(2));
+            vokabel.setLessonId(cursor.getLong(3));
+            vokabel.setAlternativeTranslations(getAlternativeTranslations(vokabel.getId()));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return vokabel;
+    }
+
     /**
      * Sichert eine Vokabel inklusive der falschen Übersetzungen
      * 
@@ -295,4 +320,118 @@ public class DataSource {
         }
     }
 
+    // TODO: extract identical code from updateCorrect... and updateBad... methods into helper method
+    public void updateCorrectAnswerCount(long userId, long lessonId, long wordId) {
+        Log.i(TAG, "Updating correctAnswerCount for user/lesson/word: " + userId + "/" + lessonId + "/" + wordId);
+        String whereClause = StatisticColumn.USER_ID + "=" + userId + " and " + StatisticColumn.LESSON_ID + "=" + lessonId + " and "
+                + StatisticColumn.VOCABULARY_ID + "=" + wordId;
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_STATISTIC, DbOpenHelper.ALL_COLUMNS_STATISTIC,
+                whereClause, null, null, null, null);
+
+        ContentValues values = new ContentValues();
+        // Check, if combination of user.id, lesson.id and word.id already exists
+        if (cursor.moveToFirst()) {
+            // statistic for this word already exists -> update the correct count
+            Log.d(TAG, "Statistics for this word already exist. Incrementing correctAnswerCount to " + (cursor.getInt(4) + 1));
+            values.put(StatisticColumn.CORRECT_ANSWERS, cursor.getInt(4) + 1);
+            database.update(DbOpenHelper.TABLE_NAME_STATISTIC, values, whereClause, null);
+        } else {
+            // no existing record -> insert row
+            Log.d(TAG, "No statistics present for this word. Initializing now.");
+            values.put(StatisticColumn.USER_ID, userId);
+            values.put(StatisticColumn.LESSON_ID, lessonId);
+            values.put(StatisticColumn.VOCABULARY_ID, wordId);
+            values.put(StatisticColumn.CORRECT_ANSWERS, 1);
+            values.put(StatisticColumn.WRONG_ANSWERS, 0);
+            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
+            database.insert(DbOpenHelper.TABLE_NAME_STATISTIC, null, values);
+        }
+        cursor.close();
+    }
+
+    public void updateBadAnswerCount(long userId, long lessonId, long wordId) {
+        Log.i(TAG, "Updating badAnswerCount for user/lesson/word: " + userId + "/" + lessonId + "/" + wordId);
+        String whereClause = StatisticColumn.USER_ID + "=" + userId + " and " + StatisticColumn.LESSON_ID + "=" + lessonId + " and "
+                + StatisticColumn.VOCABULARY_ID + "=" + wordId;
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_STATISTIC, DbOpenHelper.ALL_COLUMNS_STATISTIC,
+                whereClause, null, null, null, null);
+
+        ContentValues values = new ContentValues();
+        // Check, if combination of user.id, lesson.id and word.id already exists
+        if (cursor.moveToFirst()) {
+            // statistic for this word already exists -> update the bad count
+            Log.d(TAG, "Statistics for this word already exist. Incrementing badAnswerCount to " + (cursor.getInt(5) + 1));
+            values.put(StatisticColumn.WRONG_ANSWERS, cursor.getInt(5) + 1);
+            database.update(DbOpenHelper.TABLE_NAME_STATISTIC, values, whereClause, null);
+        } else {
+            // no existing record -> insert row
+            Log.d(TAG, "No statistics present for this word. Initializing now.");
+            values.put(StatisticColumn.USER_ID, userId);
+            values.put(StatisticColumn.LESSON_ID, lessonId);
+            values.put(StatisticColumn.VOCABULARY_ID, wordId);
+            values.put(StatisticColumn.CORRECT_ANSWERS, 0);
+            values.put(StatisticColumn.WRONG_ANSWERS, 1);
+            values.put(StatisticColumn.TIMESTAMP, new Timestamp(new Date().getTime()).toString());
+            database.insert(DbOpenHelper.TABLE_NAME_STATISTIC, null, values);
+        }
+        cursor.close();
+    }
+
+    /**
+     * Returns a lesson with words that have the hightest bad answer count for a given user.
+     * 
+     * @param user
+     * @param maxCount
+     *            max. number of words to return for this lesson
+     * @return
+     */
+    public Lesson getWeakestWordsByUser(User user, int maxCount) {
+        Log.i(TAG, "Getting weakest word for user " + user.getName());
+        List<Vokabel> weakestWords = new ArrayList<Vokabel>();
+
+        String rawQueryClause = "select w." + VocabularyColumn.ID + " from " + DbOpenHelper.TABLE_NAME_VOCABULARY + " as W join "
+                + DbOpenHelper.TABLE_NAME_STATISTIC + " as S on W." + VocabularyColumn.ID + " = S." + StatisticColumn.VOCABULARY_ID + " and S."
+                + StatisticColumn.USER_ID + "=" + user.getId() + " order by S." + StatisticColumn.WRONG_ANSWERS + " desc limit " + maxCount;
+        Log.d(TAG, "SQL query is: " + rawQueryClause);
+
+        Cursor cursor = database.rawQuery(rawQueryClause, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            weakestWords.add(getWord(cursor.getLong(0)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        Lesson lesson = new Lesson();
+        lesson.setName(ctx.getString(de.robertmathes.android.orangeiron.R.string.lesson_name_weakest_words));
+        lesson.setVocabulary(weakestWords);
+
+        return lesson;
+    }
+
+    public Lesson getOldestWordsByUser(User user, int maxCount) {
+        Log.i(TAG, "Getting oldest words for user " + user.getName());
+        List<Vokabel> oldestWords = new ArrayList<Vokabel>();
+
+        String rawQueryClause = "select w." + VocabularyColumn.ID + " from " + DbOpenHelper.TABLE_NAME_VOCABULARY + " as W join "
+                + DbOpenHelper.TABLE_NAME_STATISTIC + " as S on W." + VocabularyColumn.ID + " = S." + StatisticColumn.VOCABULARY_ID + " and S."
+                + StatisticColumn.USER_ID + "=" + user.getId() + " order by date(S." + StatisticColumn.TIMESTAMP + ") limit " + maxCount;
+        Log.d(TAG, "SQL query is: " + rawQueryClause);
+
+        Cursor cursor = database.rawQuery(rawQueryClause, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            oldestWords.add(getWord(cursor.getLong(0)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        Lesson lesson = new Lesson();
+        lesson.setName(ctx.getString(de.robertmathes.android.orangeiron.R.string.lesson_name_oldest_words));
+        lesson.setVocabulary(oldestWords);
+
+        return lesson;
+    }
 }

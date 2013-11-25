@@ -81,14 +81,26 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
 
         // navigate to the question activity
         Intent intent = new Intent(this, QuestionActivity.class);
+        intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
         startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_manageServers:
-                Intent intent = new Intent(this, VocabularyServerConfig.class);
+                intent = new Intent(this, VocabularyServerConfig.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_weakestWords:
+                intent = new Intent(this, QuestionActivity.class);
+                intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_WEAKEST_WORDS);
+                startActivity(intent);
+                return true;
+            case R.id.action_oldestWords:
+                intent = new Intent(this, QuestionActivity.class);
+                intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_OLDEST_WORDS);
                 startActivity(intent);
                 return true;
             default:

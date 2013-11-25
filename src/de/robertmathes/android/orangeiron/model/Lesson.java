@@ -4,6 +4,11 @@ import java.util.List;
 
 public class Lesson {
 
+    public static final String LESSON_MODE = "lessonMode";
+    public static final int LESSON_MODE_NORMAL = 0;
+    public static final int LESSON_MODE_WEAKEST_WORDS = 1;
+    public static final int LESSON_MODE_OLDEST_WORDS = 2;
+
     private long id;
     private String name;
     private String language;

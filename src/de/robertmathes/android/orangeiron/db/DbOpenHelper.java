@@ -30,55 +30,56 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME_STATISTIC = "statistics";
     public static final String[] ALL_COLUMNS_STATISTIC = { StatisticColumn.ID, StatisticColumn.USER_ID, StatisticColumn.LESSON_ID,
-            StatisticColumn.VOCABULARY_ID, StatisticColumn.CORRECT_ANSWERS, StatisticColumn.WRONG_ANSWERS };
+            StatisticColumn.VOCABULARY_ID, StatisticColumn.CORRECT_ANSWERS, StatisticColumn.WRONG_ANSWERS, StatisticColumn.TIMESTAMP };
 
     public interface ServerColumn {
 
-        public final String ID = "_id";
-        public final String NAME = "name";
-        public final String URL = "url";
-        public final String SERVER_VERSION = "serverVersion";
-        public final String DATA_VERSION = "dataVersion";
+        String ID = "_id";
+        String NAME = "name";
+        String URL = "url";
+        String SERVER_VERSION = "serverVersion";
+        String DATA_VERSION = "dataVersion";
     }
 
     public interface UserColumn {
 
-        static final String ID = "_id";
-        static final String NAME = "name";
+        String ID = "_id";
+        String NAME = "name";
     }
 
     public interface LessonColumn {
 
-        static final String ID = "_id";
-        static final String LESSON_NAME = "lessonName";
-        static final String LESSON_LANGUAGE = "lessonLanguage";
-        static final String LESSON_VERSION = "lessonVersion";
-        static final String SERVER_ID = "serverId";
+        String ID = "_id";
+        String LESSON_NAME = "lessonName";
+        String LESSON_LANGUAGE = "lessonLanguage";
+        String LESSON_VERSION = "lessonVersion";
+        String SERVER_ID = "serverId";
     }
 
     public interface VocabularyColumn {
 
-        static final String ID = "_id";
-        static final String ORIGINAL_WORD = "originalWord";
-        static final String CORRECT_TRANSLATION = "correctTranslation";
-        static final String LESSON_ID = "lessonId";
+        String ID = "_id";
+        String ORIGINAL_WORD = "originalWord";
+        String CORRECT_TRANSLATION = "correctTranslation";
+        String LESSON_ID = "lessonId";
     }
 
     public interface AltTranslationsColumn {
 
-        static final String ID = "_id";
-        static final String TRANSLATION = "translation";
-        static final String VOCABULARY_ID = "vocabularyId";
+        String ID = "_id";
+        String TRANSLATION = "translation";
+        String VOCABULARY_ID = "vocabularyId";
     }
 
     public interface StatisticColumn {
 
-        static final String ID = "_id";
-        static final String USER_ID = "userId";
-        static final String LESSON_ID = "lessonId";
-        static final String VOCABULARY_ID = "vocabularyId";
-        static final String CORRECT_ANSWERS = "correctAnswers";
-        static final String WRONG_ANSWERS = "wrongAnswers";
+        String ID = "_id";
+        String USER_ID = "userId";
+        String LESSON_ID = "lessonId";
+        String VOCABULARY_ID = "vocabularyId";
+        String CORRECT_ANSWERS = "correctAnswers";
+        String WRONG_ANSWERS = "wrongAnswers";
+        String TIMESTAMP = "timestamp";
     }
 
     private static final String TABLE_CREATE_SERVER = "CREATE TABLE " + TABLE_NAME_SERVER + " (" + ServerColumn.ID + " integer primary key autoincrement, "
@@ -104,10 +105,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + " integer primary key autoincrement, "
             + StatisticColumn.USER_ID + " integer not null, " + StatisticColumn.LESSON_ID + " integer not null, " + StatisticColumn.VOCABULARY_ID
             + " integer not null, "
-            + StatisticColumn.CORRECT_ANSWERS + " integer not null default 0, " + StatisticColumn.WRONG_ANSWERS + " integer not null default 0);";
-
-    private static final String CREATE_DUMMY_USER_1 = "INSERT INTO " + TABLE_NAME_USER + " VALUES (1, 'Robert');";
-    private static final String CREATE_DUMMY_USER_2 = "INSERT INTO " + TABLE_NAME_USER + " VALUES (2, 'Albert');";
+            + StatisticColumn.CORRECT_ANSWERS + " integer not null default 0, " + StatisticColumn.WRONG_ANSWERS + " integer not null default 0, "
+            + StatisticColumn.TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 
     DbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -121,8 +120,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_VOCABULARY);
         db.execSQL(TABLE_CREATE_ALTTRANSLATIONS);
         db.execSQL(TABLE_CREATE_STATISTIC);
-        // db.execSQL(CREATE_DUMMY_USER_1);
-        // db.execSQL(CREATE_DUMMY_USER_2);
     }
 
     @Override
