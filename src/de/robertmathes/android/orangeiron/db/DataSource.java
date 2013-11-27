@@ -12,6 +12,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.LessonColumn;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.ServerColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.StatisticColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.UserColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.VocabularyColumn;
@@ -42,18 +43,62 @@ public class DataSource {
     }
 
     public Server getServer(long serverId) {
-        // TODO Auto-generated method stub
-        return null;
+        Log.i(TAG, "Loading server with id " + serverId);
+
+        Server server = null;
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_SERVER, DbOpenHelper.ALL_COLUMNS_SERVER, ServerColumn.ID + "=" + serverId, null, null, null,
+                null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            server = new Server();
+            server.setId(cursor.getLong(0));
+            server.setName(cursor.getString(1));
+            server.setUrl(cursor.getString(2));
+            server.setServerVersion(cursor.getInt(3));
+            server.setDataVersion(cursor.getInt(4));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return server;
     }
 
     public List<Server> getAllServers() {
-        // TODO Auto-generated method stub
-        return null;
+        Log.i(TAG, "Getting all servers");
+
+        List<Server> servers = new ArrayList<Server>();
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_SERVER, DbOpenHelper.ALL_COLUMNS_SERVER, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Server server = new Server();
+            server.setId(cursor.getLong(0));
+            server.setName(cursor.getString(1));
+            server.setUrl(cursor.getString(2));
+            server.setServerVersion(cursor.getInt(3));
+            server.setDataVersion(cursor.getInt(4));
+            servers.add(server);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return servers;
     }
 
     public long saveServer(Server server) {
-        // TODO Auto-generated method stub
-        return -1;
+        Log.i(TAG, "Saving server " + server.getName());
+
+        ContentValues values = new ContentValues();
+        values.put(ServerColumn.NAME, server.getName());
+        values.put(ServerColumn.SERVER_VERSION, server.getServerVersion());
+        values.put(ServerColumn.DATA_VERSION, server.getDataVersion());
+        values.put(ServerColumn.URL, server.getUrl());
+        long serverId = database.insert(DbOpenHelper.TABLE_NAME_SERVER, null, values);
+
+        return serverId;
     }
 
     public User getUser(long userId) {
