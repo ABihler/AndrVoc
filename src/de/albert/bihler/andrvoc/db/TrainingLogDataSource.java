@@ -84,11 +84,15 @@ public class TrainingLogDataSource {
     public List<Vokabel> getWorstForUser(long user) {
 
         List<Vokabel> vocabulary = new ArrayList<Vokabel>();
-        Cursor c = database.rawQuery("select count(*) as Anzahl, " + DbOpenHelper.TrainingLogColumn.VOKABEL_ID + " from "
-                + DbOpenHelper.TABLE_NAME_TRAINING_LOG + " where "
-                + DbOpenHelper.TrainingLogColumn.USER
-                + " = '" + user + "' AND " + DbOpenHelper.TrainingLogColumn.CORRECT_RESULT + " = 0 group by "
-                + DbOpenHelper.TrainingLogColumn.VOKABEL_ID + " order by Anzahl desc", null);
+
+        // SQL Sucht falsch beantwortete Vokabeln mit einer Fehlerquote von über 10 Prozent
+        // TODO: Fehlerquote konfigurierbar machen
+        String qstring = "select (0.0+falsche)/alle * 100 as fehlerquote, f.VOKABEL_ID from (select VOKABEL_ID, count(*) as alle from TRAINING_LOG where USER = '1' group by VOKABEL_ID) a join (select VOKABEL_ID, count(*) as falsche from TRAINING_LOG where USER = '1' AND CORRECT_RESULT = 0 group by VOKABEL_ID) f on a.VOKABEL_ID = f.VOKABEL_ID where fehlerquote >= 10.0 order by fehlerquote desc;";
+        qstring = qstring.replaceAll("VOKABEL_ID", DbOpenHelper.TrainingLogColumn.VOKABEL_ID);
+        qstring = qstring.replaceAll("TRAINING_LOG", DbOpenHelper.TABLE_NAME_TRAINING_LOG);
+        qstring = qstring.replaceAll("CORRECT_RESULT", DbOpenHelper.TrainingLogColumn.CORRECT_RESULT);
+        Cursor c = database.rawQuery(qstring, null);
+
         // TODO Auf x begrenzen
         if (c != null & c.getCount() > 0) {
             c.moveToFirst();
