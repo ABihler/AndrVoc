@@ -90,7 +90,7 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_manageServers:
-                intent = new Intent(this, VocabularyServerConfig.class);
+                intent = new Intent(this, VocabularyServerConfigActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_weakestWords:

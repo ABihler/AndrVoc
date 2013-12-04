@@ -16,7 +16,6 @@ import de.robertmathes.android.orangeiron.model.Vokabel;
 
 public class QuestionListViewAdapter extends BaseAdapter {
 
-    private Vokabel word;
     private List<String> translations;
 
     private final LayoutInflater inflater;
@@ -45,7 +44,6 @@ public class QuestionListViewAdapter extends BaseAdapter {
     }
 
     public void setWord(Vokabel word) {
-        this.word = word;
         this.translations = new ArrayList<String>(word.getAlternativeTranslations());
         this.translations.add(word.getCorrectTranslation());
         Collections.shuffle(translations);

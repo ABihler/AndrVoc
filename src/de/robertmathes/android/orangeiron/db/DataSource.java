@@ -55,9 +55,10 @@ public class DataSource {
             server = new Server();
             server.setId(cursor.getLong(0));
             server.setName(cursor.getString(1));
-            server.setUrl(cursor.getString(2));
-            server.setServerVersion(cursor.getInt(3));
-            server.setDataVersion(cursor.getInt(4));
+            server.setDescription(cursor.getString(2));
+            server.setUrl(cursor.getString(3));
+            server.setServerVersion(cursor.getInt(4));
+            server.setDataVersion(cursor.getInt(5));
             cursor.moveToNext();
         }
         cursor.close();
@@ -77,14 +78,16 @@ public class DataSource {
             Server server = new Server();
             server.setId(cursor.getLong(0));
             server.setName(cursor.getString(1));
-            server.setUrl(cursor.getString(2));
-            server.setServerVersion(cursor.getInt(3));
-            server.setDataVersion(cursor.getInt(4));
+            server.setDescription(cursor.getString(2));
+            server.setUrl(cursor.getString(3));
+            server.setServerVersion(cursor.getInt(4));
+            server.setDataVersion(cursor.getInt(5));
             servers.add(server);
             cursor.moveToNext();
         }
         cursor.close();
 
+        Log.d(TAG, "Found " + servers.size() + " servers.");
         return servers;
     }
 
@@ -93,6 +96,7 @@ public class DataSource {
 
         ContentValues values = new ContentValues();
         values.put(ServerColumn.NAME, server.getName());
+        values.put(ServerColumn.DESCRIPTION, server.getDescription());
         values.put(ServerColumn.SERVER_VERSION, server.getServerVersion());
         values.put(ServerColumn.DATA_VERSION, server.getDataVersion());
         values.put(ServerColumn.URL, server.getUrl());
@@ -245,6 +249,29 @@ public class DataSource {
         values.put(DbOpenHelper.LessonColumn.LESSON_NAME, lesson.getName());
         values.put(DbOpenHelper.LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
         values.put(DbOpenHelper.LessonColumn.LESSON_VERSION, lesson.getVersion());
+        long lessonId = database.insert(DbOpenHelper.TABLE_NAME_LESSONS, null, values);
+
+        // Vokabeln der Lektion sichern
+        saveVocabulary(lesson.getVocabulary(), lessonId);
+
+        return lessonId;
+    }
+
+    /**
+     * Sichert eine Lektion, inklusive aller Vokabeln und falschen Übersetzungen
+     * 
+     * @param lesson
+     *            zu sichernde Lektion
+     * @return die Id der erzeugten Lektion
+     */
+    public long saveLesson(Lesson lesson, long serverId) {
+        Log.i(TAG, "Saving lesson " + lesson.getName());
+        // Lektion sichern
+        ContentValues values = new ContentValues();
+        values.put(LessonColumn.LESSON_NAME, lesson.getName());
+        values.put(LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
+        values.put(LessonColumn.LESSON_VERSION, lesson.getVersion());
+        values.put(LessonColumn.SERVER_ID, serverId);
         long lessonId = database.insert(DbOpenHelper.TABLE_NAME_LESSONS, null, values);
 
         // Vokabeln der Lektion sichern

@@ -10,9 +10,21 @@ public class Server {
 
     private long id;
     private String name;
+    private String description;
     private String url;
     private int serverVersion;
     private int dataVersion;
+
+    public Server() {
+    }
+
+    public Server(VocabularyServer vocServer) {
+        this.name = vocServer.getServerName();
+        this.description = vocServer.getServerDescription();
+        this.url = vocServer.getServerUrl();
+        this.serverVersion = vocServer.getServerVersion();
+        this.dataVersion = vocServer.getVersion();
+    }
 
     public long getId() {
         return id;
@@ -28,6 +40,14 @@ public class Server {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUrl() {

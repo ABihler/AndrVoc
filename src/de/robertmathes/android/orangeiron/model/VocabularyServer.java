@@ -6,6 +6,8 @@ public class VocabularyServer {
 
     private String serverType;
     private String serverName;
+    private String serverDescription;
+    private String serverUrl;
     private int serverVersion;
     private int version;
     private List<Lesson> lessons;
@@ -16,6 +18,22 @@ public class VocabularyServer {
 
     public String getServerName() {
         return serverName;
+    }
+
+    public String getServerDescription() {
+        return serverDescription;
+    }
+
+    public void setServerDescription(String serverDescription) {
+        this.serverDescription = serverDescription;
+    }
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
     }
 
     public int getServerVersion() {

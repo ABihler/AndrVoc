@@ -4,6 +4,7 @@
     <string name="app_name">Orange Iron</string>
     <string name="action_createUser">Neuen Benutzer erstellen</string>
     <string name="no_user_defined">Klicke oben auf den Button, um einen neuen Benutzer anzulegen!</string>
+    <string name="no_server_defined">Klicke oben auf den Button, um einen neuen Server hinzuzufügen!</string>
     <string name="edit_message">Gib etwas ein</string>
     <string name="neu_message">Neu ein</string>
     <string name="button_send">Send</string>
@@ -32,6 +33,7 @@
     <string name="createUser_button">Erstellen</string>
     <string name="server_popup_explanation">Du hast das Programm zum ersten Mal gestartet. Bitte gib den URL deines Vokablservers an. Anschließend werden die Vokabeln von diesem geladen.</string>
     <string name="save">Speichern</string>
+    <string name="load">Laden</string>
     <string name="title_activity_vocabulary_server_config">Vokabelserver konfigurieren</string>
     <string name="no_valid_server">Fehler: Unter dem angegebenen URL befindet sich kein gültiger Vokabelserver!</string>
     <string name="found_valid_server">Vokabelserver %1$s gefunden. %2$d Lektionen vorhanden. Lade Lektionen.</string>
@@ -45,4 +47,12 @@
     <string name="lesson_name_oldest_words">Lange nicht abgefragt</string>
     <string name="action_weakestWords">Schwächste Wörter abfragen</string>
     <string name="action_oldestWords">Lange nicht-abgefragte Wörter abfragen</string>
+    <string name="action_addNewServer">Neuen Vokabelserver hinzufügen</string>
+    <string name="title_activity_add_vocabulary_server">Neuen Vokabelserver hinzufügen</string>
+    <string name="label_url">URL</string>
+    <string name="label_server_name">Servername</string>
+    <string name="label_server_description">Beschreibung</string>
+    <string name="label_server_lessonCount">Lektionsanzahl</string>
+    <string name="label_server_details">Serverdetails</string>
+
 </resources>

@@ -1,42 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <TextView
-        android:id="@+id/server_popup_explenation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/server_popup_explanation"
-        android:textAppearance="?android:attr/textAppearance" />
-
-    <TextView
-        android:id="@+id/server_popup_url_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:text="URL" />
-
-    <EditText
-        android:id="@+id/server_popup_url"
+    <ListView
+        android:id="@+id/serverList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:ems="10" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:listSelector="@color/pressed_orangeiron" >
+    </ListView>
 
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/server_popup_save"
+    <TextView
+        android:id="@+id/empty_server_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/save"
-        android:onClick="onSave" />
+        android:layout_marginTop="100dp"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
+        android:text="@string/no_server_defined"
+        android:textAlignment="center" >
+    </TextView>
 
-</LinearLayout>
+</RelativeLayout>
+

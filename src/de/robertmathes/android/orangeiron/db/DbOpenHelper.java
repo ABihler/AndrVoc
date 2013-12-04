@@ -11,7 +11,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "AndrVoc.db";
 
     public static final String TABLE_NAME_SERVER = "servers";
-    public static final String[] ALL_COLUMNS_SERVER = {};
+    public static final String[] ALL_COLUMNS_SERVER = { ServerColumn.ID, ServerColumn.NAME, ServerColumn.DESCRIPTION, ServerColumn.URL,
+            ServerColumn.SERVER_VERSION, ServerColumn.DATA_VERSION };
 
     public static final String TABLE_NAME_USER = "users";
     public static final String[] ALL_COLUMNS_USER = { UserColumn.ID, UserColumn.NAME };
@@ -36,6 +37,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
         String ID = "_id";
         String NAME = "name";
+        String DESCRIPTION = "description";
         String URL = "url";
         String SERVER_VERSION = "serverVersion";
         String DATA_VERSION = "dataVersion";
@@ -83,7 +85,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     private static final String TABLE_CREATE_SERVER = "CREATE TABLE " + TABLE_NAME_SERVER + " (" + ServerColumn.ID + " integer primary key autoincrement, "
-            + ServerColumn.NAME + " text not null, " + ServerColumn.URL + " text not null, " + ServerColumn.SERVER_VERSION + " integer not null default 1, "
+            + ServerColumn.NAME + " text not null, " + ServerColumn.DESCRIPTION + " text, " + ServerColumn.URL + " text not null, "
+            + ServerColumn.SERVER_VERSION + " integer not null default 1, "
             + ServerColumn.DATA_VERSION + " integer not null default 1);";
 
     private static final String TABLE_CREATE_USER = "CREATE TABLE " + TABLE_NAME_USER + " (" + UserColumn.ID + " integer primary key autoincrement, "

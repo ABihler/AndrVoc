@@ -42,12 +42,16 @@
             android:label="@string/title_activity_create_user" >
         </activity>
         <activity
-            android:name="de.robertmathes.android.orangeiron.VocabularyServerConfig"
+            android:name="de.robertmathes.android.orangeiron.VocabularyServerConfigActivity"
             android:label="@string/title_activity_vocabulary_server_config" >
         </activity>
         <activity
             android:name="de.robertmathes.android.orangeiron.LessonChooserActivity"
             android:label="@string/title_activity_lesson_chooser" >
+        </activity>
+        <activity
+            android:name="de.robertmathes.android.orangeiron.AddVocabularyServerActivity"
+            android:label="@string/title_activity_add_vocabulary_server" >
         </activity>
     </application>
 
