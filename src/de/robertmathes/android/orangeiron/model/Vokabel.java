@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class Vokabel {
 
     private long id;
+    private UUID uuid;
     private String correctTranslation;
     private String originalWord;
     private long lessonId;
@@ -37,6 +39,14 @@ public class Vokabel {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getOriginalWord() {

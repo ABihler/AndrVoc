@@ -1,5 +1,7 @@
 package de.robertmathes.android.orangeiron.model;
 
+import java.util.UUID;
+
 /**
  * 
  * @author Robert Mathes <robert.d.mathes@gmail.com>
@@ -9,6 +11,7 @@ package de.robertmathes.android.orangeiron.model;
 public class Server {
 
     private long id;
+    private UUID uuid;
     private String name;
     private String description;
     private String url;
@@ -32,6 +35,14 @@ public class Server {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {

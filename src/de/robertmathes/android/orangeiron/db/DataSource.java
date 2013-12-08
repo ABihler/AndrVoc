@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -54,11 +55,12 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             server = new Server();
             server.setId(cursor.getLong(0));
-            server.setName(cursor.getString(1));
-            server.setDescription(cursor.getString(2));
-            server.setUrl(cursor.getString(3));
-            server.setServerVersion(cursor.getInt(4));
-            server.setDataVersion(cursor.getInt(5));
+            server.setUuid(UUID.fromString(cursor.getString(1)));
+            server.setName(cursor.getString(2));
+            server.setDescription(cursor.getString(3));
+            server.setUrl(cursor.getString(4));
+            server.setServerVersion(cursor.getInt(5));
+            server.setDataVersion(cursor.getInt(6));
             cursor.moveToNext();
         }
         cursor.close();
@@ -77,11 +79,12 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Server server = new Server();
             server.setId(cursor.getLong(0));
-            server.setName(cursor.getString(1));
-            server.setDescription(cursor.getString(2));
-            server.setUrl(cursor.getString(3));
-            server.setServerVersion(cursor.getInt(4));
-            server.setDataVersion(cursor.getInt(5));
+            server.setUuid(UUID.fromString(cursor.getString(1)));
+            server.setName(cursor.getString(2));
+            server.setDescription(cursor.getString(3));
+            server.setUrl(cursor.getString(4));
+            server.setServerVersion(cursor.getInt(5));
+            server.setDataVersion(cursor.getInt(6));
             servers.add(server);
             cursor.moveToNext();
         }
@@ -95,6 +98,7 @@ public class DataSource {
         Log.i(TAG, "Saving server " + server.getName());
 
         ContentValues values = new ContentValues();
+        values.put(ServerColumn.UUID, server.getUuid().toString());
         values.put(ServerColumn.NAME, server.getName());
         values.put(ServerColumn.DESCRIPTION, server.getDescription());
         values.put(ServerColumn.SERVER_VERSION, server.getServerVersion());
@@ -191,9 +195,10 @@ public class DataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             lesson.setId(cursor.getLong(0));
-            lesson.setName(cursor.getString(1));
-            lesson.setLanguage(cursor.getString(2));
-            lesson.setVersion(cursor.getInt(3));
+            lesson.setUuid(UUID.fromString(cursor.getString(1)));
+            lesson.setName(cursor.getString(2));
+            lesson.setLanguage(cursor.getString(3));
+            lesson.setVersion(cursor.getInt(4));
             cursor.moveToNext();
         }
         cursor.close();
@@ -220,9 +225,10 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Lesson lesson = new Lesson();
             lesson.setId(cursor.getLong(0));
-            lesson.setName(cursor.getString(1));
-            lesson.setLanguage(cursor.getString(2));
-            lesson.setVersion(cursor.getInt(3));
+            lesson.setUuid(UUID.fromString(cursor.getString(1)));
+            lesson.setName(cursor.getString(2));
+            lesson.setLanguage(cursor.getString(3));
+            lesson.setVersion(cursor.getInt(4));
 
             // Vokabeln der Lektion laden
             lesson.setVocabulary(getVocabulary(lesson.getId()));
@@ -246,9 +252,10 @@ public class DataSource {
         Log.i(TAG, "Saving lesson " + lesson.getName());
         // Lektion sichern
         ContentValues values = new ContentValues();
-        values.put(DbOpenHelper.LessonColumn.LESSON_NAME, lesson.getName());
-        values.put(DbOpenHelper.LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
-        values.put(DbOpenHelper.LessonColumn.LESSON_VERSION, lesson.getVersion());
+        values.put(LessonColumn.UUID, lesson.getUuid().toString());
+        values.put(LessonColumn.LESSON_NAME, lesson.getName());
+        values.put(LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
+        values.put(LessonColumn.LESSON_VERSION, lesson.getVersion());
         long lessonId = database.insert(DbOpenHelper.TABLE_NAME_LESSONS, null, values);
 
         // Vokabeln der Lektion sichern
@@ -268,6 +275,7 @@ public class DataSource {
         Log.i(TAG, "Saving lesson " + lesson.getName());
         // Lektion sichern
         ContentValues values = new ContentValues();
+        values.put(LessonColumn.UUID, lesson.getUuid().toString());
         values.put(LessonColumn.LESSON_NAME, lesson.getName());
         values.put(LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
         values.put(LessonColumn.LESSON_VERSION, lesson.getVersion());
@@ -288,9 +296,10 @@ public class DataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             vokabel.setId(cursor.getLong(0));
-            vokabel.setOriginalWord(cursor.getString(1));
-            vokabel.setCorrectTranslation(cursor.getString(2));
-            vokabel.setLessonId(cursor.getLong(3));
+            vokabel.setUuid(UUID.fromString(cursor.getString(1)));
+            vokabel.setOriginalWord(cursor.getString(2));
+            vokabel.setCorrectTranslation(cursor.getString(3));
+            vokabel.setLessonId(cursor.getLong(4));
             vokabel.setAlternativeTranslations(getAlternativeTranslations(vokabel.getId()));
             cursor.moveToNext();
         }
@@ -311,9 +320,10 @@ public class DataSource {
         Log.i(TAG, "Saving word " + vokabel.getOriginalWord() + " for lesson " + lessonId);
         // Vokabel sichern
         ContentValues values = new ContentValues();
-        values.put(DbOpenHelper.VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
-        values.put(DbOpenHelper.VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
-        values.put(DbOpenHelper.VocabularyColumn.LESSON_ID, lessonId);
+        values.put(VocabularyColumn.UUID, vokabel.getUuid().toString());
+        values.put(VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
+        values.put(VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
+        values.put(VocabularyColumn.LESSON_ID, lessonId);
         long vokabelId = database.insert(DbOpenHelper.TABLE_NAME_VOCABULARY, null, values);
         // Alternative Übersetzungen sichern
         saveAlternativeTranslations(vokabel.getAlternativeTranslations(), vokabelId);
@@ -353,8 +363,9 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Vokabel vokabel = new Vokabel();
             vokabel.setId(cursor.getLong(0));
-            vokabel.setOriginalWord(cursor.getString(1));
-            vokabel.setCorrectTranslation(cursor.getString(2));
+            vokabel.setUuid(UUID.fromString(cursor.getString(1)));
+            vokabel.setOriginalWord(cursor.getString(2));
+            vokabel.setCorrectTranslation(cursor.getString(3));
             vokabel.setLessonId(lessonId);
             vokabel.setAlternativeTranslations(getAlternativeTranslations(vokabel.getId()));
             vocabulary.add(vokabel);

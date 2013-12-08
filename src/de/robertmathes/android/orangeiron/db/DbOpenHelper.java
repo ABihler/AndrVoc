@@ -11,18 +11,20 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "OrangeIron.db";
 
     public static final String TABLE_NAME_SERVER = "servers";
-    public static final String[] ALL_COLUMNS_SERVER = { ServerColumn.ID, ServerColumn.NAME, ServerColumn.DESCRIPTION, ServerColumn.URL,
+    public static final String[] ALL_COLUMNS_SERVER = { ServerColumn.ID, ServerColumn.UUID, ServerColumn.NAME, ServerColumn.DESCRIPTION, ServerColumn.URL,
             ServerColumn.SERVER_VERSION, ServerColumn.DATA_VERSION };
 
     public static final String TABLE_NAME_USER = "users";
     public static final String[] ALL_COLUMNS_USER = { UserColumn.ID, UserColumn.NAME };
 
     public static final String TABLE_NAME_LESSONS = "lessons";
-    public static final String[] ALL_COLUMNS_LESSONS = { LessonColumn.ID, LessonColumn.LESSON_NAME, LessonColumn.LESSON_LANGUAGE, LessonColumn.LESSON_VERSION,
+    public static final String[] ALL_COLUMNS_LESSONS = { LessonColumn.ID, LessonColumn.UUID, LessonColumn.LESSON_NAME, LessonColumn.LESSON_LANGUAGE,
+            LessonColumn.LESSON_VERSION,
             LessonColumn.SERVER_ID };
 
     public static final String TABLE_NAME_VOCABULARY = "vocabulary";
-    public static final String[] ALL_COLUMNS_VOCABULARY = { VocabularyColumn.ID, VocabularyColumn.ORIGINAL_WORD, VocabularyColumn.CORRECT_TRANSLATION,
+    public static final String[] ALL_COLUMNS_VOCABULARY = { VocabularyColumn.ID, VocabularyColumn.UUID, VocabularyColumn.ORIGINAL_WORD,
+            VocabularyColumn.CORRECT_TRANSLATION,
             VocabularyColumn.LESSON_ID };
 
     public static final String TABLE_NAME_ALTTRANSLATIONS = "alternativeTranslations";
@@ -36,6 +38,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public interface ServerColumn {
 
         String ID = "_id";
+        String UUID = "uuid";
         String NAME = "name";
         String DESCRIPTION = "description";
         String URL = "url";
@@ -52,6 +55,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public interface LessonColumn {
 
         String ID = "_id";
+        String UUID = "uuid";
         String LESSON_NAME = "lessonName";
         String LESSON_LANGUAGE = "lessonLanguage";
         String LESSON_VERSION = "lessonVersion";
@@ -61,6 +65,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public interface VocabularyColumn {
 
         String ID = "_id";
+        String UUID = "uuid";
         String ORIGINAL_WORD = "originalWord";
         String CORRECT_TRANSLATION = "correctTranslation";
         String LESSON_ID = "lessonId";
@@ -85,7 +90,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     private static final String TABLE_CREATE_SERVER = "CREATE TABLE " + TABLE_NAME_SERVER + " (" + ServerColumn.ID + " integer primary key autoincrement, "
-            + ServerColumn.NAME + " text not null, " + ServerColumn.DESCRIPTION + " text, " + ServerColumn.URL + " text not null, "
+            + ServerColumn.UUID + " text not null, " + ServerColumn.NAME + " text not null, " + ServerColumn.DESCRIPTION + " text, " + ServerColumn.URL
+            + " text not null, "
             + ServerColumn.SERVER_VERSION + " integer not null default 1, "
             + ServerColumn.DATA_VERSION + " integer not null default 1);";
 
@@ -93,11 +99,13 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + UserColumn.NAME + " text not null);";
 
     private static final String TABLE_CREATE_LESSON = "CREATE TABLE " + TABLE_NAME_LESSONS + " (" + LessonColumn.ID + " integer primary key autoincrement, "
-            + LessonColumn.LESSON_NAME + " text not null, " + LessonColumn.LESSON_LANGUAGE + " text not null, " + LessonColumn.LESSON_VERSION
+            + LessonColumn.UUID + " text not null, " + LessonColumn.LESSON_NAME + " text not null, " + LessonColumn.LESSON_LANGUAGE + " text not null, "
+            + LessonColumn.LESSON_VERSION
             + " integer not null, " + LessonColumn.SERVER_ID + " integer);";
 
     private static final String TABLE_CREATE_VOCABULARY = "CREATE TABLE " + TABLE_NAME_VOCABULARY + " (" + VocabularyColumn.ID
-            + " integer primary key autoincrement, " + VocabularyColumn.ORIGINAL_WORD + " text not null, " + VocabularyColumn.CORRECT_TRANSLATION
+            + " integer primary key autoincrement, " + VocabularyColumn.UUID + " text not null, " + VocabularyColumn.ORIGINAL_WORD + " text not null, "
+            + VocabularyColumn.CORRECT_TRANSLATION
             + " text not null, " + VocabularyColumn.LESSON_ID + " integer not null);";
 
     private static final String TABLE_CREATE_ALTTRANSLATIONS = "CREATE TABLE " + TABLE_NAME_ALTTRANSLATIONS + " (" + AltTranslationsColumn.ID
