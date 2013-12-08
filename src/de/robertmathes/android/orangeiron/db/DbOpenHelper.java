@@ -8,7 +8,7 @@ import android.util.Log;
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "AndrVoc.db";
+    private static final String DATABASE_NAME = "OrangeIron.db";
 
     public static final String TABLE_NAME_SERVER = "servers";
     public static final String[] ALL_COLUMNS_SERVER = { ServerColumn.ID, ServerColumn.NAME, ServerColumn.DESCRIPTION, ServerColumn.URL,
