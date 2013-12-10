@@ -1,7 +1,6 @@
 package de.robertmathes.android.orangeiron.model;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Lesson {
 
@@ -11,7 +10,7 @@ public class Lesson {
     public static final int LESSON_MODE_OLDEST_WORDS = 2;
 
     private long id;
-    private UUID uuid;
+    private String uuid;
     private String name;
     private String language;
     private int version;
@@ -26,11 +25,11 @@ public class Lesson {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

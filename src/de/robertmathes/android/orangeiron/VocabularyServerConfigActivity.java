@@ -1,23 +1,41 @@
 package de.robertmathes.android.orangeiron;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.robertmathes.android.orangeiron.adapter.ServerListViewAdapter;
 import de.robertmathes.android.orangeiron.db.DataSource;
 import de.robertmathes.android.orangeiron.model.Server;
+import de.robertmathes.android.orangeiron.model.VocabularyServer;
 
 public class VocabularyServerConfigActivity extends Activity {
 
     private DataSource db;
 
+    private List<Server> servers;
     private ListView listView;
     private ServerListViewAdapter serverAdapter;
 
@@ -53,7 +71,7 @@ public class VocabularyServerConfigActivity extends Activity {
         super.onResume();
 
         // get servers, if any present
-        List<Server> servers = db.getAllServers();
+        servers = db.getAllServers();
 
         // set the adapter to the list view
         this.serverAdapter = new ServerListViewAdapter(getApplicationContext(), servers);
@@ -83,8 +101,83 @@ public class VocabularyServerConfigActivity extends Activity {
                 Intent intent = new Intent(this, AddVocabularyServerActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_checkForUpdates:
+                checkForUpdates();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkForUpdates() {
+        for (Server server : servers) {
+            checkServer(server);
+        }
+    }
+
+    private void checkServer(final Server server) {
+        new AsyncTask<Server, Void, Server>() {
+
+            @Override
+            protected Server doInBackground(Server... servers) {
+                DefaultHttpClient client = new DefaultHttpClient();
+
+                HttpGet getRequest = new HttpGet(servers[0].getUrl());
+
+                try {
+
+                    HttpResponse getResponse = client.execute(getRequest);
+                    final int statusCode = getResponse.getStatusLine().getStatusCode();
+
+                    if (statusCode != HttpStatus.SC_OK) {
+                        Log.w(getClass().getSimpleName(), "Error " + statusCode + " for URL " + servers[0].getUrl());
+                        return null;
+                    }
+
+                    HttpEntity getResponseEntity = getResponse.getEntity();
+                    Gson gson = new Gson();
+                    Reader reader = new InputStreamReader(getResponseEntity.getContent());
+                    VocabularyServer vocServer = gson.fromJson(reader, VocabularyServer.class);
+                    vocServer.setServerUrl(servers[0].getUrl());
+                    Server server = new Server(vocServer);
+                    return server;
+                } catch (IOException e) {
+                    getRequest.abort();
+                    Log.w(getClass().getSimpleName(), "Error for URL " + servers[0].getUrl(), e);
+                }
+
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Server newServer) {
+                if (server != null) {
+                    // is the server really the one we know?
+                    if (newServer.getUuid().equals(server.getUuid())) {
+                        if (newServer.getDataVersion() > server.getDataVersion()) {
+                            // TODO: Replace toast with code and some other kind of hint
+                            Toast.makeText(getApplicationContext(),
+                                    "Update gefunden! Alte Version: " + server.getDataVersion() + ", neue Version: " + newServer.getDataVersion(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        } else {
+                            // TODO: Replace toast with code and some other kind of hint
+                            Toast.makeText(getApplicationContext(),
+                                    "Kein Update gefunden", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    } else {
+                        // wrong or no server
+                        // TODO: Replace toast with code and some other kind of hint
+                        // TODO: Remove server from database?
+                        Toast.makeText(getApplicationContext(), "Unbekannter Server!", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
+
+                }
+            }
+        }.execute(server);
     }
 }

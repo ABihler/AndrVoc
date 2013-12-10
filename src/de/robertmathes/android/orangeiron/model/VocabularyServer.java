@@ -4,6 +4,7 @@ import java.util.List;
 
 public class VocabularyServer {
 
+    private String uuid;
     private String serverType;
     private String serverName;
     private String serverDescription;
@@ -11,6 +12,14 @@ public class VocabularyServer {
     private int serverVersion;
     private int version;
     private List<Lesson> lessons;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getServerType() {
         return serverType;

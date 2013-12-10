@@ -34,7 +34,7 @@
     <string name="server_popup_explanation">Du hast das Programm zum ersten Mal gestartet. Bitte gib den URL deines Vokablservers an. Anschließend werden die Vokabeln von diesem geladen.</string>
     <string name="save">Speichern</string>
     <string name="load">Laden</string>
-    <string name="title_activity_vocabulary_server_config">Vokabelserver konfigurieren</string>
+    <string name="title_activity_vocabulary_server_config">Server konfigurieren</string>
     <string name="no_valid_server">Fehler: Unter dem angegebenen URL befindet sich kein gültiger Vokabelserver!</string>
     <string name="found_valid_server">Vokabelserver %1$s gefunden. %2$d Lektionen vorhanden. Lade Lektionen.</string>
     <string name="Message_Username_empty">Benutzername darf nicht leer sein.</string>
@@ -54,5 +54,6 @@
     <string name="label_server_description">Beschreibung</string>
     <string name="label_server_lessonCount">Lektionsanzahl</string>
     <string name="label_server_details">Serverdetails</string>
+    <string name="action_checkForUpdates">Server auf Updates prüfen</string>
 
 </resources>

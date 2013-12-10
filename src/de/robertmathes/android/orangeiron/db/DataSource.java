@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,7 +54,7 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             server = new Server();
             server.setId(cursor.getLong(0));
-            server.setUuid(UUID.fromString(cursor.getString(1)));
+            server.setUuid(cursor.getString(1));
             server.setName(cursor.getString(2));
             server.setDescription(cursor.getString(3));
             server.setUrl(cursor.getString(4));
@@ -79,7 +78,7 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Server server = new Server();
             server.setId(cursor.getLong(0));
-            server.setUuid(UUID.fromString(cursor.getString(1)));
+            server.setUuid(cursor.getString(1));
             server.setName(cursor.getString(2));
             server.setDescription(cursor.getString(3));
             server.setUrl(cursor.getString(4));
@@ -98,7 +97,7 @@ public class DataSource {
         Log.i(TAG, "Saving server " + server.getName());
 
         ContentValues values = new ContentValues();
-        values.put(ServerColumn.UUID, server.getUuid().toString());
+        values.put(ServerColumn.UUID, server.getUuid());
         values.put(ServerColumn.NAME, server.getName());
         values.put(ServerColumn.DESCRIPTION, server.getDescription());
         values.put(ServerColumn.SERVER_VERSION, server.getServerVersion());
@@ -195,7 +194,7 @@ public class DataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             lesson.setId(cursor.getLong(0));
-            lesson.setUuid(UUID.fromString(cursor.getString(1)));
+            lesson.setUuid(cursor.getString(1));
             lesson.setName(cursor.getString(2));
             lesson.setLanguage(cursor.getString(3));
             lesson.setVersion(cursor.getInt(4));
@@ -225,7 +224,7 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Lesson lesson = new Lesson();
             lesson.setId(cursor.getLong(0));
-            lesson.setUuid(UUID.fromString(cursor.getString(1)));
+            lesson.setUuid(cursor.getString(1));
             lesson.setName(cursor.getString(2));
             lesson.setLanguage(cursor.getString(3));
             lesson.setVersion(cursor.getInt(4));
@@ -252,7 +251,7 @@ public class DataSource {
         Log.i(TAG, "Saving lesson " + lesson.getName());
         // Lektion sichern
         ContentValues values = new ContentValues();
-        values.put(LessonColumn.UUID, lesson.getUuid().toString());
+        values.put(LessonColumn.UUID, lesson.getUuid());
         values.put(LessonColumn.LESSON_NAME, lesson.getName());
         values.put(LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
         values.put(LessonColumn.LESSON_VERSION, lesson.getVersion());
@@ -275,7 +274,7 @@ public class DataSource {
         Log.i(TAG, "Saving lesson " + lesson.getName());
         // Lektion sichern
         ContentValues values = new ContentValues();
-        values.put(LessonColumn.UUID, lesson.getUuid().toString());
+        values.put(LessonColumn.UUID, lesson.getUuid());
         values.put(LessonColumn.LESSON_NAME, lesson.getName());
         values.put(LessonColumn.LESSON_LANGUAGE, lesson.getLanguage());
         values.put(LessonColumn.LESSON_VERSION, lesson.getVersion());
@@ -296,7 +295,7 @@ public class DataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             vokabel.setId(cursor.getLong(0));
-            vokabel.setUuid(UUID.fromString(cursor.getString(1)));
+            vokabel.setUuid(cursor.getString(1));
             vokabel.setOriginalWord(cursor.getString(2));
             vokabel.setCorrectTranslation(cursor.getString(3));
             vokabel.setLessonId(cursor.getLong(4));
@@ -320,7 +319,7 @@ public class DataSource {
         Log.i(TAG, "Saving word " + vokabel.getOriginalWord() + " for lesson " + lessonId);
         // Vokabel sichern
         ContentValues values = new ContentValues();
-        values.put(VocabularyColumn.UUID, vokabel.getUuid().toString());
+        values.put(VocabularyColumn.UUID, vokabel.getUuid());
         values.put(VocabularyColumn.ORIGINAL_WORD, vokabel.getOriginalWord());
         values.put(VocabularyColumn.CORRECT_TRANSLATION, vokabel.getCorrectTranslation());
         values.put(VocabularyColumn.LESSON_ID, lessonId);
@@ -363,7 +362,7 @@ public class DataSource {
         while (!cursor.isAfterLast()) {
             Vokabel vokabel = new Vokabel();
             vokabel.setId(cursor.getLong(0));
-            vokabel.setUuid(UUID.fromString(cursor.getString(1)));
+            vokabel.setUuid(cursor.getString(1));
             vokabel.setOriginalWord(cursor.getString(2));
             vokabel.setCorrectTranslation(cursor.getString(3));
             vokabel.setLessonId(lessonId);

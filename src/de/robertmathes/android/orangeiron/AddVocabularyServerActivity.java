@@ -33,7 +33,6 @@ public class AddVocabularyServerActivity extends Activity {
 
     private DataSource db;
 
-    private Server newServer;
     private VocabularyServer vocServer;
 
     EditText serverUrl;
