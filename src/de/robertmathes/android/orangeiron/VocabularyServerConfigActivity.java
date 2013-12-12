@@ -3,15 +3,15 @@ package de.robertmathes.android.orangeiron;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,13 +21,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import de.robertmathes.android.orangeiron.adapter.ServerListViewAdapter;
 import de.robertmathes.android.orangeiron.db.DataSource;
+import de.robertmathes.android.orangeiron.model.Lesson;
 import de.robertmathes.android.orangeiron.model.Server;
 import de.robertmathes.android.orangeiron.model.VocabularyServer;
 
@@ -151,16 +153,33 @@ public class VocabularyServerConfigActivity extends Activity {
             }
 
             @Override
-            protected void onPostExecute(Server newServer) {
+            protected void onPostExecute(Server remoteServer) {
                 if (server != null) {
                     // is the server really the one we know?
-                    if (newServer.getUuid().equals(server.getUuid())) {
-                        if (newServer.getDataVersion() > server.getDataVersion()) {
+                    if (remoteServer.getUuid().equals(server.getUuid())) {
+                        if (remoteServer.getDataVersion() > server.getDataVersion()) {
                             // TODO: Replace toast with code and some other kind of hint
                             Toast.makeText(getApplicationContext(),
-                                    "Update gefunden! Alte Version: " + server.getDataVersion() + ", neue Version: " + newServer.getDataVersion(),
+                                    "Update gefunden! Alte Version: " + server.getDataVersion() + ", neue Version: " + remoteServer.getDataVersion(),
                                     Toast.LENGTH_LONG)
                                     .show();
+                            List<Lesson> localLessons = db.getLessonsByServerId(server.getId());
+                            Map<String, Lesson> localLessonsMap = new HashMap<String, Lesson>();
+                            for (Lesson lesson : localLessons)
+                                localLessonsMap.put(lesson.getUuid(), lesson);
+                            for (Lesson remoteLesson : remoteServer.getLessons()) {
+                                Lesson localLesson = localLessonsMap.get(remoteLesson.getUuid());
+                                if (localLesson != null) {
+                                    // existing lesson -> check if remote version is higher
+                                    if (remoteLesson.getVersion() > localLesson.getVersion()) {
+                                        // update lesson locally
+                                        db.updateLesson(remoteLesson);
+                                    }
+                                } else {
+                                    // new lesson -> add locally
+                                    db.saveLesson(remoteLesson, server.getId());
+                                }
+                            }
                         } else {
                             // TODO: Replace toast with code and some other kind of hint
                             Toast.makeText(getApplicationContext(),

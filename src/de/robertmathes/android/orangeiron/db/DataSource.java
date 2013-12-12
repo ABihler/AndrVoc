@@ -183,7 +183,7 @@ public class DataSource {
      * @param lessonId
      * @return Lektion mit der id lessonId
      */
-    public Lesson getLesson(long lessonId) {
+    public Lesson getLessonById(long lessonId) {
         Log.i(TAG, "Loading lesson " + lessonId);
         // Lektion laden
         Lesson lesson = new Lesson();
@@ -206,6 +206,41 @@ public class DataSource {
         lesson.setVocabulary(getVocabulary(lesson.getId()));
 
         return lesson;
+    }
+
+    /**
+     * Gibt alle lokal gespeicherten Lektionen eines Servers zurück.
+     * 
+     * @param serverId
+     *            Id des Servers
+     * @return alle lokal gespeicherten Lektionen eines Servers zurück
+     */
+    public List<Lesson> getLessonsByServerId(long serverId) {
+        Log.i(TAG, "Loading all lessons for server " + serverId);
+
+        List<Lesson> lessons = new ArrayList<Lesson>();
+
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_LESSONS, DbOpenHelper.ALL_COLUMNS_LESSONS, LessonColumn.SERVER_ID + "=" + serverId, null, null,
+                null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Lesson lesson = new Lesson();
+            lesson.setId(cursor.getLong(0));
+            lesson.setUuid(cursor.getString(1));
+            lesson.setName(cursor.getString(2));
+            lesson.setLanguage(cursor.getString(3));
+            lesson.setVersion(cursor.getInt(4));
+
+            // Vokabeln der Lektion laden
+            lesson.setVocabulary(getVocabulary(lesson.getId()));
+
+            lessons.add(lesson);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return lessons;
     }
 
     /**
@@ -285,6 +320,10 @@ public class DataSource {
         saveVocabulary(lesson.getVocabulary(), lessonId);
 
         return lessonId;
+    }
+
+    public void updateLesson(Lesson lesson) {
+        // TODO: insert code here!
     }
 
     public Vokabel getWord(long wordId) {

@@ -1,5 +1,7 @@
 package de.robertmathes.android.orangeiron.model;
 
+import java.util.List;
+
 /**
  * 
  * @author Robert Mathes <robert.d.mathes@gmail.com>
@@ -15,6 +17,7 @@ public class Server {
     private String url;
     private int serverVersion;
     private int dataVersion;
+    private List<Lesson> lessons;
 
     public Server() {
     }
@@ -26,6 +29,7 @@ public class Server {
         this.url = vocServer.getServerUrl();
         this.serverVersion = vocServer.getServerVersion();
         this.dataVersion = vocServer.getVersion();
+        this.lessons = vocServer.getLessons();
     }
 
     public long getId() {
@@ -82,6 +86,14 @@ public class Server {
 
     public void setDataVersion(int dataVersion) {
         this.dataVersion = dataVersion;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
     }
 
 }

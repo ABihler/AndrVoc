@@ -74,7 +74,7 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         user = db.getUser(appPrefs.getCurrentUser());
         switch (lessonMode) {
             case Lesson.LESSON_MODE_NORMAL:
-                lesson = db.getLesson(appPrefs.getCurrentLesson());
+                lesson = db.getLessonById(appPrefs.getCurrentLesson());
                 break;
             case Lesson.LESSON_MODE_WEAKEST_WORDS:
                 lesson = db.getWeakestWordsByUser(user, 20);
@@ -83,7 +83,7 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
                 lesson = db.getOldestWordsByUser(user, 20);
                 break;
             default:
-                lesson = db.getLesson(appPrefs.getCurrentLesson());
+                lesson = db.getLessonById(appPrefs.getCurrentLesson());
         }
 
         // set the list view adapter
