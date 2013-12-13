@@ -158,7 +158,7 @@ public class VocabularyServerConfigActivity extends Activity {
                     // is the server really the one we know?
                     if (remoteServer.getUuid().equals(server.getUuid())) {
                         if (remoteServer.getDataVersion() > server.getDataVersion()) {
-                            // TODO: Replace toast with code and some other kind of hint
+                            // TODO: Replace toast some other kind of hint
                             Toast.makeText(getApplicationContext(),
                                     "Update gefunden! Alte Version: " + server.getDataVersion() + ", neue Version: " + remoteServer.getDataVersion(),
                                     Toast.LENGTH_LONG)
@@ -178,15 +178,17 @@ public class VocabularyServerConfigActivity extends Activity {
                                     // existing lesson -> check if remote version is higher
                                     if (remoteLesson.getVersion() > localLesson.getVersion()) {
                                         // update lesson locally
-                                        db.updateLesson(remoteLesson);
+                                        db.updateLesson(localLesson.getId(), remoteLesson);
                                     }
                                 } else {
                                     // new lesson -> add locally
                                     db.saveLesson(remoteLesson, server.getId());
                                 }
                             }
+                            db.updateServerDataVersion(server.getId(), remoteServer.getDataVersion());
+                            Toast.makeText(getApplicationContext(), "Update wurde durchgeführt!", Toast.LENGTH_LONG).show();
                         } else {
-                            // TODO: Replace toast with code and some other kind of hint
+                            // TODO: Replace toast with some other kind of hint
                             Toast.makeText(getApplicationContext(),
                                     "Kein Update gefunden", Toast.LENGTH_LONG)
                                     .show();
@@ -194,12 +196,10 @@ public class VocabularyServerConfigActivity extends Activity {
                     } else {
                         // wrong or no server
                         // TODO: Replace toast with code and some other kind of hint
-                        // TODO: Remove server from database?
                         Toast.makeText(getApplicationContext(), "Unbekannter Server!", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
-
                 }
             }
         }.execute(server);

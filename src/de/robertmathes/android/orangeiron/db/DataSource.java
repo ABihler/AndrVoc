@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import de.robertmathes.android.orangeiron.db.DbOpenHelper.AltTranslationsColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.LessonColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.ServerColumn;
 import de.robertmathes.android.orangeiron.db.DbOpenHelper.StatisticColumn;
@@ -91,6 +92,12 @@ public class DataSource {
 
         Log.d(TAG, "Found " + servers.size() + " servers.");
         return servers;
+    }
+
+    public void updateServerDataVersion(long serverId, int dataVersion) {
+        ContentValues values = new ContentValues();
+        values.put(ServerColumn.DATA_VERSION, dataVersion);
+        database.update(DbOpenHelper.TABLE_NAME_SERVER, values, ServerColumn.ID + "=" + serverId, null);
     }
 
     public long saveServer(Server server) {
@@ -322,8 +329,20 @@ public class DataSource {
         return lessonId;
     }
 
-    public void updateLesson(Lesson lesson) {
-        // TODO: insert code here!
+    public void updateLesson(long localeLessonId, Lesson remoteLesson) {
+        Log.i(TAG, "Updating lesson " + localeLessonId);
+
+        // update fields in lesson table
+        ContentValues values = new ContentValues();
+        values.put(LessonColumn.LESSON_NAME, remoteLesson.getName());
+        values.put(LessonColumn.LESSON_LANGUAGE, remoteLesson.getLanguage());
+        values.put(LessonColumn.LESSON_VERSION, remoteLesson.getVersion());
+        database.update(DbOpenHelper.TABLE_NAME_LESSONS, values, LessonColumn.ID + "=" + localeLessonId, null);
+
+        // iterate through words in lesson and update them too
+        for (Vokabel word : remoteLesson.getVocabulary()) {
+            updateWord(word, localeLessonId);
+        }
     }
 
     public Vokabel getWord(long wordId) {
@@ -346,6 +365,18 @@ public class DataSource {
         return vokabel;
     }
 
+    public long getWordIdByUuid(String uuid) {
+        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, new String[] { VocabularyColumn.ID }, VocabularyColumn.UUID + "=" + uuid, null,
+                null, null, null);
+
+        cursor.moveToNext();
+        if (!cursor.isAfterLast()) {
+            return cursor.getLong(0);
+        } else {
+            return -1;
+        }
+    }
+
     /**
      * Sichert eine Vokabel inklusive der falschen Übersetzungen
      * 
@@ -365,6 +396,29 @@ public class DataSource {
         long vokabelId = database.insert(DbOpenHelper.TABLE_NAME_VOCABULARY, null, values);
         // Alternative Übersetzungen sichern
         saveAlternativeTranslations(vokabel.getAlternativeTranslations(), vokabelId);
+    }
+
+    public void updateWord(Vokabel remoteWord, long lessonId) {
+        Log.i(TAG, "Updating word " + remoteWord.getOriginalWord() + " for lesson " + lessonId);
+
+        long localWordId = getWordIdByUuid(remoteWord.getUuid());
+
+        if (localWordId != -1) {
+            // existing word -> update data
+            // Update fields in word table
+            ContentValues values = new ContentValues();
+            values.put(VocabularyColumn.ORIGINAL_WORD, remoteWord.getOriginalWord());
+            values.put(VocabularyColumn.CORRECT_TRANSLATION, remoteWord.getCorrectTranslation());
+            database.update(DbOpenHelper.TABLE_NAME_VOCABULARY, values, VocabularyColumn.UUID + "=" + localWordId, null);
+
+            // delete all alternative translations and add the new ones
+            database.delete(DbOpenHelper.TABLE_NAME_ALTTRANSLATIONS, AltTranslationsColumn.VOCABULARY_ID + "=" + localWordId, null);
+            saveAlternativeTranslations(remoteWord.getAlternativeTranslations(), localWordId);
+        } else {
+            // new word -> add it to database
+            saveWord(remoteWord, lessonId);
+        }
+
     }
 
     /**
@@ -439,6 +493,12 @@ public class DataSource {
             values.put(DbOpenHelper.AltTranslationsColumn.VOCABULARY_ID, vocabularyId);
             database.insert(DbOpenHelper.TABLE_NAME_ALTTRANSLATIONS, null, values);
         }
+    }
+
+    public void deleteAlternativeTranslations(long vocabularyId) {
+        Log.i(TAG, "Deleting alternative translations for word " + vocabularyId);
+        int numberOfDeletedRows = database.delete(DbOpenHelper.TABLE_NAME_ALTTRANSLATIONS, AltTranslationsColumn.VOCABULARY_ID + "=" + vocabularyId, null);
+        Log.d(TAG, "Deleted " + numberOfDeletedRows + " rows.");
     }
 
     // TODO: extract identical code from updateCorrect... and updateBad... methods into helper method
@@ -556,4 +616,5 @@ public class DataSource {
 
         return lesson;
     }
+
 }
