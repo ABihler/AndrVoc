@@ -163,10 +163,15 @@ public class VocabularyServerConfigActivity extends Activity {
                                     "Update gefunden! Alte Version: " + server.getDataVersion() + ", neue Version: " + remoteServer.getDataVersion(),
                                     Toast.LENGTH_LONG)
                                     .show();
+
+                            // Create a hashmap from local lessons for better access
                             List<Lesson> localLessons = db.getLessonsByServerId(server.getId());
                             Map<String, Lesson> localLessonsMap = new HashMap<String, Lesson>();
-                            for (Lesson lesson : localLessons)
+                            for (Lesson lesson : localLessons) {
                                 localLessonsMap.put(lesson.getUuid(), lesson);
+                            }
+
+                            // Iterate through remote lessons and check if they are new or updated
                             for (Lesson remoteLesson : remoteServer.getLessons()) {
                                 Lesson localLesson = localLessonsMap.get(remoteLesson.getUuid());
                                 if (localLesson != null) {
