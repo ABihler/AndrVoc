@@ -18,30 +18,51 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
+import de.albert.bihler.andrvoc.model.Server;
 import de.albert.bihler.andrvoc.model.VocabularyServer;
-import de.robertmathes.android.orangeiron.R;
+import de.albert.bihler.andrvoc.orangeiron.R;
 
-public class VocabularyServerConfig extends Activity {
+public class AddVocabularyServerActivity extends Activity {
 
     private DataSource db;
-    private EditText serverUrl;
+
+    private VocabularyServer vocServer;
+
+    EditText serverUrl;
+
+    LinearLayout serverDetails;
+    TextView serverName;
+    TextView serverDescription;
+    TextView serverLessonCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vocabulary_server_config);
+        setContentView(R.layout.activity_add_vocabulary_server);
+
+        serverUrl = (EditText) findViewById(R.id.server_url);
+        serverDetails = (LinearLayout) findViewById(R.id.server_details);
+        serverName = (TextView) findViewById(R.id.server_name);
+        serverDescription = (TextView) findViewById(R.id.server_description);
+        serverLessonCount = (TextView) findViewById(R.id.server_lessonCount);
+
+        // hide the server details
+        serverDetails.setVisibility(View.INVISIBLE);
 
         // Demo-URL vorbelegen
-        serverUrl = (EditText) findViewById(R.id.server_popup_url);
+        serverUrl = (EditText) findViewById(R.id.server_url);
         // serverUrl.setText("https://googledrive.com/host/0B5pL2OLIkCeiN00xdnVyRGszTmM/albert.json");
         serverUrl.setText("https://dl.dropboxusercontent.com/u/64100103/AndrVocJSON/albert.json");
         serverUrl.selectAll();
+
     }
 
     @Override
@@ -58,17 +79,36 @@ public class VocabularyServerConfig extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.vocabulary_server_config, menu);
+        getMenuInflater().inflate(R.menu.add_vocabulary_server, menu);
         return true;
     }
 
-    public void onSave(View view) {
-        Button button = (Button) findViewById(R.id.server_popup_save);
+    public void onLoad(View view) {
+        Button button = (Button) findViewById(R.id.button_server_load);
         button.setEnabled(false);
         checkServer(serverUrl.getText().toString());
+        // TODO: show spinner while loading data
     }
 
-    private void checkServer(String url) {
+    public void onSave(View view) {
+        Button button = (Button) findViewById(R.id.button_server_save);
+        button.setEnabled(false);
+        long serverId = db.saveServer(new Server(vocServer));
+        for (Lesson lesson : vocServer.getLessons()) {
+            db.saveLesson(lesson, serverId);
+        }
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Close the db connection
+        db.close();
+    }
+
+    private void checkServer(final String url) {
         new AsyncTask<String, Void, VocabularyServer>() {
 
             @Override
@@ -91,6 +131,7 @@ public class VocabularyServerConfig extends Activity {
                     Gson gson = new Gson();
                     Reader reader = new InputStreamReader(getResponseEntity.getContent());
                     VocabularyServer server = gson.fromJson(reader, VocabularyServer.class);
+                    server.setServerUrl(url);
                     return server;
                 } catch (IOException e) {
                     getRequest.abort();
@@ -104,31 +145,23 @@ public class VocabularyServerConfig extends Activity {
             @Override
             protected void onPostExecute(VocabularyServer server) {
                 if (server != null) {
-                    Toast.makeText(getApplicationContext(),
+                    serverDetails.setVisibility(View.VISIBLE);
+                    serverName.setText(server.getServerName());
+                    serverDescription.setText(server.getServerDescription());
+                    serverLessonCount.setText(server.getLessons().size() + "");
 
-                            getResources().getString(R.string.found_valid_server, server.getServerName(), server.getLessons().size()), Toast.LENGTH_LONG)
-                            .show();
-                    for (Lesson lesson : server.getLessons()) {
-                        db.saveLesson(lesson);
-                    }
+                    vocServer = server;
+
                     AppPreferences appPrefs = new AppPreferences(getApplicationContext());
                     appPrefs.saveVocabularyServer(serverUrl.getText().toString());
-                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.no_valid_server, Toast.LENGTH_LONG).show();
-                    Button button = (Button) findViewById(R.id.server_popup_save);
-                    button.setEnabled(true);
+
                 }
+                Button button = (Button) findViewById(R.id.button_server_load);
+                button.setEnabled(true);
             }
         }.execute(url);
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        // Close the db connection
-        db.close();
     }
 }

@@ -4,12 +4,18 @@ import java.util.List;
 
 public class Lesson {
 
+    public static final String LESSON_MODE = "lessonMode";
+    public static final int LESSON_MODE_NORMAL = 0;
+    public static final int LESSON_MODE_WEAKEST_WORDS = 1;
+    public static final int LESSON_MODE_OLDEST_WORDS = 2;
+
     private long id;
+    private String uuid;
     private String name;
     private String language;
     private int version;
     private List<Vokabel> vocabulary;
-    private long serverVersion;
+    private long serverId;
 
     public long getId() {
         return id;
@@ -17,6 +23,14 @@ public class Lesson {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getLanguage() {
@@ -51,12 +65,12 @@ public class Lesson {
         this.vocabulary = vocabulary;
     }
 
-    public long getServerVersion() {
-        return serverVersion;
+    public long getServerId() {
+        return serverId;
     }
 
-    public void setServerVersion(long serverVersion) {
-        this.serverVersion = serverVersion;
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
     }
 
     @Override

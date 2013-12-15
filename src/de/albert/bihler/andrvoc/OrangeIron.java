@@ -16,7 +16,7 @@ import android.widget.TextView;
 import de.albert.bihler.andrvoc.adapter.UserListViewAdapter;
 import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.model.User;
-import de.robertmathes.android.orangeiron.R;
+import de.albert.bihler.andrvoc.orangeiron.R;
 
 public class OrangeIron extends Activity implements OnItemClickListener {
 

@@ -21,7 +21,7 @@ import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.db.VocabularyDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 import de.albert.bihler.andrvoc.model.Vokabel;
-import de.robertmathes.android.orangeiron.R;
+import de.albert.bihler.andrvoc.orangeiron.R;
 
 public class LessonChooserActivity extends Activity implements OnItemClickListener {
 
@@ -95,14 +95,26 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
         appSingleton.setApplicationVocList(vocList);
         // navigate to the question activity
         Intent intent = new Intent(this, QuestionActivity.class);
+        intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
         startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_manageServers:
-                Intent intent = new Intent(this, VocabularyServerConfig.class);
+                intent = new Intent(this, VocabularyServerConfigActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_weakestWords:
+                intent = new Intent(this, QuestionActivity.class);
+                intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_WEAKEST_WORDS);
+                startActivity(intent);
+                return true;
+            case R.id.action_oldestWords:
+                intent = new Intent(this, QuestionActivity.class);
+                intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_OLDEST_WORDS);
                 startActivity(intent);
                 return true;
             default:

@@ -1,5 +1,7 @@
 package de.albert.bihler.andrvoc.model;
 
+import java.util.List;
+
 /**
  * 
  * @author Robert Mathes <robert.d.mathes@gmail.com>
@@ -9,10 +11,26 @@ package de.albert.bihler.andrvoc.model;
 public class Server {
 
     private long id;
+    private String uuid;
     private String name;
+    private String description;
     private String url;
     private int serverVersion;
     private int dataVersion;
+    private List<Lesson> lessons;
+
+    public Server() {
+    }
+
+    public Server(VocabularyServer vocServer) {
+        this.uuid = vocServer.getUuid();
+        this.name = vocServer.getServerName();
+        this.description = vocServer.getServerDescription();
+        this.url = vocServer.getServerUrl();
+        this.serverVersion = vocServer.getServerVersion();
+        this.dataVersion = vocServer.getVersion();
+        this.lessons = vocServer.getLessons();
+    }
 
     public long getId() {
         return id;
@@ -22,12 +40,28 @@ public class Server {
         this.id = id;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUrl() {
@@ -52,6 +86,14 @@ public class Server {
 
     public void setDataVersion(int dataVersion) {
         this.dataVersion = dataVersion;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
     }
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.robertmathes.android.orangeiron"
+    package="de.albert.bihler.andrvoc.orangeiron"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -42,12 +42,16 @@
             android:label="@string/title_activity_create_user" >
         </activity>
         <activity
-            android:name="de.albert.bihler.andrvoc.VocabularyServerConfig"
+            android:name="de.albert.bihler.andrvoc.VocabularyServerConfigActivity"
             android:label="@string/title_activity_vocabulary_server_config" >
         </activity>
         <activity
             android:name="de.albert.bihler.andrvoc.LessonChooserActivity"
             android:label="@string/title_activity_lesson_chooser" >
+        </activity>
+        <activity
+            android:name="de.albert.bihler.andrvoc.AddVocabularyServerActivity"
+            android:label="@string/title_activity_add_vocabulary_server" >
         </activity>
     </application>
 

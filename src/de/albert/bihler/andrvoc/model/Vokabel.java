@@ -8,6 +8,7 @@ import java.util.List;
 public class Vokabel {
 
     private long id;
+    private String uuid;
     private String correctTranslation;
     private String originalWord;
     private long lessonId;
@@ -37,6 +38,14 @@ public class Vokabel {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getOriginalWord() {

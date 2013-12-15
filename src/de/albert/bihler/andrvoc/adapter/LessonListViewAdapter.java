@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.albert.bihler.andrvoc.model.Lesson;
-import de.robertmathes.android.orangeiron.R;
+import de.albert.bihler.andrvoc.orangeiron.R;
 
 public class LessonListViewAdapter extends BaseAdapter {
 

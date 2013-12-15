@@ -7,7 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.model.User;
-import de.robertmathes.android.orangeiron.R;
+import de.albert.bihler.andrvoc.orangeiron.R;
 
 public class CreateUserActivity extends Activity {
 
