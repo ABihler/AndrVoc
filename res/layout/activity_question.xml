@@ -19,7 +19,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ListView
-            android:id="@+id/listView_lesson__translations"
+            android:id="@+id/listView_lesson_translations"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </ListView>
@@ -29,13 +29,20 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/dark_blue"
-        android:orientation="horizontal"
-        android:paddingLeft="64dp" >
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/spacer1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
         
         <TextView
             android:id="@+id/textView_lesson_correctAnswers"
             android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_answer_good"
             android:drawablePadding="16dp"
@@ -47,12 +54,20 @@
             android:id="@+id/textView_lesson_wrong_answers"
             android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_answer_bad"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMediumInverse"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/spacer2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
 </LinearLayout>

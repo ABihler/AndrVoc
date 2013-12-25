@@ -1,5 +1,11 @@
 package de.robertmathes.android.orangeiron;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -29,6 +35,8 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
     private int correctAnswersCount = 0;
     private int badAnswersCount = 0;
     private QuestionListViewAdapter translationsAdapter;
+    private ObjectAnimator correctAnswersAnimation;
+    private ObjectAnimator badAnswersAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,7 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         appPrefs = new AppPreferences(getApplicationContext());
 
         originalWord = (TextView) findViewById(R.id.textView_lesson_originalWord);
-        translations = (ListView) findViewById(R.id.listView_lesson__translations);
+        translations = (ListView) findViewById(R.id.listView_lesson_translations);
         translations.setOnItemClickListener(this);
         correctAnswers = (TextView) findViewById(R.id.textView_lesson_correctAnswers);
         correctAnswers.setText(correctAnswersCount + "");
@@ -50,6 +58,20 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         badAnswers.setText(badAnswersCount + "");
 
         currentWord = 0;
+
+        // setup animations
+        // Scale the button in X and Y. Note the use of PropertyValuesHolder to animate
+        // multiple properties on the same object in parallel.
+        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat(View.SCALE_X, 2);
+        PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 2);
+        correctAnswersAnimation =
+                ObjectAnimator.ofPropertyValuesHolder(correctAnswers, pvhX, pvhY);
+        correctAnswersAnimation.setRepeatCount(1);
+        correctAnswersAnimation.setRepeatMode(ValueAnimator.REVERSE);
+        badAnswersAnimation = ObjectAnimator.ofPropertyValuesHolder(badAnswers, pvhX, pvhY);
+        badAnswersAnimation.setRepeatCount(1);
+        badAnswersAnimation.setRepeatMode(ValueAnimator.REVERSE);
+
     }
 
     @Override
@@ -120,9 +142,37 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         if (translationsAdapter.getItem(position).equals(lesson.getVocabulary().get(currentWord).getCorrectTranslation())) {
+            correctAnswersAnimation.addUpdateListener(new AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    correctAnswers.invalidate();
+                }
+            });
+            correctAnswersAnimation.addListener(new AnimatorListener() {
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    moveToNextWord();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+            });
             updateCorrectAnswerCount();
-            moveToNextWord();
+            correctAnswersAnimation.start();
+
         } else {
+            badAnswersAnimation.start();
             updateBadAnswerCount();
         }
     }
