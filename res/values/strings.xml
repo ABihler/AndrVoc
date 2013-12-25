@@ -55,5 +55,6 @@
     <string name="label_server_lessonCount">Lektionsanzahl</string>
     <string name="label_server_details">Serverdetails</string>
     <string name="action_checkForUpdates">Server auf Updates prüfen</string>
+    <string name="no_words_in_lesson">Die ausgewählte Lektion enthält keine Vokabeln. Bitte wähle eine andere aus!</string>
 
 </resources>

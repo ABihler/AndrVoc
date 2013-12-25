@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.robertmathes.android.orangeiron.adapter.LessonListViewAdapter;
 import de.robertmathes.android.orangeiron.db.DataSource;
 import de.robertmathes.android.orangeiron.model.Lesson;
@@ -76,13 +78,20 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-        // save current selected lesson in the preferences for other activities
-        appPrefs.saveCurrentLesson(id);
+        // check, if selected lesson has any words at all
+        if (lessonAdapter.getItem(position).getVocabulary().size() > 0) {
+            // save current selected lesson in the preferences for other activities
+            appPrefs.saveCurrentLesson(id);
 
-        // navigate to the question activity
-        Intent intent = new Intent(this, QuestionActivity.class);
-        intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
-        startActivity(intent);
+            // navigate to the question activity
+            Intent intent = new Intent(this, QuestionActivity.class);
+            intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
+            startActivity(intent);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_words_in_lesson, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     @Override
