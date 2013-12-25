@@ -39,6 +39,7 @@
         </activity>
         <activity
             android:name="de.robertmathes.android.orangeiron.CreateUserActivity"
+            android:windowSoftInputMode="stateVisible"
             android:label="@string/title_activity_create_user" >
         </activity>
         <activity
@@ -51,6 +52,7 @@
         </activity>
         <activity
             android:name="de.robertmathes.android.orangeiron.AddVocabularyServerActivity"
+            android:windowSoftInputMode="stateVisible"
             android:label="@string/title_activity_add_vocabulary_server" >
         </activity>
     </application>
