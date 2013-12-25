@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,7 +37,7 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
     private int badAnswersCount = 0;
     private QuestionListViewAdapter translationsAdapter;
     private ObjectAnimator correctAnswersAnimation;
-    private ObjectAnimator badAnswersAnimation;
+    private ObjectAnimator wrongAnswersAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,14 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         // multiple properties on the same object in parallel.
         PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat(View.SCALE_X, 2);
         PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 2);
+        // PropertyValuesHolder pvhGreen = PropertyValuesHolder.ofInt("textColor", Color.GREEN);
         correctAnswersAnimation =
-                ObjectAnimator.ofPropertyValuesHolder(correctAnswers, pvhX, pvhY);
+                ObjectAnimator.ofPropertyValuesHolder(correctAnswers, pvhX, pvhY/* , pvhGreen */);
         correctAnswersAnimation.setRepeatCount(1);
         correctAnswersAnimation.setRepeatMode(ValueAnimator.REVERSE);
-        badAnswersAnimation = ObjectAnimator.ofPropertyValuesHolder(badAnswers, pvhX, pvhY);
-        badAnswersAnimation.setRepeatCount(1);
-        badAnswersAnimation.setRepeatMode(ValueAnimator.REVERSE);
+        wrongAnswersAnimation = ObjectAnimator.ofPropertyValuesHolder(badAnswers, pvhX, pvhY);
+        wrongAnswersAnimation.setRepeatCount(1);
+        wrongAnswersAnimation.setRepeatMode(ValueAnimator.REVERSE);
 
     }
 
@@ -132,27 +134,20 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         correctAnswers.setText(correctAnswersCount + "");
     }
 
-    private void updateBadAnswerCount() {
+    private void updateWrongAnswerCount() {
         badAnswersCount++;
         db.updateBadAnswerCount(user.getId(), lesson.getVocabulary().get(currentWord).getLessonId(), lesson.getVocabulary().get(currentWord).getId());
         badAnswers.setText(badAnswersCount + "");
     }
 
-    @SuppressLint("NewApi")
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, final View view, int position, long id) {
         if (translationsAdapter.getItem(position).equals(lesson.getVocabulary().get(currentWord).getCorrectTranslation())) {
-            correctAnswersAnimation.addUpdateListener(new AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    correctAnswers.invalidate();
-                }
-            });
             correctAnswersAnimation.addListener(new AnimatorListener() {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    setDefaultTextColor(view);
                     moveToNextWord();
                 }
 
@@ -168,12 +163,33 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
                 public void onAnimationStart(Animator animation) {
                 }
             });
+            markCorrectAnswer(view);
             updateCorrectAnswerCount();
             correctAnswersAnimation.start();
 
         } else {
-            badAnswersAnimation.start();
-            updateBadAnswerCount();
+            updateWrongAnswerCount();
+            markWrongAnswer(view);
+            wrongAnswersAnimation.addListener(new AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    setDefaultTextColor(view);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+            });
+            wrongAnswersAnimation.start();
         }
     }
 
@@ -186,5 +202,20 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         } else {
             finish();
         }
+    }
+
+    private void markWrongAnswer(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.translation);
+        textView.setTextColor(Color.RED);
+    }
+
+    private void markCorrectAnswer(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.translation);
+        textView.setTextColor(Color.GREEN);
+    }
+
+    private void setDefaultTextColor(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.translation);
+        textView.setTextColor(Color.BLACK);
     }
 }
