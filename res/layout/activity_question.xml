@@ -19,7 +19,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ListView
-            android:id="@+id/listView_lesson__translations"
+            android:id="@+id/listView_lesson_translations"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </ListView>

@@ -43,7 +43,7 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         appPrefs = new AppPreferences(getApplicationContext());
 
         originalWord = (TextView) findViewById(R.id.textView_lesson_originalWord);
-        translations = (ListView) findViewById(R.id.listView_lesson__translations);
+        translations = (ListView) findViewById(R.id.listView_lesson_translations);
         translations.setOnItemClickListener(this);
         correctAnswers = (TextView) findViewById(R.id.textView_lesson_correctAnswers);
         correctAnswers.setText(correctAnswersCount + "");

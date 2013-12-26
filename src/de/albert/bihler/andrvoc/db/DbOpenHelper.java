@@ -126,6 +126,11 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + " integer primary key autoincrement, " + AltTranslationsColumn.TRANSLATION + " text not null, " + AltTranslationsColumn.VOCABULARY_ID
             + " integer not null);";
 
+    private static final String TABLE_CREATE_TRAINING_LOG = "CREATE TABLE " + TABLE_NAME_TRAINING_LOG + " (" + TrainingLogColumn.ID
+            + " integer primary key autoincrement, "
+            + TrainingLogColumn.USER + " integer not null, " + TrainingLogColumn.VOKABEL_ID + " integer not null, " +
+            TrainingLogColumn.CORRECT_RESULT + " integer not null, " + TrainingLogColumn.TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
+
     private static final String TABLE_CREATE_STATISTIC = "CREATE TABLE " + TABLE_NAME_STATISTIC + " (" + StatisticColumn.ID
             + " integer primary key autoincrement, "
             + StatisticColumn.USER_ID + " integer not null, " + StatisticColumn.LESSON_ID + " integer not null, " + StatisticColumn.VOCABULARY_ID
@@ -145,6 +150,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_VOCABULARY);
         db.execSQL(TABLE_CREATE_ALTTRANSLATIONS);
         db.execSQL(TABLE_CREATE_STATISTIC);
+        db.execSQL(TABLE_CREATE_TRAINING_LOG);
     }
 
     @Override
