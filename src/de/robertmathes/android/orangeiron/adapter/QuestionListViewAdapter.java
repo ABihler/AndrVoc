@@ -22,6 +22,11 @@ public class QuestionListViewAdapter extends BaseAdapter {
 
     Typeface roboto_light;
 
+    public QuestionListViewAdapter(Context ctx) {
+        this.inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.roboto_light = Typeface.createFromAsset(ctx.getAssets(), "fonts/Roboto/Roboto-Light.ttf");
+    }
+
     public QuestionListViewAdapter(Context ctx, Vokabel word) {
         setWord(word);
         this.inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -30,7 +35,10 @@ public class QuestionListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.translations.size();
+        if (this.translations != null) {
+            return this.translations.size();
+        }
+        return 0;
     }
 
     @Override
