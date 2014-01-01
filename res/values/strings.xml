@@ -56,5 +56,8 @@
     <string name="label_server_details">Serverdetails</string>
     <string name="action_checkForUpdates">Server auf Updates prüfen</string>
     <string name="no_words_in_lesson">Die ausgewählte Lektion enthält keine Vokabeln. Bitte wähle eine andere aus!</string>
+    <string name="title_activity_learning">Lernmodus</string>
+    <string name="action_previousWord">Vorheriges Wort</string>
+    <string name="action_nextWord">Nächstes Wort</string>
 
 </resources>

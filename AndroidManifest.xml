@@ -55,6 +55,10 @@
             android:windowSoftInputMode="stateVisible"
             android:label="@string/title_activity_add_vocabulary_server" >
         </activity>
+        <activity
+            android:name="de.robertmathes.android.orangeiron.LearningActivity"
+            android:label="@string/title_activity_learning" >
+        </activity>
     </application>
 
 </manifest>
