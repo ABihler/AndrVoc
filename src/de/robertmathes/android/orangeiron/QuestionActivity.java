@@ -207,7 +207,6 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
                 public void onAnimationEnd(Animator animation) {
                     Log.d(TAG, "onAnimationEnd");
                     setDefaultTextColor(view);
-                    setWordToView(currentWord);
                 }
 
                 @Override
