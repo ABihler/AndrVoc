@@ -8,13 +8,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.albert.bihler.andrvoc.adapter.LessonListViewAdapter;
 import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
@@ -23,7 +26,7 @@ import de.albert.bihler.andrvoc.model.Lesson;
 import de.albert.bihler.andrvoc.model.Vokabel;
 import de.albert.bihler.andrvoc.orangeiron.R;
 
-public class LessonChooserActivity extends Activity implements OnItemClickListener {
+public class LessonChooserActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 
     private ListView listView;
     private DataSource db;
@@ -41,6 +44,7 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
 
         this.listView = (ListView) findViewById(R.id.lessonList);
         this.listView.setOnItemClickListener(this);
+        this.listView.setOnItemLongClickListener(this);
 
         // set the view when the list is empty
         TextView emtpyView = (TextView) findViewById(R.id.empty_lesson_list);
@@ -84,19 +88,54 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-        // save current selected lesson in the preferences for other activities
-        appPrefs.saveCurrentLesson(id);
+        // check, if selected lesson has any words at all
+        if (lessonAdapter.getItem(position).getVocabulary().size() > 0) {
+            // save current selected lesson in the preferences for other activities
+            appPrefs.saveCurrentLesson(id);
 
-        // Vokabeln der aktuellen Lektion laden
-        List<Vokabel> vocList = loadVocabulary((int) id);
-        // Abfragereihenfolge der Vokabeln mischen
-        Collections.shuffle(vocList);
+            // navigate to the question activity
+            Intent intent = new Intent(this, QuestionActivity.class);
+            intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
+            startActivity(intent);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_words_in_lesson, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+    }
 
-        appSingleton.setApplicationVocList(vocList);
-        // navigate to the question activity
-        Intent intent = new Intent(this, QuestionActivity.class);
-        intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
-        startActivity(intent);
+    // // Vokabeln der aktuellen Lektion laden
+    // List<Vokabel> vocList = loadVocabulary((int) id);
+    // // Abfragereihenfolge der Vokabeln mischen
+    // Collections.shuffle(vocList);
+    //
+    // // navigate to the question activity
+    // Intent intent = new Intent(this, QuestionActivity.class);
+    // intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
+    // startActivity(intent);
+    @Override
+    public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long id) {
+        // TODO: change action to learning mode!!!
+        // check, if selected lesson has any words at all
+        if (lessonAdapter.getItem(position).getVocabulary().size() > 0) {
+            // save current selected lesson in the preferences for other activities
+            appPrefs.saveCurrentLesson(id);
+
+            // navigate to the question activity
+            Intent intent = new Intent(this, LearningActivity.class);
+            intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
+            startActivity(intent);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_words_in_lesson, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        return false;
+        // appSingleton.setApplicationVocList(vocList);
+        // // navigate to the question activity
+        // Intent intent = new Intent(this, QuestionActivity.class);
+        // intent.putExtra(Lesson.LESSON_MODE, Lesson.LESSON_MODE_NORMAL);
+        // startActivity(intent);
     }
 
     @Override
