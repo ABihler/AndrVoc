@@ -97,8 +97,10 @@ public class TrainingLogDataSource {
         qstring = qstring.replaceAll("USER_ID", DbOpenHelper.TrainingLogColumn.USER);
         Cursor c = database.rawQuery(qstring, null);
 
-        // TODO Auf x begrenzen
+        int max = 15;
+        int i = 0;
         if (c != null & c.getCount() > 0) {
+            i++;
             c.moveToFirst();
             do {
 
@@ -108,7 +110,7 @@ public class TrainingLogDataSource {
                 vocDS.close();
                 vocabulary.add(v);
 
-            } while (c.moveToNext());
+            } while (c.moveToNext() || i <= max);
         }
         c.close();
         return vocabulary;

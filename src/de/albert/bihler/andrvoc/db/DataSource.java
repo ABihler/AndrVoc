@@ -369,9 +369,13 @@ public class DataSource {
         Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, new String[] { VocabularyColumn.ID }, VocabularyColumn.UUID + "=" + uuid, null,
                 null, null, null);
 
-        cursor.moveToNext();
-        if (!cursor.isAfterLast()) {
-            return cursor.getLong(0);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToNext();
+            if (!cursor.isAfterLast()) {
+                return cursor.getLong(0);
+            } else {
+                return -1;
+            }
         } else {
             return -1;
         }

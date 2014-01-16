@@ -18,6 +18,10 @@
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        <View
+            android:id="@+id/question_divider"
+            style="@style/Divider" />
+
         <ListView
             android:id="@+id/listView_lesson_translations"
             android:layout_width="match_parent"
@@ -37,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-        
+
         <TextView
             android:id="@+id/textView_lesson_correctAnswers"
             android:layout_width="0dp"
@@ -67,7 +71,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-
     </LinearLayout>
 
 </LinearLayout>

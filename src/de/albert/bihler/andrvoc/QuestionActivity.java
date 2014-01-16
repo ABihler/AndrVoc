@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import de.albert.bihler.andrvoc.adapter.QuestionListViewAdapter;
 import de.albert.bihler.andrvoc.db.DataSource;
+import de.albert.bihler.andrvoc.db.TrainingLogDataSource;
 import de.albert.bihler.andrvoc.model.Lesson;
 import de.albert.bihler.andrvoc.model.User;
 import de.albert.bihler.andrvoc.model.Vokabel;
@@ -155,6 +156,12 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         correctAnswersCount++;
         db.updateCorrectAnswerCount(user.getId(), words.get(currentWord).getLessonId(), words.get(currentWord).getId());
         correctAnswers.setText(correctAnswersCount + "");
+        // TODO Training Log muss irgendwie eleganter gehen.
+        TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
+        trainingLogDataSource.open();
+        // TODO Fix Cast von appPrefs von long auf int
+        trainingLogDataSource.saveTrainingLog((int) appPrefs.getUser(), (int) words.get(currentWord).getId(), 1);
+        trainingLogDataSource.close();
     }
 
     private void updateWrongAnswerCount() {
@@ -162,6 +169,12 @@ public class QuestionActivity extends Activity implements OnItemClickListener {
         badAnswersCount++;
         db.updateBadAnswerCount(user.getId(), words.get(currentWord).getLessonId(), words.get(currentWord).getId());
         wrongAnswers.setText(badAnswersCount + "");
+        // TODO Training Log muss irgendwie eleganter gehen.
+        TrainingLogDataSource trainingLogDataSource = new TrainingLogDataSource(getApplicationContext());
+        trainingLogDataSource.open();
+        // TODO Fix Cast von appPrefs von long auf int
+        trainingLogDataSource.saveTrainingLog((int) appPrefs.getUser(), (int) words.get(currentWord).getId(), 0);
+        trainingLogDataSource.close();
     }
 
     @Override
