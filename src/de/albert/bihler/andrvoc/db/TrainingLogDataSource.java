@@ -110,7 +110,7 @@ public class TrainingLogDataSource {
                 vocDS.close();
                 vocabulary.add(v);
 
-            } while (c.moveToNext() || i <= max);
+            } while (c.moveToNext() && i < max);
         }
         c.close();
         return vocabulary;
