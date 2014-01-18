@@ -1,17 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/lessonList"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:listSelector="@color/pressed_orangeiron" >
-    </ListView>
-    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".80"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/lessonList"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:listSelector="@color/pressed_orangeiron" >
+        </ListView>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/empty_lesson_list"
         android:layout_width="wrap_content"
@@ -22,15 +28,21 @@
         android:text="@string/no_lessons_present"
         android:textAlignment="center" >
     </TextView>
-    
-        <Button
-        android:id="@+id/main_button_test"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/lessonList"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="startTest"
-        android:text="@string/ButtonTest" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".20"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/main_button_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:bottom="10dp"
+            android:onClick="startTest"
+            android:text="@string/ButtonTest"
+            android:top="10dp" />
+    </LinearLayout>
+
+</LinearLayout>
