@@ -184,7 +184,7 @@ public class LessonChooserActivity extends Activity implements OnItemClickListen
         appSingleton.setApplicationVocList(vocList);
 
         Intent intent = new Intent(this, QuestionActivity.class);
+        intent.putExtra("lessonMode", 1);
         startActivity(intent);
     }
-
 }
