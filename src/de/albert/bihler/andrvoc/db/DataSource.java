@@ -366,17 +366,24 @@ public class DataSource {
     }
 
     public long getWordIdByUuid(String uuid) {
-        Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, new String[] { VocabularyColumn.ID }, VocabularyColumn.UUID + "=" + uuid, null,
-                null, null, null);
+        try {
+            Cursor cursor = database.query(DbOpenHelper.TABLE_NAME_VOCABULARY, new String[] { VocabularyColumn.ID }, VocabularyColumn.UUID + "='" + uuid + "'",
+                    null,
+                    null, null, null);
 
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToNext();
-            if (!cursor.isAfterLast()) {
-                return cursor.getLong(0);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToNext();
+                if (!cursor.isAfterLast()) {
+                    return cursor.getLong(0);
+                } else {
+                    return -1;
+                }
             } else {
                 return -1;
             }
-        } else {
+        } catch (Exception e)
+        {
+            Log.i(TAG, "Exception " + e.getMessage());
             return -1;
         }
     }
@@ -403,12 +410,13 @@ public class DataSource {
     }
 
     public void updateWord(Vokabel remoteWord, long lessonId) {
-        Log.i(TAG, "Updating word " + remoteWord.getOriginalWord() + " for lesson " + lessonId);
+        Log.i(TAG, "Updating word " + remoteWord.getOriginalWord() + " for lesson " + lessonId + "  uuid: " + remoteWord.getUuid());
 
         long localWordId = getWordIdByUuid(remoteWord.getUuid());
 
         if (localWordId != -1) {
             // existing word -> update data
+            Log.i(TAG, "Word exists -> update");
             // Update fields in word table
             ContentValues values = new ContentValues();
             values.put(VocabularyColumn.ORIGINAL_WORD, remoteWord.getOriginalWord());
@@ -420,6 +428,7 @@ public class DataSource {
             saveAlternativeTranslations(remoteWord.getAlternativeTranslations(), localWordId);
         } else {
             // new word -> add it to database
+            Log.i(TAG, "New word -> saveWord");
             saveWord(remoteWord, lessonId);
         }
 
