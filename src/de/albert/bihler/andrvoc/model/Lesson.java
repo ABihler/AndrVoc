@@ -1,8 +1,10 @@
 package de.albert.bihler.andrvoc.model;
 
+import java.text.Collator;
 import java.util.List;
+import java.util.Locale;
 
-public class Lesson {
+public class Lesson implements Comparable<Lesson> {
 
     public static final String LESSON_MODE = "lessonMode";
     public static final int LESSON_MODE_NORMAL = 0;
@@ -16,6 +18,7 @@ public class Lesson {
     private int version;
     private List<Vokabel> vocabulary;
     private long serverId;
+    private Collator collator;
 
     public long getId() {
         return id;
@@ -76,6 +79,14 @@ public class Lesson {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public int compareTo(Lesson compareLesson) {
+
+        collator = Collator.getInstance(Locale.GERMAN);
+        collator.setStrength(Collator.SECONDARY);
+        return collator.compare(getName(), compareLesson.getName());
     }
 
 }

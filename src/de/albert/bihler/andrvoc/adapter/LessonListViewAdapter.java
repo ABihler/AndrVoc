@@ -1,5 +1,7 @@
 package de.albert.bihler.andrvoc.adapter;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -21,6 +23,7 @@ public class LessonListViewAdapter extends BaseAdapter {
     Typeface roboto_regular;
 
     public LessonListViewAdapter(Context ctx, List<Lesson> lessons) {
+        Collections.sort(lessons);
         this.lessons = lessons;
         this.inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.roboto_light = Typeface.createFromAsset(ctx.getAssets(), "fonts/Roboto/Roboto-Light.ttf");
