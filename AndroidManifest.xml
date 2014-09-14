@@ -53,10 +53,14 @@
             android:name="de.albert.bihler.andrvoc.AddVocabularyServerActivity"
             android:label="@string/title_activity_add_vocabulary_server" >
         </activity>
-		<activity
+        <activity
             android:name="de.albert.bihler.andrvoc.LearningActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_learning" >
+        </activity>
+        <activity
+            android:name="de.albert.bihler.andrvoc.AppInfoActivity"
+            android:label="@string/title_activity_app_info" >
         </activity>
     </application>
 

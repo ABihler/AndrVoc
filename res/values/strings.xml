@@ -60,5 +60,9 @@
     <string name="action_previousWord">Vorheriges Wort</string>
     <string name="action_nextWord">Nächstes Wort</string>
     <string name="description_button_speak_translation">Liest die Übersetzung vor</string>
-	<string name="ButtonTest">Test</string>
+    <string name="ButtonTest">Test</string>
+    <string name="action_appinfo">Informationen</string>
+    <string name="title_activity_app_info">Informationen</string>
+    <string name="app_version">Orange Iron Alpha 1</string>
+
 </resources>

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import de.albert.bihler.andrvoc.adapter.UserListViewAdapter;
 import de.albert.bihler.andrvoc.db.DataSource;
 import de.albert.bihler.andrvoc.model.User;
+import de.albert.bihler.andrvoc.AppInfoActivity;
 import de.albert.bihler.andrvoc.orangeiron.R;
 
 public class OrangeIron extends Activity implements OnItemClickListener {
@@ -98,6 +99,10 @@ public class OrangeIron extends Activity implements OnItemClickListener {
             case R.id.action_createUser:
                 Intent intent = new Intent(this, CreateUserActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_appinfo:
+                Intent infoIntent = new Intent(this, AppInfoActivity.class);
+                startActivity(infoIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
