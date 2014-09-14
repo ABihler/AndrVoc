@@ -1,27 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".80"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/lessonList"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:listSelector="@color/pressed_orangeiron" >
-        </ListView>
-    </LinearLayout>
+    <ListView
+        android:id="@+id/lessonList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:listSelector="@color/pressed_orangeiron" >
+    </ListView>
 
     <TextView
         android:id="@+id/empty_lesson_list"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:paddingLeft="48dp"
         android:paddingRight="48dp"
@@ -29,20 +23,4 @@
         android:textAlignment="center" >
     </TextView>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".20"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/main_button_test"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:bottom="10dp"
-            android:onClick="startTest"
-            android:text="@string/ButtonTest"
-            android:top="10dp" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
