@@ -60,7 +60,7 @@
         </activity>
         <activity
             android:name="de.albert.bihler.andrvoc.AppInfoActivity"
-            android:label="@string/title_activity_app_info" >
+            android:label="@string/app_info_title" >
         </activity>
     </application>
 

@@ -62,7 +62,8 @@
     <string name="description_button_speak_translation">Liest die Übersetzung vor</string>
     <string name="ButtonTest">Test</string>
     <string name="action_appinfo">Informationen</string>
-    <string name="title_activity_app_info">Informationen</string>
-    <string name="app_version">Orange Iron Alpha 1</string>
+    <string name="app_info_title">Informationen</string>
+    <string name="app_info_button_ok">OK</string>
+    <string name="app_info_version">Orange Iron Alpha 2</string>
 
 </resources>

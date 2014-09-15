@@ -9,8 +9,22 @@
     tools:context="de.albert.bihler.andrvoc.AppInfoActivity" >
 
     <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/app_info_version" />
+
+    <Button
+        android:id="@+id/button_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_version" />
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="110dp"
+        android:minWidth="120dp"
+        android:onClick="buttonOK"
+        android:text="@string/app_info_button_ok" />
 
 </RelativeLayout>
